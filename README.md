@@ -1,6 +1,6 @@
 # Claude Code System Prompts
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.0.33](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.0.33) (November 4th, 2025).**
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.0.34](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.0.34) (November 5th, 2025).**
 
 Why multiple "system prompts?"
 
@@ -73,9 +73,10 @@ Misc large strings.
 
 Parts of the main system prompt.
 
-- [**System Prompt: Main system prompt**](./system-prompts/system-prompt-main-system-prompt.md) (**2326** tks) - Core system prompt for Claude Code defining behavior, tone, and tool usage policies.
+- [**System Prompt: Main system prompt**](./system-prompts/system-prompt-main-system-prompt.md) (**2468** tks) - Core system prompt for Claude Code defining behavior, tone, and tool usage policies.
 - [System Prompt: Learning mode (insights)](./system-prompts/system-prompt-learning-mode-insights.md) (**142** tks) - Instructions for providing educational insights when learning mode is active.
 - [System Prompt: Learning mode](./system-prompts/system-prompt-learning-mode.md) (**1042** tks) - System Prompt: Main system prompt for learning mode with human collaboration instructions.
+- [System Prompt: MCP CLI](./system-prompts/system-prompt-mcp-cli.md) (**1338** tks) - Instructions for using mcp-cli to interact with Model Context Protocol servers.
 
 ### System Reminders
 
@@ -98,7 +99,7 @@ Text for large system reminders.
 - [Tool Description: ReadFile](./system-prompts/tool-description-readfile.md) (**439** tks) - Tool description for reading files.
 - [Tool Description: Skill](./system-prompts/tool-description-skill.md) (**270** tks) - Tool description for executing skills in the main conversation.
 - [Tool Description: SlashCommand](./system-prompts/tool-description-slashcommand.md) (**381** tks) - Tool description for executing slash commands.
-- [Tool Description: Task](./system-prompts/tool-description-task.md) (**987** tks) - Tool description for launching specialized sub-agents to handle complex tasks.
+- [Tool Description: Task](./system-prompts/tool-description-task.md) (**1055** tks) - Tool description for launching specialized sub-agents to handle complex tasks.
 - [Tool Description: TodoWrite](./system-prompts/tool-description-todowrite.md) (**2167** tks) - Tool description for creating and managing task lists.
 - [Tool Description: WebFetch](./system-prompts/tool-description-webfetch.md) (**278** tks) - Tool description for web fetch functionality.
 - [Tool Description: WebSearch](./system-prompts/tool-description-websearch.md) (**166** tks) - Tool description for web search functionality.
@@ -107,5 +108,5 @@ Text for large system reminders.
 **Additional notes for some Tool Desscriptions**
 
 - [Tool Description: Bash (Git commit and PR creation instructions)](./system-prompts/tool-description-bash-git-commit-and-pr-creation-instructions.md) (**1598** tks) - Instructions for creating git commits and GitHub pull requests.
-- [Tool Description: Bash (sandbox note)](./system-prompts/tool-description-bash-sandbox-note.md) (**438** tks) - Note about bash command sandboxing.
+- [Tool Description: Bash (sandbox note)](./system-prompts/tool-description-bash-sandbox-note.md) (**454** tks) - Note about bash command sandboxing.
 - [Tool Description: Task (async return note)](./system-prompts/tool-description-task-async-return-note.md) (**202** tks) - Message returned to the model when a subagent launched successfully.
