@@ -53,6 +53,41 @@ async function countTokens(text) {
 }
 
 /**
+ * Fetch release date from npm for a specific version
+ */
+async function getNpmReleaseDate(version) {
+  try {
+    const response = await fetch('https://registry.npmjs.org/@anthropic-ai/claude-code');
+    if (!response.ok) {
+      console.warn(`Warning: Could not fetch npm package data`);
+      return null;
+    }
+    const data = await response.json();
+    const timestamp = data.time && data.time[version];
+    if (!timestamp) {
+      console.warn(`Warning: No release date found for v${version}`);
+      return null;
+    }
+    // Parse the date and format it nicely
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    }).replace(/(\d+)/, (match) => {
+      // Add ordinal suffix (1st, 2nd, 3rd, etc.)
+      const n = parseInt(match);
+      const s = ['th', 'st', 'nd', 'rd'];
+      const v = n % 100;
+      return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    });
+  } catch (err) {
+    console.warn(`Warning: Error fetching npm release date: ${err.message}`);
+    return null;
+  }
+}
+
+/**
  * Batch count tokens for multiple prompts with rate limiting
  */
 async function countTokensBatch(prompts, batchSize = 5, delayMs = 100) {
@@ -353,9 +388,13 @@ async function updateFromJSON(jsonPath) {
     });
   }
 
+  // Fetch npm release date
+  console.log('\x1b[34mFetching npm release date...\x1b[0m');
+  const releaseDate = await getNpmReleaseDate(jsonData.version);
+
   // Update README
   console.log('\x1b[34mUpdating README.md...\x1b[0m');
-  updateReadme(promptsByFilename, jsonData.version);
+  updateReadme(promptsByFilename, jsonData.version, releaseDate);
 
   console.log('\x1b[32;1mUpdate complete!\x1b[0m');
   console.log(`   New: \x1b[1m${newPrompts.size}\x1b[0m`);
@@ -366,12 +405,14 @@ async function updateFromJSON(jsonPath) {
 /**
  * Update README.md with new prompt information
  */
-function updateReadme(promptsByFilename, version) {
+function updateReadme(promptsByFilename, version, releaseDate) {
   let readme = readFileSync(README_PATH, 'utf-8');
   const lines = readme.split('\n');
 
-  // Update version in header
-  lines[2] = `This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of ${version}.`;
+  // Update version in header with npm link and date
+  const npmUrl = `https://www.npmjs.com/package/@anthropic-ai/claude-code/v/${version}`;
+  const dateStr = releaseDate ? ` (${releaseDate})` : '';
+  lines[2] = `This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v${version}](${npmUrl})${dateStr}.**`;
 
   // Organize prompts by category
   const categories = {
