@@ -1,6 +1,6 @@
 # Claude Code System Prompts
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.0.14](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.0.14) (October 10th, 2025).**
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.0.15](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.0.15) (October 14th, 2025).**
 
 Why multiple "system prompts?"
 
@@ -84,13 +84,13 @@ Text for large system reminders.
 > [!NOTE]
 > Note that we're planning to add a **system reminder creator/editor** to [tweakcc](https://github.com/Piebald-AI/tweakcc); :+1: [this issue](https://github.com/Piebald-AI/tweakcc/issues/113) if you're interested in that idea.
 
-- [System Reminder: Plan mode is active](./system-prompts/system-reminder-plan-mode-is-active.md) (**162** tks) - System reminder sent to Claude when the user enters plan mode.
+- [System Reminder: Plan mode is active](./system-prompts/system-reminder-plan-mode-is-active.md) (**163** tks) - System reminder sent to Claude when the user enters plan mode.
 
 ### Builtin Tool Descriptions
 
 - [Tool Description: Bash](./system-prompts/tool-description-bash.md) (**1097** tks) - Description for the Bash tool, which allows Claude to run shell commands.
 - [Tool Description: Edit](./system-prompts/tool-description-edit.md) (**278** tks) - Tool description for performing exact string replacements in files.
-- [Tool Description: ExitPlanMode](./system-prompts/tool-description-exitplanmode.md) (**175** tks) - Description for the ExitPlanMode tool, which presents a plan dialog for the user to approve.
+- [Tool Description: ExitPlanMode](./system-prompts/tool-description-exitplanmode.md) (**174** tks) - Description for the ExitPlanMode tool, which presents a plan dialog for the user to approve.
 - [Tool Description: Glob](./system-prompts/tool-description-glob.md) (**122** tks) - Tool description for file pattern matching and searching by name.
 - [Tool Description: Grep](./system-prompts/tool-description-grep.md) (**300** tks) - Tool description for content search using ripgrep.
 - [Tool Description: NotebookEdit](./system-prompts/tool-description-notebookedit.md) (**121** tks) - Tool description for editing Jupyter notebook cells.
