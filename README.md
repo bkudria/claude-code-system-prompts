@@ -31,7 +31,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 
 [![Mentioned in Awesome Claude Code](https://awesome.re/mentioned-badge.svg)](https://github.com/hesreallyhim/awesome-claude-code)
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.12](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.12) (January 17th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 71 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.14](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.14) (January 20th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 72 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [CHANGELOG](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -97,6 +97,7 @@ Sub-agents and utilities.
 - [Agent Prompt: Conversation summarization with additional instructions](./system-prompts/agent-prompt-conversation-summarization-with-additional-instructions.md) (**1133** tks) - Extended summarization prompt with support for custom additional instructions.
 - [Agent Prompt: Conversation summarization](./system-prompts/agent-prompt-conversation-summarization.md) (**1121** tks) - System prompt for creating detailed conversation summaries.
 - [Agent Prompt: Prompt Hook execution](./system-prompts/agent-prompt-prompt-hook-execution.md) (**134** tks) - Prompt given to Claude when acting evaluating whether to pass or fail a prompt hook..
+- [Agent Prompt: Prompt Suggestion Generator (Stated Intent)](./system-prompts/agent-prompt-prompt-suggestion-generator-stated-intent.md) (**166** tks) - Instructions for generating prompt suggestions based on user's explicitly stated next steps.
 - [Agent Prompt: Prompt Suggestion Generator v2](./system-prompts/agent-prompt-prompt-suggestion-generator-v2.md) (**296** tks) - V2 instructions for generating prompt suggestions for Claude Code.
 - [Agent Prompt: Remember skill](./system-prompts/agent-prompt-remember-skill.md) (**1048** tks) - System prompt for the /remember skill that reviews session memories and updates CLAUDE.local.md with recurring patterns and learnings.
 - [Agent Prompt: Session Search Assistant](./system-prompts/agent-prompt-session-search-assistant.md) (**439** tks) - Agent prompt for the session search assistant that finds relevant sessions based on user queries and metadata.
@@ -145,22 +146,21 @@ Text for large system reminders.
 ### Builtin Tool Descriptions
 
 - [Tool Description: AskUserQuestion](./system-prompts/tool-description-askuserquestion.md) (**194** tks) - Tool description for asking user questions..
-- [Tool Description: Bash](./system-prompts/tool-description-bash.md) (**1047** tks) - Description for the Bash tool, which allows Claude to run shell commands.
+- [Tool Description: Bash](./system-prompts/tool-description-bash.md) (**1067** tks) - Description for the Bash tool, which allows Claude to run shell commands.
 - [Tool Description: Computer](./system-prompts/tool-description-computer.md) (**161** tks) - Main description for the Chrome browser computer automation tool.
 - [Tool Description: Edit](./system-prompts/tool-description-edit.md) (**278** tks) - Tool description for performing exact string replacements in files.
 - [Tool Description: EnterPlanMode](./system-prompts/tool-description-enterplanmode.md) (**970** tks) - Tool description for entering plan mode to explore and design implementation approaches.
-- [Tool Description: ExitPlanMode v2](./system-prompts/tool-description-exitplanmode-v2.md) (**738** tks) - V2 description for the ExitPlanMode tool, which presents a plan dialog for the user to approve.
-- [Tool Description: ExitPlanMode](./system-prompts/tool-description-exitplanmode.md) (**342** tks) - Description for the ExitPlanMode tool, which presents a plan dialog for the user to approve.
+- [Tool Description: ExitPlanMode](./system-prompts/tool-description-exitplanmode.md) (**417** tks) - Description for the ExitPlanMode tool, which presents a plan dialog for the user to approve.
 - [Tool Description: Glob](./system-prompts/tool-description-glob.md) (**122** tks) - Tool description for file pattern matching and searching by name.
 - [Tool Description: Grep](./system-prompts/tool-description-grep.md) (**300** tks) - Tool description for content search using ripgrep.
 - [Tool Description: LSP](./system-prompts/tool-description-lsp.md) (**255** tks) - Description for the LSP tool..
-- [Tool Description: MCPSearch](./system-prompts/tool-description-mcpsearch.md) (**477** tks) - Tool description for the MCPSearch tool.
 - [Tool Description: NotebookEdit](./system-prompts/tool-description-notebookedit.md) (**121** tks) - Tool description for editing Jupyter notebook cells.
 - [Tool Description: ReadFile](./system-prompts/tool-description-readfile.md) (**439** tks) - Tool description for reading files.
 - [Tool Description: Skill](./system-prompts/tool-description-skill.md) (**444** tks) - Tool description for executing skills in the main conversation.
 - [Tool Description: Task](./system-prompts/tool-description-task.md) (**1264** tks) - Tool description for launching specialized sub-agents to handle complex tasks.
 - [Tool Description: TodoWrite](./system-prompts/tool-description-todowrite.md) (**2167** tks) - Tool description for creating and managing task lists.
-- [Tool Description: WebFetch](./system-prompts/tool-description-webfetch.md) (**265** tks) - Tool description for web fetch functionality.
+- [Tool Description: ToolSearch](./system-prompts/tool-description-toolsearch.md) (**520** tks) - Tool description for loading and searching deferred tools before use.
+- [Tool Description: WebFetch](./system-prompts/tool-description-webfetch.md) (**297** tks) - Tool description for web fetch functionality.
 - [Tool Description: WebSearch](./system-prompts/tool-description-websearch.md) (**329** tks) - Tool description for web search functionality.
 - [Tool Description: Write](./system-prompts/tool-description-write.md) (**159** tks) - Tool description creating/overwriting writing individual files.
 
@@ -168,5 +168,3 @@ Text for large system reminders.
 
 - [Tool Description: Bash (Git commit and PR creation instructions)](./system-prompts/tool-description-bash-git-commit-and-pr-creation-instructions.md) (**1386** tks) - Instructions for creating git commits and GitHub pull requests.
 - [Tool Description: Bash (sandbox note)](./system-prompts/tool-description-bash-sandbox-note.md) (**454** tks) - Note about bash command sandboxing.
-- [Tool Description: ExitPlanMode v2 (security notes)](./system-prompts/tool-description-exitplanmode-v2-security-notes.md) (**241** tks) - Security guidelines for scoping permissions when using the ExitPlanMode tool.
-- [Tool Description: MCPSearch (with available tools)](./system-prompts/tool-description-mcpsearch-with-available-tools.md) (**510** tks) - Tool description for the MCPSearch tool with available tools listed.
