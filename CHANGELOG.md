@@ -4,6 +4,33 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.20](https://github.com/Piebald-AI/claude-code-system-prompts/commit/18fd5f9)
+
+_-1,928 tokens_
+
+- **NEW:** System Prompt: Doing tasks - Instructions for performing software engineering tasks
+- **NEW:** System Prompt: Task management - Instructions for using task management tools
+- **NEW:** System Prompt: Tone and style - Guidelines for communication tone and response style
+- **NEW:** System Prompt: Tool usage policy - Policies and guidelines for tool usage
+- **NEW:** Tool Description: SendMessageTool - Tool for sending messages to teammates and handling protocol requests/responses in a swarm
+- **NEW:** Tool Description: EnterPlanMode (ambiguous tasks) - Tool for entering plan mode when task has ambiguity
+- **REMOVED:** Agent Prompt: Conversation summarization with additional instructions - Extended summarization prompt with support for custom additional instructions
+- **REMOVED:** Agent Prompt: Prompt Hook execution - Prompt given to Claude when evaluating whether to pass or fail a prompt hook
+- **REMOVED:** System Prompt: Censoring assistance with malicious activities - Guidelines for assisting with authorized security testing
+- **REMOVED:** System Reminder: Queued command (prompt) - Queued user message to address (prompt variant)
+- **REMOVED:** System Reminder: Queued command - Queued user message to address
+- **REMOVED:** System Reminder: Session memory - Past session summaries that may be relevant
+- System Prompt: Main system prompt - Massively reduced from 2896 to 269 tokens; most content extracted into separate, focused system prompts (Doing tasks, Task management, Tone and style, Tool usage policy)
+- Agent Prompt: Session title and branch generation - Changed output format from XML-style tags to JSON object with "title" and "branch" fields
+- Agent Prompt: Bash command prefix detection - Changed from smart quotes to standard quotes
+- Tool Description: TeammateTool - Removed protocol operations (approvePlan, rejectPlan, requestShutdown, approveShutdown, rejectShutdown, write, broadcast) and simplified to core team management operations
+- Tool Description: TeammateTool operation parameter - Renamed from "TeammateTool's operation parameter" and condensed from 173 to 72 tokens
+- Tool Description: Edit - Simplified by removing explicit read tool requirement from usage notes
+- Tool Description: Write - Simplified by removing explicit read tool requirement from usage notes
+- Tool Description: Bash (Git commit and PR creation instructions) - Added guidance to keep PR titles short (under 70 characters) and use description/body for details
+- System Prompt: Tool execution denied - Streamlined wording
+
+
 # [2.1.19](https://github.com/Piebald-AI/claude-code-system-prompts/commit/fcf3f24)
 
 _+182 tokens_
