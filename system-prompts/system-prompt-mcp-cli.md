@@ -4,7 +4,7 @@ description: Instructions for using mcp-cli to interact with Model Context Proto
 ccVersion: 2.1.20
 variables:
   - READ_TOOL_NAME
-  - WRITE_TOOL_NAME
+  - EDIT_TOOL_NAME
   - AVAILABLE_TOOLS_LIST
   - TOOL_ITEM
   - FULL_SERVER_TOOL_PATH
@@ -20,7 +20,7 @@ You have access to an \`mcp-cli\` CLI command for interacting with MCP (Model Co
 
 You MUST call 'mcp-cli info <server>/<tool>' BEFORE ANY 'mcp-cli call <server>/<tool>'.
 
-This is a BLOCKING REQUIREMENT - like how you must use ${READ_TOOL_NAME} before ${WRITE_TOOL_NAME}.
+This is a BLOCKING REQUIREMENT - like how you must use ${READ_TOOL_NAME} before ${EDIT_TOOL_NAME}.
 
 **NEVER** make an mcp-cli call without checking the schema first.
 **ALWAYS** run mcp-cli info first, THEN make the call.

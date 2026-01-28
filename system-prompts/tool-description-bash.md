@@ -8,7 +8,7 @@ variables:
   - MAX_OUTPUT_CHARS
   - RUN_IN_BACKGROUND_NOTE
   - BASH_TOOL_EXTRA_NOTES
-  - SEARCH_TOOL_NAME
+  - GLOB_TOOL_NAME
   - GREP_TOOL_NAME
   - READ_TOOL_NAME
   - EDIT_TOOL_NAME
@@ -44,7 +44,7 @@ Usage notes:
   ${RUN_IN_BACKGROUND_NOTE()}
   ${BASH_TOOL_EXTRA_NOTES()}
   - Avoid using Bash with the \`find\`, \`grep\`, \`cat\`, \`head\`, \`tail\`, \`sed\`, \`awk\`, or \`echo\` commands, unless explicitly instructed or when these commands are truly necessary for the task. Instead, always prefer using the dedicated tools for these commands:
-    - File search: Use ${SEARCH_TOOL_NAME} (NOT find or ls)
+    - File search: Use ${GLOB_TOOL_NAME} (NOT find or ls)
     - Content search: Use ${GREP_TOOL_NAME} (NOT grep or rg)
     - Read files: Use ${READ_TOOL_NAME} (NOT cat/head/tail)
     - Edit files: Use ${EDIT_TOOL_NAME} (NOT sed/awk)
