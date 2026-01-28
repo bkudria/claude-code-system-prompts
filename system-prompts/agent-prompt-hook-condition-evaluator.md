@@ -1,7 +1,7 @@
 <!--
-name: 'Agent Prompt: Prompt Hook execution'
-description: Prompt given to Claude when evaluating whether to pass or fail a prompt hook
-ccVersion: 2.1.20
+name: 'Agent Prompt: Hook condition evaluator'
+description: System prompt for evaluating hook conditions in Claude Code
+ccVersion: 2.1.21
 -->
 You are evaluating a hook in Claude Code.
 

@@ -34,7 +34,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 > [!important]
 > **NEW (January 23, 2026): We've added all of Claude Code's ~40 system reminders to this list&mdash;see [System Reminders](#system-reminders).**
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.20](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.20) (January 26th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 78 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.21](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.21) (January 27th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 79 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [changelog](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -99,6 +99,7 @@ Sub-agents and utilities.
 - [Agent Prompt: Command execution specialist](./system-prompts/agent-prompt-command-execution-specialist.md) (**109** tks) - System prompt for command execution agent focusing on bash commands.
 - [Agent Prompt: Conversation summarization](./system-prompts/agent-prompt-conversation-summarization.md) (**1121** tks) - System prompt for creating detailed conversation summaries.
 - [Agent Prompt: Exit plan mode with swarm](./system-prompts/agent-prompt-exit-plan-mode-with-swarm.md) (**440** tks) - System reminder for when ExitPlanMode is called with `isSwarm` set to true..
+- [Agent Prompt: Hook condition evaluator](./system-prompts/agent-prompt-hook-condition-evaluator.md) (**78** tks) - System prompt for evaluating hook conditions in Claude Code.
 - [Agent Prompt: Prompt Suggestion Generator (Stated Intent)](./system-prompts/agent-prompt-prompt-suggestion-generator-stated-intent.md) (**166** tks) - Instructions for generating prompt suggestions based on user's explicitly stated next steps.
 - [Agent Prompt: Prompt Suggestion Generator v2](./system-prompts/agent-prompt-prompt-suggestion-generator-v2.md) (**296** tks) - V2 instructions for generating prompt suggestions for Claude Code.
 - [Agent Prompt: Remember skill](./system-prompts/agent-prompt-remember-skill.md) (**1048** tks) - System prompt for the /remember skill that reviews session memories and updates CLAUDE.local.md with recurring patterns and learnings.
@@ -124,6 +125,7 @@ Misc large strings.
 Parts of the main system prompt.
 
 - [**System Prompt: Main system prompt**](./system-prompts/system-prompt-main-system-prompt.md) (**269** tks) - Core identity and capabilities of Claude Code as an interactive CLI assistant.
+- [System Prompt: Accessing past sessions](./system-prompts/system-prompt-accessing-past-sessions.md) (**329** tks) - Instructions for searching past session data including memory summaries and transcript logs.
 - [System Prompt: Chrome browser MCP tools](./system-prompts/system-prompt-chrome-browser-mcp-tools.md) (**156** tks) - Instructions for loading Chrome browser MCP tools via MCPSearch before use.
 - [System Prompt: Claude in Chrome browser automation](./system-prompts/system-prompt-claude-in-chrome-browser-automation.md) (**759** tks) - Instructions for using Claude in Chrome browser automation tools effectively.
 - [System Prompt: Doing tasks](./system-prompts/system-prompt-doing-tasks.md) (**445** tks) - Instructions for performing software engineering tasks.
@@ -138,7 +140,7 @@ Parts of the main system prompt.
 - [System Prompt: Tone and style](./system-prompts/system-prompt-tone-and-style.md) (**500** tks) - Guidelines for communication tone and response style.
 - [System Prompt: Tool Use Summary Generation](./system-prompts/system-prompt-tool-use-summary-generation.md) (**171** tks) - Prompt for generating summaries of tool usage.
 - [System Prompt: Tool execution denied](./system-prompts/system-prompt-tool-execution-denied.md) (**144** tks) - System prompt for when tool execution is denied.
-- [System Prompt: Tool usage policy](./system-prompts/system-prompt-tool-usage-policy.md) (**566** tks) - Policies and guidelines for tool usage.
+- [System Prompt: Tool usage policy](./system-prompts/system-prompt-tool-usage-policy.md) (**564** tks) - Policies and guidelines for tool usage.
 
 ### System Reminders
 
@@ -190,7 +192,7 @@ All Claude Code system reminders.
 - [Tool Description: AskUserQuestion](./system-prompts/tool-description-askuserquestion.md) (**194** tks) - Tool description for asking user questions..
 - [Tool Description: Bash](./system-prompts/tool-description-bash.md) (**1067** tks) - Description for the Bash tool, which allows Claude to run shell commands.
 - [Tool Description: Computer](./system-prompts/tool-description-computer.md) (**161** tks) - Main description for the Chrome browser computer automation tool.
-- [Tool Description: Edit](./system-prompts/tool-description-edit.md) (**242** tks) - Tool for performing exact string replacements in files.
+- [Tool Description: Edit](./system-prompts/tool-description-edit.md) (**246** tks) - Tool for performing exact string replacements in files.
 - [Tool Description: EnterPlanMode](./system-prompts/tool-description-enterplanmode.md) (**970** tks) - Tool description for entering plan mode to explore and design implementation approaches.
 - [Tool Description: ExitPlanMode](./system-prompts/tool-description-exitplanmode.md) (**417** tks) - Description for the ExitPlanMode tool, which presents a plan dialog for the user to approve.
 - [Tool Description: Glob](./system-prompts/tool-description-glob.md) (**122** tks) - Tool description for file pattern matching and searching by name.
@@ -203,12 +205,12 @@ All Claude Code system reminders.
 - [Tool Description: TaskCreate](./system-prompts/tool-description-taskcreate.md) (**558** tks) - Tool description for TaskCreate tool.
 - [Tool Description: Task](./system-prompts/tool-description-task.md) (**1311** tks) - Tool description for launching specialized sub-agents to handle complex tasks.
 - [Tool Description: TeammateTool operation parameter](./system-prompts/tool-description-teammatetool-operation-parameter.md) (**72** tks) - Description of the operation parameter for the TeammateTool.
-- [Tool Description: TeammateTool](./system-prompts/tool-description-teammatetool.md) (**2221** tks) - Tool for managing teams and coordinating teammates in a swarm.
+- [Tool Description: TeammateTool](./system-prompts/tool-description-teammatetool.md) (**2250** tks) - Tool for managing teams and coordinating teammates in a swarm.
 - [Tool Description: TodoWrite](./system-prompts/tool-description-todowrite.md) (**2167** tks) - Tool description for creating and managing task lists.
 - [Tool Description: ToolSearch](./system-prompts/tool-description-toolsearch.md) (**792** tks) - Tool description for loading and searching deferred tools before use.
 - [Tool Description: WebFetch](./system-prompts/tool-description-webfetch.md) (**297** tks) - Tool description for web fetch functionality.
 - [Tool Description: WebSearch](./system-prompts/tool-description-websearch.md) (**329** tks) - Tool description for web search functionality.
-- [Tool Description: Write](./system-prompts/tool-description-write.md) (**123** tks) - Tool for writing files to the local filesystem.
+- [Tool Description: Write](./system-prompts/tool-description-write.md) (**127** tks) - Tool for writing files to the local filesystem.
 
 **Additional notes for some Tool Desscriptions**
 
