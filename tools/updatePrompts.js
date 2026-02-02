@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, readdirSync, unlinkSync, mkdirSync, existsSync } from 'fs';
+import { readFileSync as readFileSyncOrig, writeFileSync as writeFileSyncOrig, readdirSync, unlinkSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -20,6 +20,9 @@ if (!ANTHROPIC_API_KEY) {
   console.error('Set it with: export ANTHROPIC_API_KEY=your-api-key');
   process.exit(1);
 }
+
+const readFileSync = (file) => readFileSyncOrig(file, 'utf-8').replace(/\r\n/g, "\n");
+const writeFileSync = (file, content) => writeFileSyncOrig(file, content.replace(/\n/g, "\r\n"));
 
 /**
  * Count tokens using Anthropic's token counting API
@@ -220,7 +223,7 @@ function createMarkdownContent(prompt, reconstructedContent) {
  */
 function parseMarkdownFile(filepath) {
   try {
-    const content = readFileSync(filepath, 'utf-8');
+    const content = readFileSync(filepath);
     const commentMatch = content.match(/<!--\n([\s\S]*?)\n-->/);
     if (!commentMatch) return null;
 
@@ -289,7 +292,7 @@ function createReadmeEntry(prompt, filename, tokens, isBold = false) {
 function parseReadmeTokenCounts() {
   const tokenCounts = new Map();
   try {
-    const readme = readFileSync(README_PATH, 'utf-8');
+    const readme = readFileSync(README_PATH);
     // Match patterns like: (./system-prompts/filename.md) (**123** tks)
     const regex = /\(\.\/system-prompts\/([^)]+\.md)\)\s*\(\*\*(\d+)\*\*\s*tks\)/g;
     let match;
@@ -307,7 +310,7 @@ function parseReadmeTokenCounts() {
  */
 async function updateFromJSON(jsonPath) {
   console.log(`Reading JSON from: ${jsonPath}`);
-  const jsonData = JSON.parse(readFileSync(jsonPath, 'utf-8'));
+  const jsonData = JSON.parse(readFileSync(jsonPath));
 
   console.log(`Version: ${jsonData.version}`);
   console.log(`Prompts count: ${jsonData.prompts.length}`);
@@ -409,7 +412,7 @@ async function updateFromJSON(jsonPath) {
  * Update README.md with new prompt information
  */
 function updateReadme(promptsByFilename, version, releaseDate, versionCount) {
-  let readme = readFileSync(README_PATH, 'utf-8');
+  let readme = readFileSync(README_PATH);
   const lines = readme.split('\n');
 
   // Update version in header with npm link and date
@@ -505,13 +508,11 @@ function updateReadme(promptsByFilename, version, releaseDate, versionCount) {
 
   // Data section (commented out if has entries)
   if (categories['Data']['main'].length > 0) {
-    newLines.push('<!--');
     newLines.push('### Data');
     newLines.push('');
-    newLines.push('Misc large strings.');
+    newLines.push('The content of various template files embedded in Claude Code.');
     newLines.push('');
     newLines.push(...categories['Data']['main']);
-    newLines.push('-->');
     newLines.push('');
   }
 
@@ -527,9 +528,6 @@ function updateReadme(promptsByFilename, version, releaseDate, versionCount) {
   newLines.push('### System Reminders');
   newLines.push('');
   newLines.push('Text for large system reminders.');
-  newLines.push('');
-  newLines.push('> [!NOTE]');
-  newLines.push('> Note that we\'re planning to add a **system reminder creator/editor** to [tweakcc](https://github.com/Piebald-AI/tweakcc); :+1: [this issue](https://github.com/Piebald-AI/tweakcc/issues/113) if you\'re interested in that idea.');
   newLines.push('');
   newLines.push(...categories['System Reminders']['main']);
   newLines.push('');
