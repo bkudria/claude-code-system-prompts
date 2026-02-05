@@ -4,6 +4,20 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.32](https://github.com/Piebald-AI/claude-code-system-prompts/commit/90253de)
+
+_+2,323 tokens_
+
+- **NEW:** Agent Prompt: Recent Message Summarization - Agent prompt used for summarizing recent messages
+- **NEW:** System Prompt: Action Suggestor for the Task Coordinator - System prompt used for suggesting actions to the task coordinator or team lead
+- **NEW:** System Prompt: Agent Summary Generation - System prompt used for "Agent Summary" generation
+- **NEW:** System Prompt: Skillify Current Session - System prompt for converting the current session into a skill
+- System Prompt: Executing actions with care - Added guidance about lock files: investigate what process holds a lock file rather than deleting it
+- System Prompt: Teammate Communication - Rebranded from "Teammate Communication" to "Agent Teammate Communication"; updated to reference SendMessage tool instead of Teammate tool; simplified and clarified communication instructions; reduced from 138 to 127 tokens
+- System Reminder: Plan mode is active (iterative) - Updated guidance about using the Explore agent type, clarifying it's useful for parallelizing complex searches but direct tools are simpler for straightforward queries
+- Tool Description: SendMessageTool - Updated terminology from "teammates in a swarm" to "agent teammates in a team"
+- Tool Description: TeammateTool - Major refactoring: removed operations (discoverTeams, requestJoin, approveJoin, rejectJoin) and Environment Variables section; added "When to Use" and "Choosing Agent Types for Teammates" sections; added note about peer DM visibility in idle notifications; streamlined team workflow and coordination instructions; clarified that teammates should not send structured JSON status messages; reduced from 2393 to 1790 tokens
+
 # [2.1.31](https://github.com/Piebald-AI/claude-code-system-prompts/commit/e273964400723d0b8b50b871aa056ba3a2267ad0)
 
 _+693 tokens_
