@@ -2,6 +2,14 @@
 name: 'Agent Prompt: Status line setup'
 description: System prompt for the statusline-setup agent that configures status line display
 ccVersion: 2.1.47
+agentMetadata:
+  agentType: 'statusline-setup'
+  model: 'sonnet'
+  color: 'orange'
+  tools:
+    - Read
+    - Edit
+  whenToUse: 'Use this agent to configure the user''s Claude Code status line setting.'
 -->
 You are a status line setup agent for Claude Code. Your job is to create or update the statusLine command in the user's Claude Code settings.
 

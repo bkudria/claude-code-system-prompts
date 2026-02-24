@@ -4,6 +4,43 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+#### [2.1.52](https://github.com/Piebald-AI/claude-code-system-prompts/commit/94cd8e5)
+
+<sub>_No changes to the system prompts in v2.1.52._</sub>
+
+#### [2.1.51](https://github.com/Piebald-AI/claude-code-system-prompts/commit/1988a63)
+
+_+6,918 tokens_
+
+- **NEW:** Agent Prompt: Quick PR creation - Streamlined prompt for creating a commit and pull request with pre-populated context (945 tks).
+- **NEW:** Agent Prompt: Quick git commit - Streamlined prompt for creating a single git commit with pre-populated context (507 tks).
+- **NEW:** Data: Agent SDK reference — TypeScript - TypeScript Agent SDK reference including installation, quick start, custom tools, and hooks (2287 tks).
+- **NEW:** Data: Claude Code version mismatch warning - Warning shown when Claude Code version is outdated (173 tks).
+- **NEW:** Skill: Create verifier skills - Prompt for creating verifier skills for the Verify agent to automatically verify code changes (2586 tks).
+- **NEW:** System Reminder: Hook JSON validation failed - Error when hook JSON output fails validation (320 tks).
+- **REMOVED:** Agent Prompt: Single-word search term extractor - Removed prompt for extracting single-word search terms from a user's query (361 tks).
+- Data: Agent SDK patterns — Python - Replaced `asyncio` with `anyio`; switched message type checks from `message.type == "result"` to `isinstance(message, ResultMessage)`; custom tools now require MCP server via `create_sdk_mcp_server` + `ClaudeSDKClient`; added `permission_mode="plan"` and `allow_dangerously_skip_permissions` for bypass mode (2080 → 2350 tks).
+- Data: Agent SDK reference — Python - Added `ClaudeSDKClient` interface with full lifecycle control; expanded built-in tools table (`AskUserQuestion`, `Task`); added `plan` and `dontAsk` permission modes; greatly expanded Common Options table with `max_budget_usd`, `output_format`, `thinking`, `betas`, `setting_sources`, `env`, and more; updated hook events list with 15+ event types (1718 → 2750 tks).
+- Data: Tool use concepts - Code execution promoted from beta to GA (`code_execution_20260120`); added new server-side tools sections for Web Search/Fetch (`web_search_20260209`, `web_fetch_20260209`) with dynamic filtering, Programmatic Tool Calling, Tool Search, and Tool Use Examples; removed beta requirement for memory tool; updated structured outputs guidance for `output_config.format` (2820 → 3640 tks).
+- Data: Tool use reference — Python - Migrated code execution and memory from `client.beta.messages.create` to `client.messages.create`; removed `betas` arrays; Files API beta now passed via `extra_headers` (4261 → 4180 tks).
+- Data: Tool use reference — TypeScript - Same beta→GA migration as Python; structured output example updated from `output_format` to `output_config.format` (3294 → 3228 tks).
+- Data: Claude API reference — Python - Added explicit TTL support for `cache_control` (`"ttl": "1h"`); extended adaptive thinking note to include Sonnet 4.6; added Stop Reasons table (`end_turn`, `max_tokens`, `tool_use`, `pause_turn`, `refusal`); updated rate limit error handling; changed Sonnet reference to `claude-sonnet-4-6` (2905 → 3248 tks).
+- Data: Claude API reference — TypeScript - Added explicit TTL for `cache_control`; extended adaptive thinking to Sonnet 4.6; added Stop Reasons table (2024 → 2388 tks).
+- Data: Claude API reference — Java - Updated SDK version 2.11.1 → 2.14.0; improved streaming with fluent stream API; added `anthropic-beta` header for structured outputs; added non-beta tool use section (1073 → 1226 tks).
+- Data: Claude API reference — C# - Removed "beta" label; expanded streaming example with typed `RawMessageStreamEvent` handling (458 → 550 tks).
+- Data: Claude API reference — Ruby - Updated tool runner to use `BaseModel` input schema pattern with `doc` method and `input` parameter (603 → 622 tks).
+- Data: Claude API reference — Go - Updated model constants from `ModelClaudeOpus4_5_20251101` to `ModelClaudeOpus4_6` (629 → 621 tks).
+- Data: Claude API reference — PHP - Removed "beta" label; updated SDK 0.4.0 → 0.5.0; switched from array syntax to named parameters (410 → 394 tks).
+- Data: Claude model catalog - Added Max Output column (128K for Opus, 64K for Sonnet/Haiku); Opus 4.6 now shows 1M beta context; added Model Descriptions section; moved Sonnet 3.7 and Haiku 3.5 from "deprecated" to "retired"; updated alias table accordingly (1349 → 1510 tks).
+- Data: HTTP error codes reference - Replaced human-readable error names with API error type strings (e.g., `invalid_request_error`); removed 422 status code, merging validation errors into 400; stripped escaped markdown formatting (1460 → 1387 tks).
+- Skill: Build with Claude API - Opus 4.6 now shows 1M beta context; stronger default-model guidance ("ALWAYS use `claude-opus-4-6`"); extended adaptive thinking and effort parameter to Sonnet 4.6; expanded thinking/budget_tokens deprecation notes; removed "beta" labels from C#/PHP SDKs (token count unchanged).
+- Skill: Build with Claude API (trigger) - Simplified trigger criteria to explicit SDK import checks (`anthropic`, `claude_agent_sdk`); clearer DO NOT TRIGGER rules (token count unchanged).
+- Tool Description: EnterWorktree - Added explicit "When NOT to Use" section; narrowed activation to only when user explicitly says "worktree"; no longer triggers for general isolation or branch requests (284 → 334 tks).
+- Data: Agent SDK patterns — TypeScript - Fixed session init check from `"subtype" in message` to `message.type === "system"` (1067 → 1069 tks).
+- Data: Message Batches API reference — Python - Added `"canceled"` result type handling (1481 → 1505 tks).
+- Widespread internal variable renames across 12 files (e.g., `ADDITIONAL_USER_INPUT` → `USER_INPUT`, `PREVIOUS_AGENT_SUMMARY` → `PREVIOUS_SUMMARY`, `SYSTEM_REMINDER` → `PLAN_STATE`, `COMMIT_CO_AUTHORED_BY_CLAUDE_CODE` → `ATTRIBUTION_TEXT`, `IS_TRUTHY_FN` → `IS_BACKGROUND_TASKS_DISABLED_FN`, `CAN_READ_PDF_FILES` → `IS_PDF_SUPPORTED_FN`, and others).
+
+
 #### [2.1.50](https://github.com/Piebald-AI/claude-code-system-prompts/commit/5fa66df)
 
 _+110 tokens_

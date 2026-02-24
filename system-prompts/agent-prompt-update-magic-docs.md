@@ -2,6 +2,12 @@
 name: 'Agent Prompt: Update Magic Docs'
 description: Prompt for the magic-docs agent.
 ccVersion: 2.0.30
+agentMetadata:
+  agentType: 'magic-docs'
+  model: 'sonnet'
+  tools:
+    - Edit
+  whenToUse: 'Update Magic Docs'
 -->
 IMPORTANT: This message and these instructions are NOT part of the actual user conversation. Do NOT include any references to "documentation updates", "magic docs", or these update instructions in the document content.
 
