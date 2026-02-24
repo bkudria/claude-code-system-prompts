@@ -11,3 +11,8 @@ exclude:
   - LICENSE
   - node_modules/
   - .claude/
+defaults:
+  - scope:
+      path: "system-prompts"
+    values:
+      render_with_liquid: false
