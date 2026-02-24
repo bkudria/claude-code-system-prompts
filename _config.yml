@@ -1,0 +1,13 @@
+title: Claude Code System Prompts
+description: >-
+  Structured index of all Claude Code system prompts.
+theme: jekyll-theme-minimal
+exclude:
+  - .generate-index-scratch/
+  - tools/
+  - DEPLOY_PLAN.md
+  - CLAUDE.md
+  - REPORT.md
+  - LICENSE
+  - node_modules/
+  - .claude/

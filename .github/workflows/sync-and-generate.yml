@@ -1,0 +1,72 @@
+name: Sync upstream and generate index
+
+on:
+  schedule:
+    - cron: '17 */4 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: sync-and-generate
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream https://github.com/Piebald-AI/claude-code-system-prompts.git
+          git fetch upstream main
+
+      - name: Update upstream branch
+        run: |
+          git fetch upstream main:upstream
+          git push origin upstream
+
+      - name: Merge upstream into main
+        id: merge
+        run: |
+          BEFORE=$(git rev-parse HEAD)
+          git merge upstream --no-edit
+          AFTER=$(git rev-parse HEAD)
+          if [ "$BEFORE" = "$AFTER" ]; then
+            echo "new_commits=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "new_commits=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        if: steps.merge.outputs.new_commits == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate index
+        if: steps.merge.outputs.new_commits == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node tools/orchestrate-index.js --output index.md
+
+      - name: Commit and push
+        if: steps.merge.outputs.new_commits == 'true'
+        run: |
+          git add index.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate index.md from upstream changes"
+          fi
+          git push origin main
