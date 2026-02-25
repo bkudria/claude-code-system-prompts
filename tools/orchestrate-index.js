@@ -16,7 +16,7 @@ const path = require('path');
 const { validateSummaries, validateClusters, validateClusterSummaries, validateHierarchy } = require('./validate');
 const { generateIndex } = require('./generate-index');
 const { buildInlinedBatchPrompt, buildInlinedClusterPrompt, buildInlinedClusterSummarizerPrompt, buildRootSummaryPrompt, buildOrganizeHierarchyPrompt } = require('./prompt-builders');
-const { parseModelJSON, runModel, runModelsConcurrently, collectBatchResults } = require('./model');
+const { parseModelJSON, runModel, runModelsConcurrently } = require('./model');
 
 // ---------------------------------------------------------------------------
 // Hierarchy pruning
@@ -322,8 +322,55 @@ async function clusterAndSummarize(allSummaries, config, clustersPath) {
     return { ok: true, cost: result.cost };
   });
 
-  const csResults = await runModelsConcurrently(csTaskFns, config.maxConcurrent);
-  sumCost += collectBatchResults(csResults);
+  const MAX_CS_RETRIES = 2;
+  let csResults = await runModelsConcurrently(csTaskFns, config.maxConcurrent);
+  let csBatchCost = 0;
+
+  // Process results, identify failures
+  let failedCSIndices = [];
+  for (let j = 0; j < csResults.length; j++) {
+    const r = csResults[j];
+    const v = r.status === 'fulfilled' ? r.value : { ok: false, cost: 0, error: r.reason };
+    csBatchCost += v.cost;
+    if (!v.ok) failedCSIndices.push(j);
+  }
+
+  // Retry failed batches
+  for (let retry = 1; retry <= MAX_CS_RETRIES && failedCSIndices.length > 0; retry++) {
+    log('warn', `Cluster-summarize: retrying ${failedCSIndices.length} failed batch(es) (attempt ${retry + 1}/${MAX_CS_RETRIES + 1})`);
+
+    const retryCSTaskFns = failedCSIndices.map((origIdx) => async () => {
+      const { system, user } = buildInlinedClusterSummarizerPrompt(batches[origIdx], leafSummaryMap);
+      const result = await runModel(config.summarizerModel, user, { timeout: 120_000, temperature: 0.5, system });
+      if (!result.ok || !result.text) {
+        return { ok: false, cost: result.cost, error: `cluster batch ${origIdx + 1}: ${result.error || 'empty result'}` };
+      }
+      const parsed = parseModelJSON(result.text.trim());
+      if (!Array.isArray(parsed)) {
+        return { ok: false, cost: result.cost, error: `cluster batch ${origIdx + 1}: failed to parse JSON array` };
+      }
+      for (const cs of parsed) {
+        if (cs.id && cs.name && cs.summary && cs.keywords) allClusterSummaries.push(cs);
+      }
+      return { ok: true, cost: result.cost };
+    });
+
+    const retryCSResults = await runModelsConcurrently(retryCSTaskFns, config.maxConcurrent);
+    const stillFailed = [];
+    for (let k = 0; k < retryCSResults.length; k++) {
+      const r = retryCSResults[k];
+      const v = r.status === 'fulfilled' ? r.value : { ok: false, cost: 0, error: r.reason };
+      csBatchCost += v.cost;
+      if (!v.ok) stillFailed.push(failedCSIndices[k]);
+    }
+    failedCSIndices = stillFailed;
+  }
+
+  if (failedCSIndices.length > 0) {
+    throw new Error(`${failedCSIndices.length} cluster-summarize batch(es) failed after ${MAX_CS_RETRIES + 1} attempts: batches ${failedCSIndices.map(i => i + 1).join(', ')}`);
+  }
+
+  sumCost += csBatchCost;
 
   const clusterSummaryMap = new Map(allClusterSummaries.map(cs => [cs.id, cs]));
 
@@ -418,8 +465,56 @@ async function main() {
       return { ok: true, cost: result.cost };
     });
 
-    const results = await runModelsConcurrently(taskFns, config.maxConcurrent);
-    const batchCost = collectBatchResults(results);
+    const MAX_SUMMARIZE_RETRIES = 2;
+    let results = await runModelsConcurrently(taskFns, config.maxConcurrent);
+    let batchCost = 0;
+
+    // Process results, identify failures
+    let failedBatchIndices = [];
+    for (let j = 0; j < results.length; j++) {
+      const r = results[j];
+      const v = r.status === 'fulfilled' ? r.value : { ok: false, cost: 0, error: r.reason };
+      batchCost += v.cost;
+      if (!v.ok) failedBatchIndices.push(j);
+    }
+
+    // Retry failed batches
+    for (let retry = 1; retry <= MAX_SUMMARIZE_RETRIES && failedBatchIndices.length > 0; retry++) {
+      log('warn', `Summarize: retrying ${failedBatchIndices.length} failed batch(es) (attempt ${retry + 1}/${MAX_SUMMARIZE_RETRIES + 1})`);
+
+      const retryTaskFns = failedBatchIndices.map((origIdx) => async () => {
+        const { system, user } = buildInlinedBatchPrompt(batches[origIdx], allMetadata);
+        const result = await runModel(config.summarizerModel, user, { timeout: 120_000, temperature: 0.5, system });
+        if (!result.ok || !result.text) {
+          return { ok: false, cost: result.cost, error: `batch ${origIdx + 1}: ${result.error || 'empty result'}` };
+        }
+        const parsed = parseModelJSON(result.text.trim());
+        if (!Array.isArray(parsed)) {
+          return { ok: false, cost: result.cost, error: `batch ${origIdx + 1}: failed to parse JSON array` };
+        }
+        for (const s of parsed) {
+          if (s.file && s.summary) {
+            s.id = s.file.replace(/\.md$/, '');
+            collectedSummaries.push(s);
+          }
+        }
+        return { ok: true, cost: result.cost };
+      });
+
+      const retryResults = await runModelsConcurrently(retryTaskFns, config.maxConcurrent);
+      const stillFailed = [];
+      for (let k = 0; k < retryResults.length; k++) {
+        const r = retryResults[k];
+        const v = r.status === 'fulfilled' ? r.value : { ok: false, cost: 0, error: r.reason };
+        batchCost += v.cost;
+        if (!v.ok) stillFailed.push(failedBatchIndices[k]);
+      }
+      failedBatchIndices = stillFailed;
+    }
+
+    if (failedBatchIndices.length > 0) {
+      throw new Error(`${failedBatchIndices.length} summarize batch(es) failed after ${MAX_SUMMARIZE_RETRIES + 1} attempts: batches ${failedBatchIndices.map(i => i + 1).join(', ')}`);
+    }
 
     allSummaries = collectedSummaries;
 

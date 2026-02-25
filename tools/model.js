@@ -25,14 +25,29 @@ const MODEL_PRICING = {
  * Returns the parsed value, or undefined if parsing fails.
  */
 function parseModelJSON(text) {
+  // Strategy 1: direct parse (text is pure JSON)
   try {
     return JSON.parse(text);
-  } catch {
-    const match = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-    if (match) {
-      try { return JSON.parse(match[1].trim()); } catch {}
+  } catch {}
+
+  // Strategy 2: extract from markdown code fences
+  const match = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (match) {
+    try { return JSON.parse(match[1].trim()); } catch {}
+  }
+
+  // Strategy 3: find first [ or { and parse to last matching ] or }
+  // Handles preamble/postscript text around JSON
+  const firstBracket = text.search(/[\[{]/);
+  if (firstBracket !== -1) {
+    const opener = text[firstBracket];
+    const closer = opener === '[' ? ']' : '}';
+    const lastCloser = text.lastIndexOf(closer);
+    if (lastCloser > firstBracket) {
+      try { return JSON.parse(text.slice(firstBracket, lastCloser + 1)); } catch {}
     }
   }
+
   return undefined;
 }
 
