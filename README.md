@@ -34,7 +34,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 > [!important]
 > **NEW (January 23, 2026): We've added all of Claude Code's ~40 system reminders to this list&mdash;see [System Reminders](#system-reminders).**
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.52](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.52) (February 23rd, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 106 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.55](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.55) (February 24th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 107 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [changelog](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -99,9 +99,9 @@ Sub-agents and utilities.
 - [Agent Prompt: Bash command file path extraction](./system-prompts/agent-prompt-bash-command-file-path-extraction.md) (**286** tks) - System prompt for extracting file paths from bash command output.
 - [Agent Prompt: Bash command prefix detection](./system-prompts/agent-prompt-bash-command-prefix-detection.md) (**823** tks) - System prompt for detecting command prefixes and command injection.
 - [Agent Prompt: Claude guide agent](./system-prompts/agent-prompt-claude-guide-agent.md) (**761** tks) - System prompt for the claude-guide agent that helps users understand and use Claude Code, the Claude Agent SDK and the Claude API effectively..
-- [Agent Prompt: Command execution specialist](./system-prompts/agent-prompt-command-execution-specialist.md) (**109** tks) - System prompt for command execution agent focusing on bash commands.
 - [Agent Prompt: Conversation summarization](./system-prompts/agent-prompt-conversation-summarization.md) (**1121** tks) - System prompt for creating detailed conversation summaries.
 - [Agent Prompt: Hook condition evaluator](./system-prompts/agent-prompt-hook-condition-evaluator.md) (**78** tks) - System prompt for evaluating hook conditions in Claude Code.
+- [Agent Prompt: Memory selection](./system-prompts/agent-prompt-memory-selection.md) (**156** tks) - Instructions for selecting relevant memories for a user query.
 - [Agent Prompt: Prompt Suggestion Generator v2](./system-prompts/agent-prompt-prompt-suggestion-generator-v2.md) (**296** tks) - V2 instructions for generating prompt suggestions for Claude Code.
 - [Agent Prompt: Quick PR creation](./system-prompts/agent-prompt-quick-pr-creation.md) (**945** tks) - Streamlined prompt for creating a commit and pull request with pre-populated context.
 - [Agent Prompt: Quick git commit](./system-prompts/agent-prompt-quick-git-commit.md) (**507** tks) - Streamlined prompt for creating a single git commit with pre-populated context.
@@ -148,15 +148,25 @@ The content of various template files embedded in Claude Code.
 
 Parts of the main system prompt.
 
-- [**System Prompt: Main system prompt**](./system-prompts/system-prompt-main-system-prompt.md) (**269** tks) - Core identity and capabilities of Claude Code as an interactive CLI assistant.
 - [System Prompt: Agent Summary Generation](./system-prompts/system-prompt-agent-summary-generation.md) (**178** tks) - System prompt used for "Agent Summary" generation..
 - [System Prompt: Agent memory instructions](./system-prompts/system-prompt-agent-memory-instructions.md) (**337** tks) - Instructions for including memory update guidance in agent system prompts.
 - [System Prompt: Censoring assistance with malicious activities](./system-prompts/system-prompt-censoring-assistance-with-malicious-activities.md) (**98** tks) - Guidelines for assisting with authorized security testing, defensive security, CTF challenges, and educational contexts while censoring requests for malicious activities.
 - [System Prompt: Chrome browser MCP tools](./system-prompts/system-prompt-chrome-browser-mcp-tools.md) (**156** tks) - Instructions for loading Chrome browser MCP tools via MCPSearch before use.
 - [System Prompt: Claude in Chrome browser automation](./system-prompts/system-prompt-claude-in-chrome-browser-automation.md) (**759** tks) - Instructions for using Claude in Chrome browser automation tools effectively.
-- [System Prompt: Conditional delegate codebase exploration](./system-prompts/system-prompt-conditional-delegate-codebase-exploration.md) (**249** tks) - Instructions for when to use the Explore subagent versus calling tools directly..
 - [System Prompt: Context compaction summary](./system-prompts/system-prompt-context-compaction-summary.md) (**278** tks) - Prompt used for context compaction summary (for the SDK).
-- [System Prompt: Doing tasks](./system-prompts/system-prompt-doing-tasks.md) (**437** tks) - Instructions for performing software engineering tasks.
+- [System Prompt: Doing tasks (ambitious tasks)](./system-prompts/system-prompt-doing-tasks-ambitious-tasks.md) (**47** tks) - Allow users to complete ambitious tasks; defer to user judgement on scope.
+- [System Prompt: Doing tasks (avoid over-engineering)](./system-prompts/system-prompt-doing-tasks-avoid-over-engineering.md) (**30** tks) - Only make changes that are directly requested or clearly necessary.
+- [System Prompt: Doing tasks (blocked approach)](./system-prompts/system-prompt-doing-tasks-blocked-approach.md) (**90** tks) - Consider alternatives when blocked instead of brute-forcing.
+- [System Prompt: Doing tasks (help and feedback)](./system-prompts/system-prompt-doing-tasks-help-and-feedback.md) (**24** tks) - How to inform users about help and feedback channels.
+- [System Prompt: Doing tasks (minimize file creation)](./system-prompts/system-prompt-doing-tasks-minimize-file-creation.md) (**47** tks) - Prefer editing existing files over creating new ones.
+- [System Prompt: Doing tasks (no compatibility hacks)](./system-prompts/system-prompt-doing-tasks-no-compatibility-hacks.md) (**52** tks) - Delete unused code completely rather than adding compatibility shims.
+- [System Prompt: Doing tasks (no premature abstractions)](./system-prompts/system-prompt-doing-tasks-no-premature-abstractions.md) (**60** tks) - Do not create abstractions for one-time operations or hypothetical requirements.
+- [System Prompt: Doing tasks (no time estimates)](./system-prompts/system-prompt-doing-tasks-no-time-estimates.md) (**47** tks) - Avoid giving time estimates or predictions.
+- [System Prompt: Doing tasks (no unnecessary additions)](./system-prompts/system-prompt-doing-tasks-no-unnecessary-additions.md) (**78** tks) - Do not add features, refactor, or improve beyond what was asked.
+- [System Prompt: Doing tasks (no unnecessary error handling)](./system-prompts/system-prompt-doing-tasks-no-unnecessary-error-handling.md) (**64** tks) - Do not add error handling for impossible scenarios; only validate at boundaries.
+- [System Prompt: Doing tasks (read before modifying)](./system-prompts/system-prompt-doing-tasks-read-before-modifying.md) (**46** tks) - Read and understand existing code before suggesting modifications.
+- [System Prompt: Doing tasks (security)](./system-prompts/system-prompt-doing-tasks-security.md) (**67** tks) - Avoid introducing security vulnerabilities like injection, XSS, etc..
+- [System Prompt: Doing tasks (software engineering focus)](./system-prompts/system-prompt-doing-tasks-software-engineering-focus.md) (**104** tks) - Users primarily request software engineering tasks; interpret instructions in that context.
 - [System Prompt: Executing actions with care](./system-prompts/system-prompt-executing-actions-with-care.md) (**541** tks) - Instructions for executing actions carefully..
 - [System Prompt: Git status](./system-prompts/system-prompt-git-status.md) (**97** tks) - System prompt for displaying the current git status at the start of the conversation.
 - [System Prompt: Hooks Configuration](./system-prompts/system-prompt-hooks-configuration.md) (**1461** tks) - System prompt for hooks configuration.  Used for above Claude Code config skill..
@@ -171,13 +181,24 @@ Parts of the main system prompt.
 - [System Prompt: Parallel tool call note (part of "Tool usage policy")](./system-prompts/system-prompt-parallel-tool-call-note-part-of-tool-usage-policy.md) (**102** tks) - System prompt for telling Claude to using parallel tool calls.
 - [System Prompt: Scratchpad directory](./system-prompts/system-prompt-scratchpad-directory.md) (**170** tks) - Instructions for using a dedicated scratchpad directory for temporary files.
 - [System Prompt: Skillify Current Session](./system-prompts/system-prompt-skillify-current-session.md) (**1882** tks) - System prompt for converting the current session in to a skill..
-- [System Prompt: Task management](./system-prompts/system-prompt-task-management.md) (**565** tks) - Instructions for using task management tools.
 - [System Prompt: Teammate Communication](./system-prompts/system-prompt-teammate-communication.md) (**127** tks) - System prompt for teammate communication in swarm.
-- [System Prompt: Tone and style](./system-prompts/system-prompt-tone-and-style.md) (**500** tks) - Guidelines for communication tone and response style.
+- [System Prompt: Tone and style (code references)](./system-prompts/system-prompt-tone-and-style-code-references.md) (**39** tks) - Instruction to include file_path:line_number when referencing code.
+- [System Prompt: Tone and style (concise output — detailed)](./system-prompts/system-prompt-tone-and-style-concise-output-detailed.md) (**89** tks) - Instruction for concise, polished output without filler or inner monologue.
+- [System Prompt: Tone and style (concise output — short)](./system-prompts/system-prompt-tone-and-style-concise-output-short.md) (**16** tks) - Instruction for short and concise responses.
 - [System Prompt: Tool Use Summary Generation](./system-prompts/system-prompt-tool-use-summary-generation.md) (**171** tks) - Prompt for generating summaries of tool usage.
 - [System Prompt: Tool execution denied](./system-prompts/system-prompt-tool-execution-denied.md) (**144** tks) - System prompt for when tool execution is denied.
 - [System Prompt: Tool permission mode](./system-prompts/system-prompt-tool-permission-mode.md) (**155** tks) - Guidance on tool permission modes and handling denied tool calls.
-- [System Prompt: Tool usage policy](./system-prompts/system-prompt-tool-usage-policy.md) (**352** tks) - Policies and guidelines for tool usage.
+- [System Prompt: Tool usage (create files)](./system-prompts/system-prompt-tool-usage-create-files.md) (**30** tks) - Prefer Write tool instead of cat heredoc or echo redirection.
+- [System Prompt: Tool usage (delegate exploration)](./system-prompts/system-prompt-tool-usage-delegate-exploration.md) (**114** tks) - Use Task tool for broader codebase exploration and deep research.
+- [System Prompt: Tool usage (direct search)](./system-prompts/system-prompt-tool-usage-direct-search.md) (**52** tks) - Use Glob/Grep directly for simple, directed searches.
+- [System Prompt: Tool usage (edit files)](./system-prompts/system-prompt-tool-usage-edit-files.md) (**26** tks) - Prefer Edit tool instead of sed/awk.
+- [System Prompt: Tool usage (read files)](./system-prompts/system-prompt-tool-usage-read-files.md) (**29** tks) - Prefer Read tool instead of cat/head/tail/sed.
+- [System Prompt: Tool usage (reserve Bash)](./system-prompts/system-prompt-tool-usage-reserve-bash.md) (**75** tks) - Reserve Bash tool exclusively for system commands and terminal operations.
+- [System Prompt: Tool usage (search content)](./system-prompts/system-prompt-tool-usage-search-content.md) (**30** tks) - Prefer Grep tool instead of grep or rg.
+- [System Prompt: Tool usage (search files)](./system-prompts/system-prompt-tool-usage-search-files.md) (**26** tks) - Prefer Glob tool instead of find or ls.
+- [System Prompt: Tool usage (skill invocation)](./system-prompts/system-prompt-tool-usage-skill-invocation.md) (**102** tks) - Slash commands invoke user-invocable skills via Skill tool.
+- [System Prompt: Tool usage (subagent guidance)](./system-prompts/system-prompt-tool-usage-subagent-guidance.md) (**103** tks) - Guidance on when and how to use subagents effectively.
+- [System Prompt: Tool usage (task management)](./system-prompts/system-prompt-tool-usage-task-management.md) (**73** tks) - Use TodoWrite to break down and track work progress.
 
 ### System Reminders
 
@@ -228,7 +249,6 @@ Text for large system reminders.
 ### Builtin Tool Descriptions
 
 - [Tool Description: AskUserQuestion](./system-prompts/tool-description-askuserquestion.md) (**287** tks) - Tool description for asking user questions..
-- [Tool Description: Bash](./system-prompts/tool-description-bash.md) (**1067** tks) - Description for the Bash tool, which allows Claude to run shell commands.
 - [Tool Description: Computer](./system-prompts/tool-description-computer.md) (**161** tks) - Main description for the Chrome browser computer automation tool.
 - [Tool Description: Edit](./system-prompts/tool-description-edit.md) (**246** tks) - Tool for performing exact string replacements in files.
 - [Tool Description: EnterPlanMode](./system-prompts/tool-description-enterplanmode.md) (**878** tks) - Tool description for entering plan mode to explore and design implementation approaches.
@@ -243,7 +263,7 @@ Text for large system reminders.
 - [Tool Description: Skill](./system-prompts/tool-description-skill.md) (**326** tks) - Tool description for executing skills in the main conversation.
 - [Tool Description: Sleep](./system-prompts/tool-description-sleep.md) (**154** tks) - Tool for waiting/sleeping with early wake capability on user input.
 - [Tool Description: TaskCreate](./system-prompts/tool-description-taskcreate.md) (**558** tks) - Tool description for TaskCreate tool.
-- [Tool Description: Task](./system-prompts/tool-description-task.md) (**1317** tks) - Tool description for launching specialized sub-agents to handle complex tasks.
+- [Tool Description: Task](./system-prompts/tool-description-task.md) (**1331** tks) - Tool description for launching specialized sub-agents to handle complex tasks.
 - [Tool Description: TeamDelete](./system-prompts/tool-description-teamdelete.md) (**154** tks) - Tool description for the TeamDelete tool.
 - [Tool Description: TeammateTool](./system-prompts/tool-description-teammatetool.md) (**1642** tks) - Tool for managing teams and coordinating teammates in a swarm.
 - [Tool Description: TodoWrite](./system-prompts/tool-description-todowrite.md) (**2167** tks) - Tool description for creating and managing task lists.
@@ -251,10 +271,54 @@ Text for large system reminders.
 - [Tool Description: ToolSearch](./system-prompts/tool-description-toolsearch.md) (**144** tks) - Tool description for loading and searching deferred tools before use.
 - [Tool Description: WebFetch](./system-prompts/tool-description-webfetch.md) (**297** tks) - Tool description for web fetch functionality.
 - [Tool Description: WebSearch](./system-prompts/tool-description-websearch.md) (**319** tks) - Tool description for web search functionality.
-- [Tool Description: Write](./system-prompts/tool-description-write.md) (**127** tks) - Tool for writing files to the local filesystem.
+- [Tool Description: Write](./system-prompts/tool-description-write.md) (**129** tks) - Tool for writing files to the local filesystem.
 
 **Additional notes for some Tool Desscriptions**
 
 - [Tool Description: Bash (Git commit and PR creation instructions)](./system-prompts/tool-description-bash-git-commit-and-pr-creation-instructions.md) (**1558** tks) - Instructions for creating git commits and GitHub pull requests.
-- [Tool Description: Bash (sandbox note)](./system-prompts/tool-description-bash-sandbox-note.md) (**438** tks) - Note about bash command sandboxing.
+- [Tool Description: Bash (alternative — communication)](./system-prompts/tool-description-bash-alternative-communication.md) (**18** tks) - Bash tool alternative: output text directly instead of echo/printf.
+- [Tool Description: Bash (alternative — content search)](./system-prompts/tool-description-bash-alternative-content-search.md) (**27** tks) - Bash tool alternative: use Grep for content search instead of grep/rg.
+- [Tool Description: Bash (alternative — edit files)](./system-prompts/tool-description-bash-alternative-edit-files.md) (**27** tks) - Bash tool alternative: use Edit for file editing instead of sed/awk.
+- [Tool Description: Bash (alternative — file search)](./system-prompts/tool-description-bash-alternative-file-search.md) (**26** tks) - Bash tool alternative: use Glob for file search instead of find/ls.
+- [Tool Description: Bash (alternative — read files)](./system-prompts/tool-description-bash-alternative-read-files.md) (**27** tks) - Bash tool alternative: use Read for file reading instead of cat/head/tail.
+- [Tool Description: Bash (alternative — write files)](./system-prompts/tool-description-bash-alternative-write-files.md) (**29** tks) - Bash tool alternative: use Write for file writing instead of echo/cat.
+- [Tool Description: Bash (built-in tools note)](./system-prompts/tool-description-bash-built-in-tools-note.md) (**53** tks) - Note that built-in tools provide better UX than Bash equivalents.
+- [Tool Description: Bash (command description)](./system-prompts/tool-description-bash-command-description.md) (**71** tks) - Bash tool instruction: write clear command descriptions.
+- [Tool Description: Bash (git — avoid destructive ops)](./system-prompts/tool-description-bash-git-avoid-destructive-ops.md) (**58** tks) - Bash tool git instruction: consider safer alternatives to destructive operations.
+- [Tool Description: Bash (git — never skip hooks)](./system-prompts/tool-description-bash-git-never-skip-hooks.md) (**59** tks) - Bash tool git instruction: never skip hooks or bypass signing unless user requests it.
+- [Tool Description: Bash (git — prefer new commits)](./system-prompts/tool-description-bash-git-prefer-new-commits.md) (**22** tks) - Bash tool git instruction: prefer new commits over amending.
+- [Tool Description: Bash (maintain cwd)](./system-prompts/tool-description-bash-maintain-cwd.md) (**41** tks) - Bash tool instruction: use absolute paths and avoid cd.
+- [Tool Description: Bash (no newlines)](./system-prompts/tool-description-bash-no-newlines.md) (**24** tks) - Bash tool instruction: do not use newlines to separate commands.
+- [Tool Description: Bash (overview)](./system-prompts/tool-description-bash-overview.md) (**19** tks) - Opening line of the Bash tool description.
+- [Tool Description: Bash (parallel commands)](./system-prompts/tool-description-bash-parallel-commands.md) (**72** tks) - Bash tool instruction: run independent commands as parallel tool calls.
+- [Tool Description: Bash (prefer dedicated tools)](./system-prompts/tool-description-bash-prefer-dedicated-tools.md) (**82** tks) - Warning to prefer dedicated tools over Bash for find, grep, cat, etc..
+- [Tool Description: Bash (quote file paths)](./system-prompts/tool-description-bash-quote-file-paths.md) (**35** tks) - Bash tool instruction: quote file paths containing spaces.
+- [Tool Description: Bash (sandbox — adjust settings)](./system-prompts/tool-description-bash-sandbox-adjust-settings.md) (**26** tks) - Work with user to adjust sandbox settings on failure.
+- [Tool Description: Bash (sandbox — default to sandbox)](./system-prompts/tool-description-bash-sandbox-default-to-sandbox.md) (**38** tks) - Default to sandbox; only bypass when user asks or evidence of sandbox restriction.
+- [Tool Description: Bash (sandbox — evidence list header)](./system-prompts/tool-description-bash-sandbox-evidence-list-header.md) (**15** tks) - Header for list of sandbox-caused failure evidence.
+- [Tool Description: Bash (sandbox — evidence: access denied)](./system-prompts/tool-description-bash-sandbox-evidence-access-denied.md) (**15** tks) - Sandbox evidence: access denied to paths outside allowed directories.
+- [Tool Description: Bash (sandbox — evidence: network failures)](./system-prompts/tool-description-bash-sandbox-evidence-network-failures.md) (**17** tks) - Sandbox evidence: network connection failures to non-whitelisted hosts.
+- [Tool Description: Bash (sandbox — evidence: operation not permitted)](./system-prompts/tool-description-bash-sandbox-evidence-operation-not-permitted.md) (**18** tks) - Sandbox evidence: operation not permitted errors.
+- [Tool Description: Bash (sandbox — evidence: unix socket errors)](./system-prompts/tool-description-bash-sandbox-evidence-unix-socket-errors.md) (**11** tks) - Sandbox evidence: unix socket connection errors.
+- [Tool Description: Bash (sandbox — explain restriction)](./system-prompts/tool-description-bash-sandbox-explain-restriction.md) (**36** tks) - Explain which sandbox restriction caused the failure.
+- [Tool Description: Bash (sandbox — failure evidence condition)](./system-prompts/tool-description-bash-sandbox-failure-evidence-condition.md) (**48** tks) - Condition: command failed with evidence of sandbox restrictions.
+- [Tool Description: Bash (sandbox — mandatory mode)](./system-prompts/tool-description-bash-sandbox-mandatory-mode.md) (**34** tks) - Policy: all commands must run in sandbox mode.
+- [Tool Description: Bash (sandbox — no exceptions)](./system-prompts/tool-description-bash-sandbox-no-exceptions.md) (**17** tks) - Commands cannot run outside sandbox under any circumstances.
+- [Tool Description: Bash (sandbox — no sensitive paths)](./system-prompts/tool-description-bash-sandbox-no-sensitive-paths.md) (**36** tks) - Do not suggest adding sensitive paths to sandbox allowlist.
+- [Tool Description: Bash (sandbox — per-command)](./system-prompts/tool-description-bash-sandbox-per-command.md) (**52** tks) - Treat each command individually; default to sandbox for future commands.
+- [Tool Description: Bash (sandbox — response header)](./system-prompts/tool-description-bash-sandbox-response-header.md) (**17** tks) - Header for how to respond when seeing sandbox-caused failures.
+- [Tool Description: Bash (sandbox — retry without sandbox)](./system-prompts/tool-description-bash-sandbox-retry-without-sandbox.md) (**33** tks) - Immediately retry with dangerouslyDisableSandbox on sandbox failure.
+- [Tool Description: Bash (sandbox — tmpdir)](./system-prompts/tool-description-bash-sandbox-tmpdir.md) (**102** tks) - Use $TMPDIR for temporary files in sandbox mode.
+- [Tool Description: Bash (sandbox — user permission prompt)](./system-prompts/tool-description-bash-sandbox-user-permission-prompt.md) (**14** tks) - Note that disabling sandbox will prompt user for permission.
+- [Tool Description: Bash (semicolon usage)](./system-prompts/tool-description-bash-semicolon-usage.md) (**29** tks) - Bash tool instruction: use semicolons when sequential order matters but failure does not.
+- [Tool Description: Bash (sequential commands)](./system-prompts/tool-description-bash-sequential-commands.md) (**42** tks) - Bash tool instruction: chain dependent commands with &&.
+- [Tool Description: Bash (sleep — keep short)](./system-prompts/tool-description-bash-sleep-keep-short.md) (**29** tks) - Bash tool instruction: keep sleep duration to 1-5 seconds.
+- [Tool Description: Bash (sleep — no polling background tasks)](./system-prompts/tool-description-bash-sleep-no-polling-background-tasks.md) (**37** tks) - Bash tool instruction: do not poll background tasks, wait for notification.
+- [Tool Description: Bash (sleep — no retry loops)](./system-prompts/tool-description-bash-sleep-no-retry-loops.md) (**28** tks) - Bash tool instruction: diagnose failures instead of retrying in sleep loops.
+- [Tool Description: Bash (sleep — run immediately)](./system-prompts/tool-description-bash-sleep-run-immediately.md) (**21** tks) - Bash tool instruction: do not sleep between commands that can run immediately.
+- [Tool Description: Bash (sleep — use check commands)](./system-prompts/tool-description-bash-sleep-use-check-commands.md) (**34** tks) - Bash tool instruction: use check commands rather than sleeping when polling.
+- [Tool Description: Bash (sleep — use run_in_background)](./system-prompts/tool-description-bash-sleep-use-run_in_background.md) (**48** tks) - Bash tool instruction: use run_in_background for long-running commands.
+- [Tool Description: Bash (timeout)](./system-prompts/tool-description-bash-timeout.md) (**75** tks) - Bash tool instruction: optional timeout configuration.
+- [Tool Description: Bash (verify parent directory)](./system-prompts/tool-description-bash-verify-parent-directory.md) (**38** tks) - Bash tool instruction: verify parent directory before creating files.
+- [Tool Description: Bash (working directory)](./system-prompts/tool-description-bash-working-directory.md) (**37** tks) - Bash tool note about working directory persistence and shell state.
 - [Tool Description: TaskList (teammate workflow)](./system-prompts/tool-description-tasklist-teammate-workflow.md) (**133** tks) - Conditional section appended to TaskList tool description.
