@@ -34,7 +34,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 > [!important]
 > **NEW (January 23, 2026): We've added all of Claude Code's ~40 system reminders to this list&mdash;see [System Reminders](#system-reminders).**
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.58](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.58) (February 25th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 111 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.59](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.59) (February 25th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 112 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [changelog](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -128,7 +128,6 @@ The content of various template files embedded in Claude Code.
 - [Data: Claude API reference — Python](./system-prompts/data-claude-api-reference-python.md) (**3248** tks) - Python SDK reference including installation, client initialization, basic requests, thinking, and multi-turn conversation.
 - [Data: Claude API reference — Ruby](./system-prompts/data-claude-api-reference-ruby.md) (**622** tks) - Ruby SDK reference including installation, client initialization, basic requests, streaming, and beta tool runner.
 - [Data: Claude API reference — TypeScript](./system-prompts/data-claude-api-reference-typescript.md) (**2388** tks) - TypeScript SDK reference including installation, client initialization, basic requests, thinking, and multi-turn conversation.
-- [Data: Claude Code version mismatch warning](./system-prompts/data-claude-code-version-mismatch-warning.md) (**173** tks) - Warning shown when Claude Code version is outdated.
 - [Data: Claude model catalog](./system-prompts/data-claude-model-catalog.md) (**1510** tks) - Catalog of current and legacy Claude models with exact model IDs, aliases, context windows, and pricing.
 - [Data: Files API reference — Python](./system-prompts/data-files-api-reference-python.md) (**1303** tks) - Python Files API reference including file upload, listing, deletion, and usage in messages.
 - [Data: Files API reference — TypeScript](./system-prompts/data-files-api-reference-typescript.md) (**798** tks) - TypeScript Files API reference including file upload, listing, deletion, and usage in messages.
@@ -213,7 +212,6 @@ Text for large system reminders.
 - [System Reminder: File opened in IDE](./system-prompts/system-reminder-file-opened-in-ide.md) (**37** tks) - Notification that user opened a file in IDE.
 - [System Reminder: File shorter than offset](./system-prompts/system-reminder-file-shorter-than-offset.md) (**59** tks) - Warning when file read offset exceeds file length.
 - [System Reminder: File truncated](./system-prompts/system-reminder-file-truncated.md) (**74** tks) - Notification that file was truncated due to size.
-- [System Reminder: Hook JSON validation failed](./system-prompts/system-reminder-hook-json-validation-failed.md) (**320** tks) - Error when hook JSON output fails validation.
 - [System Reminder: Hook additional context](./system-prompts/system-reminder-hook-additional-context.md) (**35** tks) - Additional context from a hook.
 - [System Reminder: Hook blocking error](./system-prompts/system-reminder-hook-blocking-error.md) (**52** tks) - Error from a blocking hook command.
 - [System Reminder: Hook stopped continuation prefix](./system-prompts/system-reminder-hook-stopped-continuation-prefix.md) (**12** tks) - Prefix for hook stopped continuation messages.
