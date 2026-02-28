@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — Java'
 description: Java SDK reference including installation, client initialization, basic requests, streaming, and beta tool use
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Claude API — Java
 
@@ -15,14 +15,14 @@ Maven:
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java</artifactId>
-    <version>2.14.0</version>
+    <version>2.15.0</version>
 </dependency>
 \`\`\`
 
 Gradle:
 
 \`\`\`groovy
-implementation("com.anthropic:anthropic-java:2.14.0")
+implementation("com.anthropic:anthropic-java:2.15.0")
 \`\`\`
 
 ## Client Initialization
@@ -112,7 +112,7 @@ static class GetWeather implements Supplier<String> {
 
 BetaToolRunner toolRunner = client.beta().messages().toolRunner(
     MessageCreateParams.builder()
-        .model("claude-opus-4-6")
+        .model("{{OPUS_ID}}")
         .maxTokens(1024L)
         .putAdditionalHeader("anthropic-beta", "structured-outputs-2025-11-13")
         .addTool(GetWeather.class)

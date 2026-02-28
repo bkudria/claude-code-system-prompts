@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Files API reference — Python'
 description: Python Files API reference including file upload, listing, deletion, and usage in messages
-ccVersion: 2.1.47
+ccVersion: 2.1.63
 -->
 # Files API — Python
 
@@ -41,7 +41,7 @@ print(f"Size: {uploaded.size_bytes} bytes")
 
 \`\`\`python
 response = client.beta.messages.create(
-    model="claude-opus-4-6",
+    model="{{OPUS_ID}}",
     max_tokens=1024,
     messages=[{
         "role": "user",
@@ -68,7 +68,7 @@ image_file = client.beta.files.upload(
 )
 
 response = client.beta.messages.create(
-    model="claude-opus-4-6",
+    model="{{OPUS_ID}}",
     max_tokens=1024,
     messages=[{
         "role": "user",
@@ -145,7 +145,7 @@ questions = [
 
 for question in questions:
     response = client.beta.messages.create(
-        model="claude-opus-4-6",
+        model="{{OPUS_ID}}",
         max_tokens=1024,
         messages=[{
             "role": "user",

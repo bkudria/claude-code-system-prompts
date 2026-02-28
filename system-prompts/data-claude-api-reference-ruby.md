@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — Ruby'
 description: Ruby SDK reference including installation, client initialization, basic requests, streaming, and beta tool runner
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Claude API — Ruby
 
@@ -31,7 +31,7 @@ client = Anthropic::Client.new(api_key: "your-api-key")
 
 \`\`\`ruby
 message = client.messages.create(
-  model: :"claude-opus-4-6",
+  model: :"{{OPUS_ID}}",
   max_tokens: 1024,
   messages: [
     { role: "user", content: "What is the capital of France?" }
@@ -46,7 +46,7 @@ puts message.content.first.text
 
 \`\`\`ruby
 stream = client.messages.stream(
-  model: :"claude-opus-4-6",
+  model: :"{{OPUS_ID}}",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Write a haiku" }]
 )
@@ -78,7 +78,7 @@ class GetWeather < Anthropic::BaseTool
 end
 
 client.beta.messages.tool_runner(
-  model: :"claude-opus-4-6",
+  model: :"{{OPUS_ID}}",
   max_tokens: 1024,
   tools: [GetWeather.new],
   messages: [{ role: "user", content: "What's the weather in San Francisco?" }]

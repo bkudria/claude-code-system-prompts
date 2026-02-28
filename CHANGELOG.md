@@ -4,6 +4,35 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+#### [2.1.63](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7e37a33)
+
+_+4,200 tokens_
+
+- **NEW:** Agent Prompt: /batch slash command — Instructions for orchestrating a large, parallelizable change across a codebase.
+- **NEW:** System Prompt: Worker instructions — Instructions for workers to follow when implementing a change.
+- **REMOVED:** Agent Prompt: Bash command file path extraction — System prompt for extracting file paths from bash command output.
+- **REMOVED:** Skill: Build with Claude API (trigger) — Activation criteria for the Build with Claude API skill.
+- **REMOVED:** System Reminder: Todo list changed — Notification that todo list has changed.
+- **REMOVED:** System Reminder: Todo list empty — Reminder that todo list is empty.
+- Data: Claude API reference — Go — Added `BetaToolRunner` documentation with the `toolrunner` package; restructured tool use into "Tool Runner (Beta)" and "Manual Loop" sections.
+- Data: Claude API reference — PHP — Added Bedrock, Vertex AI, and Foundry client initialization examples; removed version pinning from install command.
+- Data: Claude API reference — Java — Updated SDK version from 2.14.0 to 2.15.0.
+- Data: Claude API reference — Python — Added automatic caching section for simplified prompt caching alongside existing manual cache control.
+- Data: Claude API reference — TypeScript — Added automatic caching section, typed error handling guidance, SDK types guidance (`Anthropic.MessageParam`, etc.), and multi-turn typing improvements.
+- Data: HTTP error codes reference — Added typed exceptions table mapping HTTP codes to TypeScript and Python exception classes, with correct/incorrect usage examples.
+- Data: Tool use concepts — Expanded tool runner availability to include Java, Go, and Ruby; improved `pause_turn` handling with code example and `max_continuations` guidance; simplified dynamic filtering (no longer requires separate `code_execution` tool or beta header).
+- Data: Tool use reference — TypeScript — Added streaming manual loop section combining `stream()` + `finalMessage()` with tool-use loop; added `pause_turn` handling; added SDK type annotations and error handling guidance throughout.
+- Data: Tool use reference — Python — Added `pause_turn` handling in manual agentic loop.
+- Data: Streaming reference — TypeScript — Enhanced best practices: expanded `finalMessage()` guidance, added `stream.on("text")` tip, added agentic loop streaming cross-reference.
+- Data: Claude model catalog — Moved Claude Haiku 3 from current models to deprecated.
+- Skill: Build with Claude API — Updated Go SDK to show beta tool runner support; added guidance against reimplementing SDK functionality, redefining SDK types, and guidance on report/document output via code execution sandbox.
+- Agent SDK references and patterns (Python, TypeScript) — Renamed `Task` tool to `Agent` in allowed tools, tool tables, and code examples.
+- Agent Prompt: Conversation summarization — Fixed list indentation and corrected duplicate section numbering (two section 6s → 6, 7).
+- System Reminder: Plan mode is active (5-phase) — Simplified template variables and removed several variable declarations.
+- System Reminder: Plan mode is active (iterative) — Restructured plan file info rendering and simplified variable references.
+- Tool descriptions (EnterPlanMode, TeammateTool) — Renamed `Task` tool references to `Agent`.
+- Hardcoded model IDs (e.g., `claude-opus-4-6`) replaced with template variables (e.g., `{{OPUS_ID}}`) across all SDK reference, data, and skill files.
+
 #### [2.1.62](https://github.com/Piebald-AI/claude-code-system-prompts/commit/5e65215)
 
 <sub>_No changes to the system prompts in v2.1.62._</sub>

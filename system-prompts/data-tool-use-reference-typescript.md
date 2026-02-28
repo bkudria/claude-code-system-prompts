@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Tool use reference — TypeScript'
 description: TypeScript tool use reference including tool runner, manual agentic loop, code execution, and structured outputs
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Tool Use — TypeScript
 
@@ -35,7 +35,7 @@ const getWeather = betaZodTool({
 
 // The tool runner handles the agentic loop and returns the final message
 const finalMessage = await client.beta.messages.toolRunner({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 4096,
   tools: [getWeather],
   messages: [{ role: "user", content: "What's the weather in Paris?" }],
@@ -55,18 +55,18 @@ console.log(finalMessage.content);
 
 ## Manual Agentic Loop
 
-Use this when you need fine-grained control:
+Use this when you need fine-grained control (custom logging, conditional tool execution, streaming individual iterations, human-in-the-loop approval):
 
 \`\`\`typescript
 import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic();
-const tools = [...]; // Your tool definitions
-const messages = [{ role: "user", content: userInput }];
+const tools: Anthropic.Tool[] = [...]; // Your tool definitions
+let messages: Anthropic.MessageParam[] = [{ role: "user", content: userInput }];
 
 while (true) {
   const response = await client.messages.create({
-    model: "claude-opus-4-6",
+    model: "{{OPUS_ID}}",
     max_tokens: 4096,
     tools: tools,
     messages: messages,
@@ -74,11 +74,22 @@ while (true) {
 
   if (response.stop_reason === "end_turn") break;
 
-  const toolUseBlocks = response.content.filter((b) => b.type === "tool_use");
+  // Server-side tool hit iteration limit; re-send to continue
+  if (response.stop_reason === "pause_turn") {
+    messages = [
+      { role: "user", content: userInput },
+      { role: "assistant", content: response.content },
+    ];
+    continue;
+  }
+
+  const toolUseBlocks = response.content.filter(
+    (b): b is Anthropic.ToolUseBlock => b.type === "tool_use",
+  );
 
   messages.push({ role: "assistant", content: response.content });
 
-  const toolResults = [];
+  const toolResults: Anthropic.ToolResultBlockParam[] = [];
   for (const tool of toolUseBlocks) {
     const result = await executeTool(tool.name, tool.input);
     toolResults.push({
@@ -92,13 +103,78 @@ while (true) {
 }
 \`\`\`
 
+### Streaming Manual Loop
+
+Use \`client.messages.stream()\` + \`finalMessage()\` instead of \`.create()\` when you need streaming within a manual loop. Text deltas are streamed on each iteration; \`finalMessage()\` collects the complete \`Message\` so you can inspect \`stop_reason\` and extract tool-use blocks:
+
+\`\`\`typescript
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic();
+const tools: Anthropic.Tool[] = [...];
+let messages: Anthropic.MessageParam[] = [{ role: "user", content: userInput }];
+
+while (true) {
+  const stream = client.messages.stream({
+    model: "{{OPUS_ID}}",
+    max_tokens: 4096,
+    tools,
+    messages,
+  });
+
+  // Stream text deltas on each iteration
+  stream.on("text", (delta) => {
+    process.stdout.write(delta);
+  });
+
+  // finalMessage() resolves with the complete Message — no need to
+  // manually wire up .on("message") / .on("error") / .on("abort")
+  const message = await stream.finalMessage();
+
+  if (message.stop_reason === "end_turn") break;
+
+  // Server-side tool hit iteration limit; re-send to continue
+  if (message.stop_reason === "pause_turn") {
+    messages = [
+      { role: "user", content: userInput },
+      { role: "assistant", content: message.content },
+    ];
+    continue;
+  }
+
+  const toolUseBlocks = message.content.filter(
+    (b): b is Anthropic.ToolUseBlock => b.type === "tool_use",
+  );
+
+  messages.push({ role: "assistant", content: message.content });
+
+  const toolResults: Anthropic.ToolResultBlockParam[] = [];
+  for (const tool of toolUseBlocks) {
+    const result = await executeTool(tool.name, tool.input);
+    toolResults.push({
+      type: "tool_result",
+      tool_use_id: tool.id,
+      content: result,
+    });
+  }
+
+  messages.push({ role: "user", content: toolResults });
+}
+\`\`\`
+
+> **Important:** Don't wrap \`.on()\` events in \`new Promise()\` to collect the final message — use \`stream.finalMessage()\` instead. The SDK handles all error/abort/completion states internally.
+
+> **Error handling in the loop:** Use the SDK's typed exceptions (e.g., \`Anthropic.RateLimitError\`, \`Anthropic.APIError\`) — see [Error Handling](./README.md#error-handling) for examples. Don't check error messages with string matching.
+
+> **SDK types:** Use \`Anthropic.MessageParam\`, \`Anthropic.Tool\`, \`Anthropic.ToolUseBlock\`, \`Anthropic.ToolResultBlockParam\`, \`Anthropic.Message\`, etc. for all API-related data structures. Don't redefine equivalent interfaces.
+
 ---
 
 ## Handling Tool Results
 
 \`\`\`typescript
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   tools: tools,
   messages: [{ role: "user", content: "What's the weather in Paris?" }],
@@ -109,7 +185,7 @@ for (const block of response.content) {
     const result = await executeTool(block.name, block.input);
 
     const followup = await client.messages.create({
-      model: "claude-opus-4-6",
+      model: "{{OPUS_ID}}",
       max_tokens: 1024,
       tools: tools,
       messages: [
@@ -133,7 +209,7 @@ for (const block of response.content) {
 
 \`\`\`typescript
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   tools: tools,
   tool_choice: { type: "tool", name: "get_weather" },
@@ -153,7 +229,7 @@ import Anthropic from "@anthropic-ai/sdk";
 const client = new Anthropic();
 
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 4096,
   messages: [
     {
@@ -186,7 +262,7 @@ const uploaded = await client.beta.files.upload({
 // Code execution is GA; Files API is still beta (pass via RequestOptions)
 const response = await client.messages.create(
   {
-    model: "claude-opus-4-6",
+    model: "{{OPUS_ID}}",
     max_tokens: 4096,
     messages: [
       {
@@ -246,7 +322,7 @@ for (const block of response.content) {
 \`\`\`typescript
 // First request: set up environment
 const response1 = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 4096,
   messages: [
     {
@@ -262,7 +338,7 @@ const containerId = response1.container.id;
 
 const response2 = await client.messages.create({
   container: containerId,
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 4096,
   messages: [
     {
@@ -282,7 +358,7 @@ const response2 = await client.messages.create({
 
 \`\`\`typescript
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 2048,
   messages: [
     {
@@ -316,7 +392,7 @@ const handlers: MemoryToolHandlers = {
 const memory = betaMemoryTool(handlers);
 
 const runner = client.beta.messages.toolRunner({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 2048,
   tools: [memory],
   messages: [{ role: "user", content: "Remember my preferences" }],
@@ -353,7 +429,7 @@ const ContactInfoSchema = z.object({
 const client = new Anthropic();
 
 const response = await client.messages.parse({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   messages: [
     {
@@ -374,7 +450,7 @@ console.log(response.parsed_output.name); // "Jane Doe"
 
 \`\`\`typescript
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   messages: [
     {

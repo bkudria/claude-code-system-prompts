@@ -1,11 +1,11 @@
 <!--
 name: 'Data: Claude API reference — Go'
-description: Go SDK reference including installation, client initialization, basic requests, streaming, and manual agentic loop
-ccVersion: 2.1.51
+description: Go SDK reference
+ccVersion: 2.1.63
 -->
 # Claude API — Go
 
-> **Note:** The Go SDK supports the Claude API. Tool runner and Agent SDK are not yet available for Go — use the manual agentic loop for tool use.
+> **Note:** The Go SDK supports the Claude API and beta tool use with \`BetaToolRunner\`. Agent SDK is not yet available for Go.
 
 ## Installation
 
@@ -78,6 +78,74 @@ if err := stream.Err(); err != nil {
 
 ---
 
-## Tool Use (Manual Loop)
+## Tool Use
 
-The Go SDK supports raw tool definitions via JSON schema. See the [shared tool use concepts](../shared/tool-use-concepts.md) for the tool definition format and agentic loop pattern.
+### Tool Runner (Beta — Recommended)
+
+**Beta:** The Go SDK provides \`BetaToolRunner\` for automatic tool use loops via the \`toolrunner\` package.
+
+\`\`\`go
+import (
+    "context"
+    "fmt"
+    "log"
+
+    "github.com/anthropics/anthropic-sdk-go"
+    "github.com/anthropics/anthropic-sdk-go/toolrunner"
+)
+
+// Define tool input with jsonschema tags for automatic schema generation
+type GetWeatherInput struct {
+    City string \`json:"city" jsonschema:"required,description=The city name"\`
+}
+
+// Create a tool with automatic schema generation from struct tags
+weatherTool, err := toolrunner.NewBetaToolFromJSONSchema(
+    "get_weather",
+    "Get current weather for a city",
+    func(ctx context.Context, input GetWeatherInput) (anthropic.BetaToolResultBlockParamContentUnion, error) {
+        return anthropic.BetaToolResultBlockParamContentUnion{
+            OfText: &anthropic.BetaTextBlockParam{
+                Text: fmt.Sprintf("The weather in %s is sunny, 72°F", input.City),
+            },
+        }, nil
+    },
+)
+if err != nil {
+    log.Fatal(err)
+}
+
+// Create a tool runner that handles the conversation loop automatically
+runner := client.Beta.Messages.NewToolRunner(
+    []anthropic.BetaTool{weatherTool},
+    anthropic.BetaToolRunnerParams{
+        BetaMessageNewParams: anthropic.BetaMessageNewParams{
+            Model:     anthropic.ModelClaudeOpus4_6,
+            MaxTokens: 1024,
+            Messages: []anthropic.BetaMessageParam{
+                anthropic.NewBetaUserMessage(anthropic.NewBetaTextBlock("What's the weather in Paris?")),
+            },
+        },
+        MaxIterations: 5,
+    },
+)
+
+// Run until Claude produces a final response
+message, err := runner.RunToCompletion(context.Background())
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(message.Content[0].Text)
+\`\`\`
+
+**Key features of the Go tool runner:**
+
+- Automatic schema generation from Go structs via \`jsonschema\` tags
+- \`RunToCompletion()\` for simple one-shot usage
+- \`All()\` iterator for processing each message in the conversation
+- \`NextMessage()\` for step-by-step iteration
+- Streaming variant via \`NewToolRunnerStreaming()\` with \`AllStreaming()\`
+
+### Manual Loop
+
+For fine-grained control, use raw tool definitions via JSON schema. See the [shared tool use concepts](../shared/tool-use-concepts.md) for the tool definition format and agentic loop pattern.

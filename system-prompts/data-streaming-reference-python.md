@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Streaming reference — Python'
 description: Python streaming reference including sync/async streaming and handling different content types
-ccVersion: 2.1.47
+ccVersion: 2.1.63
 -->
 # Streaming — Python
 
@@ -9,7 +9,7 @@ ccVersion: 2.1.47
 
 \`\`\`python
 with client.messages.stream(
-    model="claude-opus-4-6",
+    model="{{OPUS_ID}}",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Write a story"}]
 ) as stream:
@@ -21,7 +21,7 @@ with client.messages.stream(
 
 \`\`\`python
 async with async_client.messages.stream(
-    model="claude-opus-4-6",
+    model="{{OPUS_ID}}",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Write a story"}]
 ) as stream:
@@ -39,7 +39,7 @@ Claude may return text, thinking blocks, or tool use. Handle each appropriately:
 
 \`\`\`python
 with client.messages.stream(
-    model="claude-opus-4-6",
+    model="{{OPUS_ID}}",
     max_tokens=16000,
     thinking={"type": "adaptive"},
     messages=[{"role": "user", "content": "Analyze this problem"}]
@@ -66,7 +66,7 @@ The Python tool runner currently returns complete messages. Use streaming for in
 
 \`\`\`python
 with client.messages.stream(
-    model="claude-opus-4-6",
+    model="{{OPUS_ID}}",
     max_tokens=4096,
     tools=tools,
     messages=messages
@@ -84,7 +84,7 @@ with client.messages.stream(
 
 \`\`\`python
 with client.messages.stream(
-    model="claude-opus-4-6",
+    model="{{OPUS_ID}}",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Hello"}]
 ) as stream:
@@ -131,7 +131,7 @@ def stream_with_progress(client, **kwargs):
 \`\`\`python
 try:
     with client.messages.stream(
-        model="claude-opus-4-6",
+        model="{{OPUS_ID}}",
         max_tokens=1024,
         messages=[{"role": "user", "content": "Write a story"}]
     ) as stream:
