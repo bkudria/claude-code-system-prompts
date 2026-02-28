@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK patterns — Python'
 description: Python Agent SDK patterns including custom tools, hooks, subagents, MCP integration, and session resumption
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Agent SDK Patterns — Python
 
@@ -110,7 +110,7 @@ async def main():
     async for message in query(
         prompt="Use the code-reviewer agent to review this codebase",
         options=ClaudeAgentOptions(
-            allowed_tools=["Read", "Glob", "Grep", "Task"],
+            allowed_tools=["Read", "Glob", "Grep", "Agent"],
             agents={
                 "code-reviewer": AgentDefinition(
                     description="Expert code reviewer for quality and security reviews.",

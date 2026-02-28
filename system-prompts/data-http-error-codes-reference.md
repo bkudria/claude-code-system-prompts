@@ -1,7 +1,7 @@
 <!--
 name: 'Data: HTTP error codes reference'
 description: Reference for HTTP error codes returned by the Claude API with common causes and handling strategies
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # HTTP Error Codes Reference
 
@@ -84,7 +84,7 @@ This file documents HTTP error codes returned by the Claude API, their common ca
 - Using deprecated model ID
 - Invalid API endpoint
 
-**Fix:** Use exact model IDs from the models documentation. You can use aliases (e.g., `claude-opus-4-6`).
+**Fix:** Use exact model IDs from the models documentation. You can use aliases (e.g., `{{OPUS_ID}}`).
 
 ---
 
@@ -166,8 +166,45 @@ thinking: budget_tokens=10000, max_tokens=16000
 | Mistake                         | Error            | Fix                                                     |
 | ------------------------------- | ---------------- | ------------------------------------------------------- |
 | `budget_tokens` >= `max_tokens` | 400              | Ensure `budget_tokens` < `max_tokens`                   |
-| Typo in model ID                | 404              | Use valid model ID like `claude-opus-4-6`               |
+| Typo in model ID                | 404              | Use valid model ID like `{{OPUS_ID}}`               |
 | First message is `assistant`    | 400              | First message must be `user`                            |
 | Consecutive same-role messages  | 400              | Alternate `user` and `assistant`                        |
 | API key in code                 | 401 (leaked key) | Use environment variable                                |
 | Custom retry needs              | 429/5xx          | SDK retries automatically; customize with `max_retries` |
+
+## Typed Exceptions in SDKs
+
+**Always use the SDK's typed exception classes** instead of checking error messages with string matching. Each HTTP error code maps to a specific exception class:
+
+| HTTP Code | TypeScript Class                  | Python Class                      |
+| --------- | --------------------------------- | --------------------------------- |
+| 400       | `Anthropic.BadRequestError`       | `anthropic.BadRequestError`       |
+| 401       | `Anthropic.AuthenticationError`   | `anthropic.AuthenticationError`   |
+| 403       | `Anthropic.PermissionDeniedError` | `anthropic.PermissionDeniedError` |
+| 404       | `Anthropic.NotFoundError`         | `anthropic.NotFoundError`         |
+| 429       | `Anthropic.RateLimitError`        | `anthropic.RateLimitError`        |
+| 500+      | `Anthropic.InternalServerError`   | `anthropic.InternalServerError`   |
+| Any       | `Anthropic.APIError`              | `anthropic.APIError`              |
+
+```typescript
+// ✅ Correct: use typed exceptions
+try {
+  const response = await client.messages.create({...});
+} catch (error) {
+  if (error instanceof Anthropic.RateLimitError) {
+    // Handle rate limiting
+  } else if (error instanceof Anthropic.APIError) {
+    console.error(`API error ${error.status}:`, error.message);
+  }
+}
+
+// ❌ Wrong: don't check error messages with string matching
+try {
+  const response = await client.messages.create({...});
+} catch (error) {
+  const msg = error instanceof Error ? error.message : String(error);
+  if (msg.includes("429") || msg.includes("rate_limit")) { ... }
+}
+```
+
+All exception classes extend `Anthropic.APIError`, which has a `status` property. Use `instanceof` checks from most specific to least specific (e.g., check `RateLimitError` before `APIError`).

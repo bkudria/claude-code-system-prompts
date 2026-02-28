@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — TypeScript'
 description: TypeScript SDK reference including installation, client initialization, basic requests, thinking, and multi-turn conversation
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Claude API — TypeScript
 
@@ -29,7 +29,7 @@ const client = new Anthropic({ apiKey: "your-api-key" });
 
 \`\`\`typescript
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   messages: [{ role: "user", content: "What is the capital of France?" }],
 });
@@ -42,7 +42,7 @@ console.log(response.content[0].text);
 
 \`\`\`typescript
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   system:
     "You are a helpful coding assistant. Always provide examples in Python.",
@@ -58,7 +58,7 @@ const response = await client.messages.create({
 
 \`\`\`typescript
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   messages: [
     {
@@ -83,7 +83,7 @@ import fs from "fs";
 const imageData = fs.readFileSync("image.png").toString("base64");
 
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   messages: [
     {
@@ -104,9 +104,27 @@ const response = await client.messages.create({
 
 ## Prompt Caching
 
+### Automatic Caching (Recommended)
+
+Use top-level \`cache_control\` to automatically cache the last cacheable block in the request:
+
 \`\`\`typescript
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
+  max_tokens: 1024,
+  cache_control: { type: "ephemeral" }, // auto-caches the last cacheable block
+  system: "You are an expert on this large document...",
+  messages: [{ role: "user", content: "Summarize the key points" }],
+});
+\`\`\`
+
+### Manual Cache Control
+
+For fine-grained control, add \`cache_control\` to specific content blocks:
+
+\`\`\`typescript
+const response = await client.messages.create({
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   system: [
     {
@@ -120,7 +138,7 @@ const response = await client.messages.create({
 
 // With explicit TTL (time-to-live)
 const response2 = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   system: [
     {
@@ -143,7 +161,7 @@ const response2 = await client.messages.create({
 \`\`\`typescript
 // Opus 4.6: adaptive thinking (recommended)
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 16000,
   thinking: { type: "adaptive" },
   output_config: { effort: "high" }, // low | medium | high | max
@@ -165,6 +183,8 @@ for (const block of response.content) {
 
 ## Error Handling
 
+Use the SDK's typed exception classes — never check error messages with string matching:
+
 \`\`\`typescript
 import Anthropic from "@anthropic-ai/sdk";
 
@@ -183,21 +203,23 @@ try {
 }
 \`\`\`
 
+All classes extend \`Anthropic.APIError\` with a typed \`status\` field. Check from most specific to least specific. See [shared/error-codes.md](../../shared/error-codes.md) for the full error code reference.
+
 ---
 
 ## Multi-Turn Conversations
 
-The API is stateless — send the full conversation history each time.
+The API is stateless — send the full conversation history each time. Use \`Anthropic.MessageParam[]\` to type the messages array:
 
 \`\`\`typescript
-const messages = [
+const messages: Anthropic.MessageParam[] = [
   { role: "user", content: "My name is Alice." },
   { role: "assistant", content: "Hello Alice! Nice to meet you." },
   { role: "user", content: "What's my name?" },
 ];
 
 const response = await client.messages.create({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   max_tokens: 1024,
   messages: messages,
 });
@@ -207,6 +229,7 @@ const response = await client.messages.create({
 
 - Messages must alternate between \`user\` and \`assistant\`
 - First message must be \`user\`
+- Use SDK types (\`Anthropic.MessageParam\`, \`Anthropic.Message\`, \`Anthropic.Tool\`, etc.) for all API data structures — don't redefine equivalent interfaces
 
 ---
 
@@ -225,7 +248,7 @@ async function chat(userMessage: string): Promise<string> {
 
   const response = await client.beta.messages.create({
     betas: ["compact-2026-01-12"],
-    model: "claude-opus-4-6",
+    model: "{{OPUS_ID}}",
     max_tokens: 4096,
     messages,
     context_management: {
@@ -252,14 +275,14 @@ console.log(await chat("Now add rate limiting and error handling"));
 
 The \`stop_reason\` field in the response indicates why the model stopped generating:
 
-| Value          | Meaning                                                        |
-| -------------- | -------------------------------------------------------------- |
-| \`end_turn\`     | Claude finished its response naturally                         |
-| \`max_tokens\`   | Hit the \`max_tokens\` limit — increase it or use streaming      |
-| \`stop_sequence\`| Hit a custom stop sequence                                     |
-| \`tool_use\`     | Claude wants to call a tool — execute it and continue          |
-| \`pause_turn\`   | Model paused and can be resumed (agentic flows)                |
-| \`refusal\`      | Claude refused for safety reasons — output may not match schema|
+| Value           | Meaning                                                         |
+| --------------- | --------------------------------------------------------------- |
+| \`end_turn\`      | Claude finished its response naturally                          |
+| \`max_tokens\`    | Hit the \`max_tokens\` limit — increase it or use streaming       |
+| \`stop_sequence\` | Hit a custom stop sequence                                      |
+| \`tool_use\`      | Claude wants to call a tool — execute it and continue           |
+| \`pause_turn\`    | Model paused and can be resumed (agentic flows)                 |
+| \`refusal\`       | Claude refused for safety reasons — output may not match schema |
 
 ---
 
@@ -268,13 +291,14 @@ The \`stop_reason\` field in the response indicates why the model stopped genera
 ### 1. Use Prompt Caching for Repeated Context
 
 \`\`\`typescript
-const systemWithCache = [
-  {
-    type: "text",
-    text: largeDocumentText, // e.g., 50KB of context
-    cache_control: { type: "ephemeral" }, // add ttl: "1h" for longer caching
-  },
-];
+// Automatic caching (simplest — caches the last cacheable block)
+const response = await client.messages.create({
+  model: "{{OPUS_ID}}",
+  max_tokens: 1024,
+  cache_control: { type: "ephemeral" },
+  system: largeDocumentText, // e.g., 50KB of context
+  messages: [{ role: "user", content: "Summarize the key points" }],
+});
 
 // First request: full cost
 // Subsequent requests: ~90% cheaper for cached portion
@@ -284,7 +308,7 @@ const systemWithCache = [
 
 \`\`\`typescript
 const countResponse = await client.messages.countTokens({
-  model: "claude-opus-4-6",
+  model: "{{OPUS_ID}}",
   messages: messages,
   system: system,
 });

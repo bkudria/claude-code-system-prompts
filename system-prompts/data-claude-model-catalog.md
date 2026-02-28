@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude model catalog'
 description: Catalog of current and legacy Claude models with exact model IDs, aliases, context windows, and pricing
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Claude Model Catalog
 
@@ -30,11 +30,12 @@ ccVersion: 2.1.51
 | Claude Sonnet 4.5 | \`claude-sonnet-4-5\` | \`claude-sonnet-4-5-20250929\`  | Active |
 | Claude Sonnet 4   | \`claude-sonnet-4-0\` | \`claude-sonnet-4-20250514\`    | Active |
 | Claude Opus 4     | \`claude-opus-4-0\`   | \`claude-opus-4-20250514\`      | Active |
-| Claude Haiku 3    | —                   | \`claude-3-haiku-20240307\`     | Active |
 
 ## Deprecated Models (retiring soon)
 
-(none currently)
+| Friendly Name     | Alias (use this)    | Full ID                       | Status     |
+|-------------------|---------------------|-------------------------------|------------|
+| Claude Haiku 3    | —                   | \`claude-3-haiku-20240307\`     | Deprecated |
 
 ## Retired Models (no longer available)
 
@@ -69,4 +70,4 @@ When a user asks for a model by name, use this table to find the correct model I
 | "haiku", "fast", "cheap"                  | \`claude-haiku-4-5\`             |
 | "haiku 4.5"                               | \`claude-haiku-4-5\`             |
 | "haiku 3.5"                               | Retired — suggest \`claude-haiku-4-5\` |
-| "haiku 3"                                 | \`claude-3-haiku-20240307\`      |
+| "haiku 3"                                 | Deprecated — suggest \`claude-haiku-4-5\` |

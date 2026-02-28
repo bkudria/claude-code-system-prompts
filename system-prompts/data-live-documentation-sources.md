@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Live documentation sources'
 description: WebFetch URLs for fetching current Claude API and Agent SDK documentation from official sources
-ccVersion: 2.1.47
+ccVersion: 2.1.63
 -->
 # Live Documentation Sources
 
@@ -28,7 +28,7 @@ This file contains WebFetch URLs for fetching current information from platform.
 | Topic             | URL                                                                          | Extraction Prompt                                                                      |
 | ----------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | Extended Thinking | \`https://platform.claude.com/docs/en/build-with-claude/extended-thinking.md\` | "Extract extended thinking parameters, budget_tokens requirements, and usage examples" |
-| Adaptive Thinking | \`https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking.md\` | "Extract adaptive thinking setup, effort levels, and Opus 4.6 usage examples"         |
+| Adaptive Thinking | \`https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking.md\` | "Extract adaptive thinking setup, effort levels, and {{OPUS_NAME}} usage examples"         |
 | Effort Parameter  | \`https://platform.claude.com/docs/en/build-with-claude/effort.md\`            | "Extract effort levels, cost-quality tradeoffs, and interaction with thinking"        |
 | Tool Use          | \`https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview.md\`  | "Extract tool definition schema, tool_choice options, and handling tool results"       |
 | Streaming         | \`https://platform.claude.com/docs/en/build-with-claude/streaming.md\`         | "Extract streaming event types, SDK examples, and best practices"                      |

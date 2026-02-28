@@ -1,7 +1,7 @@
 <!--
 name: 'Skill: Build with Claude API'
 description: Main routing guide for building LLM-powered applications with Claude, including language detection, surface selection, and architecture overview
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Building LLM-Powered Applications with Claude
 
@@ -11,7 +11,7 @@ This skill helps you build LLM-powered applications with Claude. Choose the righ
 
 Unless the user requests otherwise:
 
-For the Claude model version, please use Claude Opus 4.6, which you can access via the exact model string \`claude-opus-4-6\`. Please default to using adaptive thinking (\`thinking: {type: "adaptive"}\`) for anything remotely complicated. And finally, please default to streaming for any request that may involve long input, long output, or high \`max_tokens\` — it prevents hitting request timeouts. Use the SDK's \`.get_final_message()\` / \`.finalMessage()\` helper to get the complete response if you don't need to handle individual stream events
+For the Claude model version, please use {{OPUS_NAME}}, which you can access via the exact model string \`{{OPUS_ID}}\`. Please default to using adaptive thinking (\`thinking: {type: "adaptive"}\`) for anything remotely complicated. And finally, please default to streaming for any request that may involve long input, long output, or high \`max_tokens\` — it prevents hitting request timeouts. Use the SDK's \`.get_final_message()\` / \`.finalMessage()\` helper to get the complete response if you don't need to handle individual stream events
 
 ---
 
@@ -56,7 +56,7 @@ Before reading code examples, determine which language the user is working in:
 | Python     | Yes (beta)  | Yes       | Full support — \`@beta_tool\` decorator |
 | TypeScript | Yes (beta)  | Yes       | Full support — \`betaZodTool\` + Zod    |
 | Java       | Yes (beta)  | No        | Beta tool use with annotated classes  |
-| Go         | No          | No        | Manual agentic loop only              |
+| Go         | Yes (beta)  | No        | \`BetaToolRunner\` in \`toolrunner\` pkg  |
 | Ruby       | Yes (beta)  | No        | \`BaseTool\` + \`tool_runner\` in beta    |
 | cURL       | N/A         | N/A       | Raw HTTP, no SDK features             |
 | C#         | No          | No        | Official SDK                          |
@@ -137,7 +137,7 @@ Everything goes through \`POST /v1/messages\`. Tools and output constraints are 
 | Claude Sonnet 4.6 | \`claude-sonnet-4-6\` | 200K (1M beta) | $3.00      | $15.00      |
 | Claude Haiku 4.5  | \`claude-haiku-4-5\`  | 200K           | $1.00      | $5.00       |
 
-**ALWAYS use \`claude-opus-4-6\` unless the user explicitly names a different model.** This is non-negotiable. Do not use \`claude-sonnet-4-6\`, \`claude-sonnet-4-5\`, or any other model unless the user literally says "use sonnet" or "use haiku". Never downgrade for cost — that's the user's decision, not yours.
+**ALWAYS use \`{{OPUS_ID}}\` unless the user explicitly names a different model.** This is non-negotiable. Do not use \`{{SONNET_ID}}\`, \`{{PREV_SONNET_ID}}\`, or any other model unless the user literally says "use sonnet" or "use haiku". Never downgrade for cost — that's the user's decision, not yours.
 
 **CRITICAL: Use only the exact model ID strings from the table above — they are complete as-is. Do not append date suffixes.** For example, use \`claude-sonnet-4-5\`, never \`claude-sonnet-4-5-20250514\` or any other date-suffixed variant you might recall from training data. If the user requests an older model not in the table (e.g., "opus 4.5", "sonnet 3.7"), read \`shared/models.md\` for the exact ID — do not construct one yourself.
 
@@ -237,3 +237,6 @@ Live documentation URLs are in \`shared/live-sources.md\`.
 - **128K output tokens:** Opus 4.6 supports up to 128K \`max_tokens\`, but the SDKs require streaming for large \`max_tokens\` to avoid HTTP timeouts. Use \`.stream()\` with \`.get_final_message()\` / \`.finalMessage()\`.
 - **Tool call JSON parsing (Opus 4.6):** Opus 4.6 may produce different JSON string escaping in tool call \`input\` fields (e.g., Unicode or forward-slash escaping). Always parse tool inputs with \`json.loads()\` / \`JSON.parse()\` — never do raw string matching on the serialized input.
 - **Structured outputs (all models):** Use \`output_config: {format: {...}}\` instead of the deprecated \`output_format\` parameter on \`messages.create()\`. This is a general API change, not 4.6-specific.
+- **Don't reimplement SDK functionality:** The SDK provides high-level helpers — use them instead of building from scratch. Specifically: use \`stream.finalMessage()\` instead of wrapping \`.on()\` events in \`new Promise()\`; use typed exception classes (\`Anthropic.RateLimitError\`, etc.) instead of string-matching error messages; use SDK types (\`Anthropic.MessageParam\`, \`Anthropic.Tool\`, \`Anthropic.Message\`, etc.) instead of redefining equivalent interfaces.
+- **Don't define custom types for SDK data structures:** The SDK exports types for all API objects. Use \`Anthropic.MessageParam\` for messages, \`Anthropic.Tool\` for tool definitions, \`Anthropic.ToolUseBlock\` / \`Anthropic.ToolResultBlockParam\` for tool results, \`Anthropic.Message\` for responses. Defining your own \`interface ChatMessage { role: string; content: unknown }\` duplicates what the SDK already provides and loses type safety.
+- **Report and document output:** For tasks that produce reports, documents, or visualizations, the code execution sandbox has \`python-docx\`, \`python-pptx\`, \`matplotlib\`, \`pillow\`, and \`pypdf\` pre-installed. Claude can generate formatted files (DOCX, PDF, charts) and return them via the Files API — consider this for "report" or "document" type requests instead of plain stdout text.

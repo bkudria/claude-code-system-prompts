@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK reference — TypeScript'
 description: TypeScript Agent SDK reference including installation, quick start, custom tools, and hooks
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Agent SDK — TypeScript
 
@@ -45,7 +45,7 @@ for await (const message of query({
 | WebSearch | Search the web for information       |
 | WebFetch        | Fetch and analyze web pages          |
 | AskUserQuestion | Ask user clarifying questions         |
-| Task            | Spawn subagent tasks                 |
+| Agent           | Spawn subagents                      |
 
 ---
 
@@ -183,7 +183,7 @@ query({ prompt: "...", options: { ... } })
 for await (const message of query({
   prompt: "Use the code-reviewer agent to review this codebase",
   options: {
-    allowedTools: ["Read", "Glob", "Grep", "Task"],
+    allowedTools: ["Read", "Glob", "Grep", "Agent"],
     agents: {
       "code-reviewer": {
         description: "Expert code reviewer for quality and security reviews.",

@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK reference — Python'
 description: Python Agent SDK reference including installation, quick start, custom tools via MCP, and hooks
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Agent SDK — Python
 
@@ -47,7 +47,7 @@ anyio.run(main)
 | WebSearch | Search the web for information       |
 | WebFetch        | Fetch and analyze web pages          |
 | AskUserQuestion | Ask user clarifying questions         |
-| Task            | Spawn subagent tasks                 |
+| Agent           | Spawn subagents                      |
 
 ---
 
@@ -229,7 +229,7 @@ from claude_agent_sdk import query, ClaudeAgentOptions, AgentDefinition, ResultM
 async for message in query(
     prompt="Use the code-reviewer agent to review this codebase",
     options=ClaudeAgentOptions(
-        allowed_tools=["Read", "Glob", "Grep", "Task"],
+        allowed_tools=["Read", "Glob", "Grep", "Agent"],
         agents={
             "code-reviewer": AgentDefinition(
                 description="Expert code reviewer for quality and security reviews.",

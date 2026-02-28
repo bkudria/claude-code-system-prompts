@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK patterns — TypeScript'
 description: TypeScript Agent SDK patterns including basic agents, hooks, subagents, and MCP integration
-ccVersion: 2.1.51
+ccVersion: 2.1.63
 -->
 # Agent SDK Patterns — TypeScript
 
@@ -70,7 +70,7 @@ import { query } from "@anthropic-ai/claude-agent-sdk";
 for await (const message of query({
   prompt: "Use the code-reviewer agent to review this codebase",
   options: {
-    allowedTools: ["Read", "Glob", "Grep", "Task"],
+    allowedTools: ["Read", "Glob", "Grep", "Agent"],
     agents: {
       "code-reviewer": {
         description: "Expert code reviewer for quality and security reviews.",

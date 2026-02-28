@@ -1,7 +1,7 @@
 <!--
 name: 'Tool Description: TeammateTool'
 description: Tool for managing teams and coordinating teammates in a swarm
-ccVersion: 2.1.33
+ccVersion: 2.1.63
 -->
 
 # TeamCreate
@@ -17,13 +17,13 @@ When in doubt about whether a task warrants a team, prefer spawning a team.
 
 ## Choosing Agent Types for Teammates
 
-When spawning teammates via the Task tool, choose the \`subagent_type\` based on what tools the agent needs for its task. Each agent type has a different set of available tools — match the agent to the work:
+When spawning teammates via the Agent tool, choose the \`subagent_type\` based on what tools the agent needs for its task. Each agent type has a different set of available tools — match the agent to the work:
 
 - **Read-only agents** (e.g., Explore, Plan) cannot edit or write files. Only assign them research, search, or planning tasks. Never assign them implementation work.
 - **Full-capability agents** (e.g., general-purpose) have access to all tools including file editing, writing, and bash. Use these for tasks that require making changes.
 - **Custom agents** defined in \`.claude/agents/\` may have their own tool restrictions. Check their descriptions to understand what they can and cannot do.
 
-Always review the agent type descriptions and their available tools listed in the Task tool prompt before selecting a \`subagent_type\` for a teammate.
+Always review the agent type descriptions and their available tools listed in the Agent tool prompt before selecting a \`subagent_type\` for a teammate.
 
 Create a new team to coordinate multiple agents working on a project. Teams have a 1:1 correspondence with task lists (Team = TaskList).
 
@@ -42,7 +42,7 @@ This creates:
 
 1. **Create a team** with TeamCreate - this creates both the team and its task list
 2. **Create tasks** using the Task tools (TaskCreate, TaskList, etc.) - they automatically use the team's task list
-3. **Spawn teammates** using the Task tool with \`team_name\` and \`name\` parameters to create teammates that join the team
+3. **Spawn teammates** using the Agent tool with \`team_name\` and \`name\` parameters to create teammates that join the team
 4. **Assign tasks** using TaskUpdate with \`owner\` to give tasks to idle teammates
 5. **Teammates work on assigned tasks** and mark them completed via TaskUpdate
 6. **Teammates go idle between turns** - after each turn, teammates automatically go idle and send a notification. IMPORTANT: Be patient with idle teammates! Don't comment on their idleness until it actually impacts your work.
