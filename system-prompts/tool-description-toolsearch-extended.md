@@ -1,7 +1,7 @@
 <!--
 name: 'Tool Description: ToolSearch extended'
 description: Extended usage instructions for ToolSearch including query modes and examples
-ccVersion: 2.1.64
+ccVersion: 2.1.66
 -->
 
 
@@ -18,11 +18,10 @@ ccVersion: 2.1.64
    - Returns up to 5 matching tools ranked by relevance
    - All returned tools are immediately available to call — no further selection step needed
 
-2. **Direct selection** - Use \`select:<tool_name>\` when you know the exact tool name:
+2. **Direct selection** - Use \`select:<tool_name>\` when you know the exact tool name and only need that one tool:
    - "select:mcp__slack__read_channel"
    - "select:NotebookEdit"
-   - "select:Read,Edit,Grep" - load multiple tools at once with comma separation
-   - Returns the named tool(s) if they exist
+   - Returns just that tool if it exists
 
 **IMPORTANT:** Both modes load tools equally. Do NOT follow up a keyword search with \`select:\` calls for tools already returned — they are already loaded.
 

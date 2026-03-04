@@ -4,6 +4,22 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+#### [2.1.66](https://github.com/Piebald-AI/claude-code-system-prompts/commit/c55bb75)
+
+_-1,507 tokens_
+
+- **REMOVED:** Agent Prompt: Verification specialist — Deleted the adversarial verification agent prompt that returned PASS/FAIL/PARTIAL verdicts.
+- **REMOVED:** System Prompt: Output efficiency instructions — Deleted instructions for concise, direct output.
+- **REMOVED:** System Reminder: Ultraplan complete — Deleted the reminder instructing Claude to present a pre-generated plan from a remote session.
+- Agent Prompt: Explore — Removed inline `whenToUse` description and `whenToUseDynamic` flag from agent metadata; renamed `Agent` to `tq` in disallowed tools.
+- Agent Prompt: Plan mode enhanced — Renamed `Agent` to `tq` in disallowed tools.
+- Agent Prompt: Status line setup — Removed `worktree` object from the status line JSON schema (name, path, branch, original cwd, and original branch fields).
+- Skill: Create verifier skills — Removed self-update guidance: verifiers no longer offer to edit their own SKILL.md when instructions are outdated.
+- Skill: Verification specialist — Removed verifier skill maintenance section for distinguishing outdated verifier instructions from actual feature failures.
+- Tool Description: Task — Re-added guidance about agents with "access to current context" seeing full conversation history (had been removed in v2.1.64).
+- Tool Description: ToolSearch extended — Removed comma-separated multi-tool direct selection; `select:` now loads only a single named tool.
+- Tool Description: ToolSearch — Added `ADDITIONAL_PROMPT_SECTION` variable.
+
 #### [2.1.64](https://github.com/Piebald-AI/claude-code-system-prompts/commit/ac581b8)
 
 _+1,291 tokens_
