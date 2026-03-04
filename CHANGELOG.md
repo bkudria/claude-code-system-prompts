@@ -4,6 +4,21 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+#### [2.1.64](https://github.com/Piebald-AI/claude-code-system-prompts/commit/ac581b8)
+
+_+1,291 tokens_
+
+- **NEW:** Agent Prompt: Verification specialist — System prompt for adversarially verifying implementation correctness through builds, tests, and runtime checks, returning PASS/FAIL/PARTIAL verdicts.
+- **NEW:** System Prompt: Output efficiency instructions — Instructions for being concise and to the point.
+- **NEW:** System Reminder: Ultraplan complete — Instructs Claude to present a pre-generated plan from a remote session without further exploration.
+- Agent Prompt: Status line setup — Added `worktree` object to the status line JSON schema with name, path, branch, original cwd, and original branch fields.
+- Skill: Create verifier skills — Added self-update guidance: verifiers now offer to edit their own SKILL.md when instructions are outdated rather than reporting a false FAIL.
+- Skill: Verification specialist — Added verifier skill maintenance section for distinguishing outdated verifier instructions from actual feature failures, with self-repair workflow.
+- Tool Description: Task — Removed guidance about agents with "access to current context" seeing full conversation history.
+- Tool Description: ToolSearch extended — Added comma-separated multi-tool direct selection (e.g., `select:Read,Edit,Grep`).
+- Tool Description: ToolSearch — Removed `EXTENDED_TOOL_SEARCH_PROMPT` variable; inlined the tool description.
+
+
 #### [2.1.63](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7e37a33)
 
 _+4,200 tokens_
