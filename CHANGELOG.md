@@ -4,6 +4,39 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+#### [2.1.69](https://github.com/Piebald-AI/claude-code-system-prompts/commit/2fde688)
+
+_+3,310 tokens_
+
+- **NEW:** Agent Prompt: Common suffix (response format) — Appends response format instructions to agent prompts, switching between concise sub-agent reporting and detailed standalone writeups based on a caller flag.
+- **NEW:** Agent Prompt: Explore strengths and guidelines — Defines the strengths and behavioral guidelines for the codebase exploration subagent, emphasizing search strategies, thoroughness, and avoiding unnecessary file creation.
+- **NEW:** Agent Prompt: Verification specialist — Re-added system prompt for a verification subagent that adversarially tests implementations and issues PASS/FAIL/PARTIAL verdicts (removed in v2.1.66).
+- **NEW:** System Prompt: Agent thread notes — Behavioral guidelines for agent threads covering absolute paths, response formatting, emoji avoidance, and tool call punctuation.
+- **NEW:** System Prompt: Analysis instructions for full compact prompt (full conversation) — Compaction analysis instructions for full conversation context.
+- **NEW:** System Prompt: Analysis instructions for full compact prompt (minimal and via feature flag) — Lean/experimental compaction analysis instructions.
+- **NEW:** System Prompt: Analysis instructions for full compact prompt (recent messages) — Compaction analysis instructions for recent messages only.
+- **NEW:** System Prompt: Description part of memory instructions — Field for describing what a memory is, part of memory creation instructions.
+- **NEW:** System Prompt: Output efficiency — Re-added instructions for concise, direct output (removed in v2.1.66).
+**NEW:** Tool Description: AskUserQuestion (preview field) — Instructions for using the optional `preview` field on single-select question options to display visual artifacts like HTML mockups, code snippets, and diagrams.
+- **REMOVED:** Agent Prompt: Task tool — Deleted the general-purpose subagent system prompt (content split into Explore strengths and guidelines and Agent thread notes).
+- **REMOVED:** Agent Prompt: Task tool (extra notes) — Deleted additional notes for Task tool usage (content moved to Agent thread notes).
+- **REMOVED:** System Reminder: Output token limit exceeded — Deleted the warning shown when a response exceeds the output token limit.
+- **REMOVED:** Tool Description: ToolSearch — Deleted the base ToolSearch tool description (content consolidated into ToolSearch extended).
+- Agent Prompt: Conversation summarization — Replaced inline analysis instructions with `${ANALYSIS_INSTRUCTION_TAGS}` variable.
+- Agent Prompt: /pr-comments slash command — Minor wording changes.
+- Agent Prompt: Quick PR creation — Removed hardcoded Changelog section and Slack posting step; made PR creation/edit options and body sections configurable; fixed typo in SAFEUSER variable name.
+- Agent Prompt: Recent Message Summarization — Refactored analysis instructions into a shared component.
+- Agent Prompt: Status line setup — Re-added `worktree` object to the status line JSON schema (name, path, branch, original cwd, and original branch fields).
+- Data: Tool use concepts — Added mention of Python SDK MCP conversion helpers (`anthropic.lib.tools.mcp`).
+- Data: Tool use reference — Python — Added full MCP Tool Conversion Helpers section with examples for tool runner integration, prompts, resources as content, and file uploads.
+- Skill: Create verifier skills — Re-added self-update guidance: verifiers now offer to edit their own SKILL.md when instructions are outdated; added user-facing note about self-update behavior.
+- Skill: Verification specialist — Re-added verifier skill maintenance section for distinguishing outdated verifier instructions from actual feature failures.
+- System Prompt: Option previewer — Renamed `markdown` field to `preview`; added description of rendering as markdown in a monospace box with multi-line support.
+- Tool Description: Task — Removed 'access to current context' guidance; added note that teammates cannot spawn other teammates when background tasks are disabled.
+- Tool Description: TaskCreate — Made `activeForm` parameter optional (spinner falls back to subject when omitted); simplified task creation instructions.
+- Tool Description: ToolSearch extended — Re-added comma-separated multi-tool direct selection (e.g., `select:Read,Edit,Grep`).
+
+
 #### [2.1.68](https://github.com/Piebald-AI/claude-code-system-prompts/commit/a4d3cca)
 
 <sub>_No changes to the system prompts in v2.1.68._</sub>

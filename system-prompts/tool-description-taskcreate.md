@@ -1,7 +1,7 @@
 <!--
 name: 'Tool Description: TaskCreate'
 description: Tool description for TaskCreate tool
-ccVersion: 2.1.19
+ccVersion: 2.1.69
 variables:
   - CONDTIONAL_TEAMMATES_NOTE
   - CONDITIONAL_TASK_NOTES
@@ -36,9 +36,9 @@ NOTE that you should not use this tool if there is only one trivial task to do. 
 
 - **subject**: A brief, actionable title in imperative form (e.g., "Fix authentication bug in login flow")
 - **description**: Detailed description of what needs to be done, including context and acceptance criteria
-- **activeForm**: Present continuous form shown in spinner when task is in_progress (e.g., "Fixing authentication bug"). This is displayed to the user while you work on the task.
+- **activeForm** (optional): Present continuous form shown in the spinner when the task is in_progress (e.g., "Fixing authentication bug"). If omitted, the spinner shows the subject instead.
 
-**IMPORTANT**: Always provide activeForm when creating tasks. The subject should be imperative ("Run tests") while activeForm should be present continuous ("Running tests"). All tasks are created with status \`pending\`.
+All tasks are created with status \`pending\`.
 
 ## Tips
 
