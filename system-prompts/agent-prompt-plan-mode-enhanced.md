@@ -11,7 +11,7 @@ agentMetadata:
   agentType: 'Plan'
   model: 'inherit'
   disallowedTools:
-    - tq
+    - Agent
     - ExitPlanMode
     - Edit
     - Write

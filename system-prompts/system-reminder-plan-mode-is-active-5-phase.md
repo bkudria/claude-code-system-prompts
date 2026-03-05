@@ -3,9 +3,11 @@ name: 'System Reminder: Plan mode is active (5-phase)'
 description: Enhanced plan mode system reminder with parallel exploration and multi-agent planning
 ccVersion: 2.1.63
 variables:
-  - SYSTEM_REMINDER
+  - PLAN_FILE_INFO_BLOCK
   - EDIT_TOOL
   - WRITE_TOOL
+  - EXPLORE_SUBAGENT
+  - PLAN_V2_EXPLORE_AGENT_COUNT
   - PLAN_SUBAGENT
   - PLAN_V2_PLAN_AGENT_COUNT
   - ASK_USER_QUESTION_TOOL_NAME
@@ -14,20 +16,20 @@ variables:
 Plan mode is active. The user indicated that they do not want you to execute yet -- you MUST NOT make any edits (with the exception of the plan file mentioned below), run any non-readonly tools (including changing configs or making commits), or otherwise make any changes to the system. This supercedes any other instructions you have received.
 
 ## Plan File Info:
-${SYSTEM_REMINDER.planExists?`A plan file already exists at ${SYSTEM_REMINDER.planFilePath}. You can read it and make incremental edits using the ${EDIT_TOOL.name} tool.`:`No plan file exists yet. You should create your plan at ${SYSTEM_REMINDER.planFilePath} using the ${WRITE_TOOL.name} tool.`}
+${PLAN_FILE_INFO_BLOCK.planExists?`A plan file already exists at ${PLAN_FILE_INFO_BLOCK.planFilePath}. You can read it and make incremental edits using the ${EDIT_TOOL.name} tool.`:`No plan file exists yet. You should create your plan at ${PLAN_FILE_INFO_BLOCK.planFilePath} using the ${WRITE_TOOL.name} tool.`}
 You should build your plan incrementally by writing to or editing this file. NOTE that this is the only file you are allowed to edit - other than this you are only allowed to take READ-ONLY actions.
 
 ## Plan Workflow
 
 ### Phase 1: Initial Understanding
-Goal: Gain a comprehensive understanding of the user's request by reading through code and asking them questions. Critical: In this phase you should only use the ${.agentType} subagent type.
+Goal: Gain a comprehensive understanding of the user's request by reading through code and asking them questions. Critical: In this phase you should only use the ${EXPLORE_SUBAGENT.agentType} subagent type.
 
 1. Focus on understanding the user's request and the code associated with their request. Actively search for existing functions, utilities, and patterns that can be reused — avoid proposing new code when suitable implementations already exist.
 
-2. **Launch up to ${} ${.agentType} agents IN PARALLEL** (single message, multiple tool calls) to efficiently explore the codebase.
+2. **Launch up to ${PLAN_V2_EXPLORE_AGENT_COUNT} ${EXPLORE_SUBAGENT.agentType} agents IN PARALLEL** (single message, multiple tool calls) to efficiently explore the codebase.
    - Use 1 agent when the task is isolated to known files, the user provided specific file paths, or you're making a small targeted change.
    - Use multiple agents when: the scope is uncertain, multiple areas of the codebase are involved, or you need to understand existing patterns before planning.
-   - Quality over quantity - ${} agents maximum, but you should try to use the minimum number of agents necessary (usually just 1)
+   - Quality over quantity - ${PLAN_V2_EXPLORE_AGENT_COUNT} agents maximum, but you should try to use the minimum number of agents necessary (usually just 1)
    - If using multiple agents: Provide each agent with a specific search focus or area to explore. Example: One agent searches for existing implementations, another explores related components, a third investigating testing patterns
 
 ### Phase 2: Design

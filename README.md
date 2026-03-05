@@ -34,7 +34,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 > [!important]
 > **NEW (January 23, 2026): We've added all of Claude Code's ~40 system reminders to this list&mdash;see [System Reminders](#system-reminders).**
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.66](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.66) (March 3rd, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 117 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.68](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.68) (March 4th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 117 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [changelog](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -229,7 +229,7 @@ Text for large system reminders.
 - [System Reminder: Output style active](./system-prompts/system-reminder-output-style-active.md) (**32** tks) - Notification that an output style is active.
 - [System Reminder: Output token limit exceeded](./system-prompts/system-reminder-output-token-limit-exceeded.md) (**35** tks) - Warning when response exceeds output token limit.
 - [System Reminder: Plan file reference](./system-prompts/system-reminder-plan-file-reference.md) (**62** tks) - Reference to an existing plan file.
-- [System Reminder: Plan mode is active (5-phase)](./system-prompts/system-reminder-plan-mode-is-active-5-phase.md) (**1385** tks) - Enhanced plan mode system reminder with parallel exploration and multi-agent planning.
+- [System Reminder: Plan mode is active (5-phase)](./system-prompts/system-reminder-plan-mode-is-active-5-phase.md) (**1437** tks) - Enhanced plan mode system reminder with parallel exploration and multi-agent planning.
 - [System Reminder: Plan mode is active (iterative)](./system-prompts/system-reminder-plan-mode-is-active-iterative.md) (**919** tks) - Iterative plan mode system reminder for main agent with user interviewing workflow.
 - [System Reminder: Plan mode is active (subagent)](./system-prompts/system-reminder-plan-mode-is-active-subagent.md) (**307** tks) - Simplified plan mode system reminder for sub agents.
 - [System Reminder: Plan mode re-entry](./system-prompts/system-reminder-plan-mode-re-entry.md) (**236** tks) - System reminder sent when the user enters Plan mode after having previously exited it either via shift+tab or by approving Claude's plan.
@@ -328,7 +328,7 @@ Built-in skill prompts for specialized tasks.
 - [Skill: Build with Claude API (reference guide)](./system-prompts/skill-build-with-claude-api-reference-guide.md) (**410** tks) - Template for presenting language-specific reference documentation with quick task navigation.
 - [Skill: Build with Claude API](./system-prompts/skill-build-with-claude-api.md) (**5137** tks) - Main routing guide for building LLM-powered applications with Claude, including language detection, surface selection, and architecture overview.
 - [Skill: Create verifier skills](./system-prompts/skill-create-verifier-skills.md) (**2517** tks) - Prompt for creating verifier skills for the Verify agent to automatically verify code changes.
-- [Skill: Debugging](./system-prompts/skill-debugging.md) (**288** tks) - Instructions for debugging an issue that the user is encountering in the Claude Code session.
+- [Skill: Debugging](./system-prompts/skill-debugging.md) (**303** tks) - Instructions for debugging an issue that the user is encountering in the Claude Code session.
 - [Skill: Simplify](./system-prompts/skill-simplify.md) (**695** tks) - Instructions for simplifying code.
 - [Skill: Update Claude Code Config](./system-prompts/skill-update-claude-code-config.md) (**1228** tks) - Skill for modifying Claude Code configuration file (settings.json).
 - [Skill: Verification specialist](./system-prompts/skill-verification-specialist.md) (**2367** tks) - Skill for verifying that code changes work correctly.
