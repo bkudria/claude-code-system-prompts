@@ -4,6 +4,21 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+#### [2.1.70](https://github.com/Piebald-AI/claude-code-system-prompts/commit/186e12a)
+
+_+1,212 tokens_
+
+- **NEW:** Agent Prompt: Worker fork execution — System prompt for a forked worker sub-agent that executes a directive directly without spawning further sub-agents, then reports structured results.
+- **NEW:** System Prompt: Fork usage guidelines — Instructions for when to fork subagents and rules against reading fork output mid-flight or fabricating fork results.
+- **NEW:** System Prompt: Subagent delegation examples — Provides example interactions showing how a coordinator agent should delegate tasks to subagents, handle waiting states, and report results.
+- **NEW:** System Prompt: Writing subagent prompts — Guidelines for writing effective prompts when delegating tasks to subagents, covering context-inheriting vs fresh subagent scenarios.
+- **NEW:** Tool Description: Agent (usage notes) — Usage notes and instructions for the Task/Agent tool, including guidance on launching subagents, background execution, resumption, and worktree isolation.
+- **NEW:** Tool Description: Agent (when to launch subagents) — Describes when to use the Agent tool for launching specialized subagent subprocesses to autonomously handle complex multi-step tasks.
+- **REMOVED:** Agent Prompt: User sentiment analysis — Deleted the agent prompt for analyzing user frustration and PR creation requests.
+- **REMOVED:** Tool Description: Task — Deleted the Task tool description (replaced by the new Agent usage notes and Agent when-to-launch prompts).
+- Agent Prompt: /security-review slash command — Changed git diff command from `--merge-base origin/HEAD` to `origin/HEAD...`; fixed version tag.
+
+
 #### [2.1.69](https://github.com/Piebald-AI/claude-code-system-prompts/commit/2fde688)
 
 _+3,310 tokens_
