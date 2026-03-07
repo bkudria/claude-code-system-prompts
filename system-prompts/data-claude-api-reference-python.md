@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — Python'
 description: Python SDK reference including installation, client initialization, basic requests, thinking, and multi-turn conversation
-ccVersion: 2.1.63
+ccVersion: 2.1.71
 -->
 # Claude API — Python
 
@@ -38,7 +38,11 @@ response = client.messages.create(
         {"role": "user", "content": "What is the capital of France?"}
     ]
 )
-print(response.content[0].text)
+# response.content is a list of content block objects (TextBlock, ThinkingBlock,
+# ToolUseBlock, ...). Check .type before accessing .text.
+for block in response.content:
+    if block.type == "text":
+        print(block.text)
 \`\`\`
 
 ---
@@ -239,7 +243,9 @@ class ConversationManager:
             **kwargs
         )
 
-        assistant_message = response.content[0].text
+        assistant_message = next(
+            (b.text for b in response.content if b.type == "text"), ""
+        )
         self.messages.append({"role": "assistant", "content": assistant_message})
 
         return assistant_message

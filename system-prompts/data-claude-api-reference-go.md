@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — Go'
 description: Go SDK reference
-ccVersion: 2.1.63
+ccVersion: 2.1.71
 -->
 # Claude API — Go
 
@@ -35,7 +35,7 @@ client := anthropic.NewClient(
 ## Basic Message Request
 
 \`\`\`go
-response, err := client.Messages.New(context.TODO(), anthropic.MessageNewParams{
+response, err := client.Messages.New(context.Background(), anthropic.MessageNewParams{
     Model:     anthropic.ModelClaudeOpus4_6,
     MaxTokens: 1024,
     Messages: []anthropic.MessageParam{
@@ -45,7 +45,12 @@ response, err := client.Messages.New(context.TODO(), anthropic.MessageNewParams{
 if err != nil {
     log.Fatal(err)
 }
-fmt.Println(response.Content[0].Text)
+for _, block := range response.Content {
+    switch variant := block.AsAny().(type) {
+    case anthropic.TextBlock:
+        fmt.Println(variant.Text)
+    }
+}
 \`\`\`
 
 ---
@@ -53,7 +58,7 @@ fmt.Println(response.Content[0].Text)
 ## Streaming
 
 \`\`\`go
-stream := client.Messages.NewStreaming(context.TODO(), anthropic.MessageNewParams{
+stream := client.Messages.NewStreaming(context.Background(), anthropic.MessageNewParams{
     Model:     anthropic.ModelClaudeOpus4_6,
     MaxTokens: 1024,
     Messages: []anthropic.MessageParam{
@@ -148,4 +153,138 @@ fmt.Println(message.Content[0].Text)
 
 ### Manual Loop
 
-For fine-grained control, use raw tool definitions via JSON schema. See the [shared tool use concepts](../shared/tool-use-concepts.md) for the tool definition format and agentic loop pattern.
+For fine-grained control over the agentic loop, define tools with \`ToolParam\`, check \`StopReason\`, execute tools yourself, and feed \`tool_result\` blocks back. This is the pattern when you need to intercept, validate, or log tool calls.
+
+Derived from \`anthropic-sdk-go/examples/tools/main.go\`.
+
+\`\`\`go
+package main
+
+import (
+    "context"
+    "encoding/json"
+    "fmt"
+    "log"
+
+    "github.com/anthropics/anthropic-sdk-go"
+)
+
+func main() {
+    client := anthropic.NewClient()
+
+    // 1. Define tools. ToolParam.InputSchema uses a map, no struct tags needed.
+    addTool := anthropic.ToolParam{
+        Name:        "add",
+        Description: anthropic.String("Add two integers"),
+        InputSchema: anthropic.ToolInputSchemaParam{
+            Properties: map[string]any{
+                "a": map[string]any{"type": "integer"},
+                "b": map[string]any{"type": "integer"},
+            },
+        },
+    }
+    // ToolParam must be wrapped in ToolUnionParam for the Tools slice
+    tools := []anthropic.ToolUnionParam{{OfTool: &addTool}}
+
+    messages := []anthropic.MessageParam{
+        anthropic.NewUserMessage(anthropic.NewTextBlock("What is 2 + 3?")),
+    }
+
+    for {
+        resp, err := client.Messages.New(context.Background(), anthropic.MessageNewParams{
+            Model:     anthropic.ModelClaudeSonnet4_6,
+            MaxTokens: 1024,
+            Messages:  messages,
+            Tools:     tools,
+        })
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        // 2. Append the assistant response to history BEFORE processing tool calls.
+        //    resp.ToParam() converts Message → MessageParam in one call.
+        messages = append(messages, resp.ToParam())
+
+        // 3. Walk content blocks. ContentBlockUnion is a flattened struct;
+        //    use block.AsAny().(type) to switch on the actual variant.
+        toolResults := []anthropic.ContentBlockParamUnion{}
+        for _, block := range resp.Content {
+            switch variant := block.AsAny().(type) {
+            case anthropic.TextBlock:
+                fmt.Println(variant.Text)
+            case anthropic.ToolUseBlock:
+                // 4. Parse the tool input. Use variant.JSON.Input.Raw() to get the
+                //    raw JSON — block.Input is json.RawMessage, not the parsed value.
+                var in struct {
+                    A int \`json:"a"\`
+                    B int \`json:"b"\`
+                }
+                if err := json.Unmarshal([]byte(variant.JSON.Input.Raw()), &in); err != nil {
+                    log.Fatal(err)
+                }
+                result := fmt.Sprintf("%d", in.A+in.B)
+                // 5. NewToolResultBlock(toolUseID, content, isError) builds the
+                //    ContentBlockParamUnion for you. block.ID is the tool_use_id.
+                toolResults = append(toolResults,
+                    anthropic.NewToolResultBlock(block.ID, result, false))
+            }
+        }
+
+        // 6. Exit when Claude stops asking for tools
+        if resp.StopReason != anthropic.StopReasonToolUse {
+            break
+        }
+
+        // 7. Tool results go in a user message (variadic: all results in one turn)
+        messages = append(messages, anthropic.NewUserMessage(toolResults...))
+    }
+}
+\`\`\`
+
+**Key API surface:**
+
+| Symbol | Purpose |
+|---|---|
+| \`resp.ToParam()\` | Convert \`Message\` response → \`MessageParam\` for history |
+| \`block.AsAny().(type)\` | Type-switch on \`ContentBlockUnion\` variants |
+| \`variant.JSON.Input.Raw()\` | Raw JSON string of tool input (for \`json.Unmarshal\`) |
+| \`anthropic.NewToolResultBlock(id, content, isError)\` | Build \`tool_result\` block |
+| \`anthropic.NewUserMessage(blocks...)\` | Wrap tool results as a user turn |
+| \`anthropic.StopReasonToolUse\` | \`StopReason\` constant to check loop termination |
+| \`anthropic.ToolUnionParam{OfTool: &t}\` | Wrap \`ToolParam\` in the union for \`Tools:\` |
+
+---
+
+## Extended Thinking
+
+Enable Claude's internal reasoning by setting \`Thinking\` in \`MessageNewParams\`. The response will contain \`ThinkingBlock\` content before the final \`TextBlock\`.
+
+Derived from \`anthropic-sdk-go/message.go:6316\` (\`ThinkingConfigParamOfEnabled\`).
+
+\`\`\`go
+resp, err := client.Messages.New(context.Background(), anthropic.MessageNewParams{
+    Model:     anthropic.ModelClaudeSonnet4_6,
+    MaxTokens: 16000,  // must be > budget_tokens
+    // ThinkingConfigParamOfEnabled(budgetTokens) is the helper constructor.
+    // budgetTokens must be >= 1024 and < MaxTokens.
+    Thinking: anthropic.ThinkingConfigParamOfEnabled(5000),
+    Messages: []anthropic.MessageParam{
+        anthropic.NewUserMessage(anthropic.NewTextBlock("How many r's in strawberry?")),
+    },
+})
+if err != nil {
+    log.Fatal(err)
+}
+
+// Thinking blocks come before text blocks in Content
+for _, block := range resp.Content {
+    switch variant := block.AsAny().(type) {
+    case anthropic.ThinkingBlock:
+        fmt.Println("[thinking]", variant.Thinking)
+    case anthropic.TextBlock:
+        fmt.Println("[response]", variant.Text)
+    }
+}
+\`\`\`
+
+To disable: \`anthropic.NewThinkingConfigDisabledParam()\`. For adaptive thinking (model decides budget): \`anthropic.NewThinkingConfigAdaptiveParam()\`.

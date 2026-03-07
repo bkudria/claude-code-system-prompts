@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK reference — TypeScript'
 description: TypeScript Agent SDK reference including installation, quick start, custom tools, and hooks
-ccVersion: 2.1.63
+ccVersion: 2.1.71
 -->
 # Agent SDK — TypeScript
 
@@ -142,6 +142,8 @@ for await (const message of query({
 }
 \`\`\`
 
+Hook event inputs for tool-lifecycle events (\`PreToolUse\`, \`PostToolUse\`, \`PostToolUseFailure\`) include \`agent_id\` and \`agent_type\` fields, allowing hooks to identify which agent (main or subagent) triggered the tool call.
+
 Available hook events: \`PreToolUse\`, \`PostToolUse\`, \`PostToolUseFailure\`, \`Notification\`, \`UserPromptSubmit\`, \`SessionStart\`, \`SessionEnd\`, \`Stop\`, \`SubagentStart\`, \`SubagentStop\`, \`PreCompact\`, \`PermissionRequest\`, \`Setup\`, \`TeammateIdle\`, \`TaskCompleted\`, \`ConfigChange\`
 
 ---
@@ -208,10 +210,55 @@ for await (const message of query({
 })) {
   if ("result" in message) {
     console.log(message.result);
+    console.log(\`Stop reason: \${message.stop_reason}\`); // e.g., "end_turn", "max_turns"
   } else if (message.type === "system" && message.subtype === "init") {
     const sessionId = message.session_id; // Capture for resuming later
   }
 }
+\`\`\`
+
+Task-related system messages are also emitted for subagent operations:
+- \`task_started\` — emitted when a subagent task is registered
+- \`task_progress\` — real-time progress updates with cumulative usage metrics, tool counts, and duration
+- \`task_notification\` — task completion notifications (includes \`tool_use_id\` for correlating with originating tool calls)
+
+---
+
+## Session History
+
+Retrieve past session data:
+
+\`\`\`typescript
+import { listSessions, getSessionMessages } from "@anthropic-ai/claude-agent-sdk";
+
+// List all past sessions
+const sessions = await listSessions();
+for (const session of sessions) {
+  console.log(\`\${session.sessionId}: \${session.cwd}\`);
+}
+
+// Get messages from a specific session (supports pagination via limit/offset)
+const messages = await getSessionMessages(sessionId, { limit: 50, offset: 0 });
+for (const msg of messages) {
+  console.log(msg);
+}
+\`\`\`
+
+---
+
+## MCP Server Management
+
+Manage MCP servers at runtime on a running query:
+
+\`\`\`typescript
+// Reconnect a disconnected MCP server
+await queryHandle.reconnectMcpServer("my-server");
+
+// Toggle an MCP server on/off
+await queryHandle.toggleMcpServer("my-server");
+
+// Check MCP server status (returns typed McpServerStatus with config, scope, tools, and error fields)
+const status = await queryHandle.mcpServerStatus();
 \`\`\`
 
 ---

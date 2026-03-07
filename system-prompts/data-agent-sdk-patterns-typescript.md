@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK patterns — TypeScript'
 description: TypeScript Agent SDK patterns including basic agents, hooks, subagents, and MCP integration
-ccVersion: 2.1.63
+ccVersion: 2.1.71
 -->
 # Agent SDK Patterns — TypeScript
 
@@ -129,6 +129,32 @@ for await (const message of query({
 })) {
   if ("result" in message) console.log(message.result);
 }
+\`\`\`
+
+---
+
+## Session History
+
+\`\`\`typescript
+import { listSessions, getSessionMessages } from "@anthropic-ai/claude-agent-sdk";
+
+async function main() {
+  // List past sessions
+  const sessions = await listSessions();
+  for (const session of sessions) {
+    console.log(\`Session \${session.sessionId} in \${session.cwd}\`);
+  }
+
+  // Retrieve messages from the most recent session
+  if (sessions.length > 0) {
+    const messages = await getSessionMessages(sessions[0].sessionId, { limit: 50 });
+    for (const msg of messages) {
+      console.log(msg);
+    }
+  }
+}
+
+main();
 \`\`\`
 
 ---

@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — TypeScript'
 description: TypeScript SDK reference including installation, client initialization, basic requests, thinking, and multi-turn conversation
-ccVersion: 2.1.63
+ccVersion: 2.1.71
 -->
 # Claude API — TypeScript
 
@@ -33,7 +33,13 @@ const response = await client.messages.create({
   max_tokens: 1024,
   messages: [{ role: "user", content: "What is the capital of France?" }],
 });
-console.log(response.content[0].text);
+// response.content is ContentBlock[] — a discriminated union. Narrow by .type
+// before accessing .text (TypeScript will error on content[0].text without this).
+for (const block of response.content) {
+  if (block.type === "text") {
+    console.log(block.text);
+  }
+}
 \`\`\`
 
 ---

@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK patterns — Python'
 description: Python Agent SDK patterns including custom tools, hooks, subagents, MCP integration, and session resumption
-ccVersion: 2.1.63
+ccVersion: 2.1.71
 -->
 # Agent SDK Patterns — Python
 
@@ -292,6 +292,29 @@ async def main():
     ):
         if isinstance(message, ResultMessage):
             print(message.result)
+
+anyio.run(main)
+\`\`\`
+
+---
+
+## Session History
+
+\`\`\`python
+import anyio
+from claude_agent_sdk import list_sessions, get_session_messages
+
+async def main():
+    # List past sessions
+    sessions = await list_sessions()
+    for session in sessions:
+        print(f"Session {session.session_id} in {session.cwd}")
+
+    # Retrieve messages from the most recent session
+    if sessions:
+        messages = await get_session_messages(session_id=sessions[0].session_id)
+        for msg in messages:
+            print(msg)
 
 anyio.run(main)
 \`\`\`

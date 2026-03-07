@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK reference — Python'
 description: Python Agent SDK reference including installation, quick start, custom tools via MCP, and hooks
-ccVersion: 2.1.63
+ccVersion: 2.1.71
 -->
 # Agent SDK — Python
 
@@ -169,6 +169,8 @@ async for message in query(
         print(message.result)
 \`\`\`
 
+Hook callback inputs for tool-lifecycle events (\`PreToolUse\`, \`PostToolUse\`, \`PostToolUseFailure\`) include \`agent_id\` and \`agent_type\` fields, allowing hooks to identify which agent (main or subagent) triggered the tool call.
+
 Available hook events: \`PreToolUse\`, \`PostToolUse\`, \`PostToolUseFailure\`, \`Notification\`, \`UserPromptSubmit\`, \`SessionStart\`, \`SessionEnd\`, \`Stop\`, \`SubagentStart\`, \`SubagentStop\`, \`PreCompact\`, \`PermissionRequest\`, \`Setup\`, \`TeammateIdle\`, \`TaskCompleted\`, \`ConfigChange\`
 
 ---
@@ -215,9 +217,15 @@ async for message in query(
 ):
     if isinstance(message, ResultMessage):
         print(message.result)
+        print(f"Stop reason: {message.stop_reason}")  # e.g., "end_turn", "max_turns"
     elif isinstance(message, SystemMessage) and message.subtype == "init":
         session_id = message.session_id  # Capture for resuming later
 \`\`\`
+
+Typed task message subclasses are available for better type safety when handling subagent task events:
+- \`TaskStarted\` — emitted when a subagent task is registered
+- \`TaskProgress\` — real-time progress updates with cumulative usage metrics
+- \`TaskNotification\` — task completion notifications
 
 ---
 
@@ -261,6 +269,44 @@ except CLINotFoundError:
     print("Claude Code CLI not found. Install with: pip install claude-agent-sdk")
 except CLIConnectionError as e:
     print(f"Connection error: {e}")
+\`\`\`
+
+---
+
+## Session History
+
+Retrieve past session data with top-level functions:
+
+\`\`\`python
+from claude_agent_sdk import list_sessions, get_session_messages
+
+# List all past sessions
+sessions = await list_sessions()
+for session in sessions:
+    print(f"{session.session_id}: {session.cwd}")
+
+# Get messages from a specific session
+messages = await get_session_messages(session_id="...")
+for msg in messages:
+    print(msg)
+\`\`\`
+
+---
+
+## MCP Server Management
+
+Manage MCP servers at runtime using \`ClaudeSDKClient\`:
+
+\`\`\`python
+async with ClaudeSDKClient(options=options) as client:
+    # Add a new MCP server during the session
+    await client.add_mcp_server("my-server", {"command": "npx", "args": ["my-server"]})
+
+    # Remove an MCP server
+    await client.remove_mcp_server("my-server")
+
+    # Check MCP server status (returns typed McpServerStatus)
+    status = await client.get_mcp_status()
 \`\`\`
 
 ---

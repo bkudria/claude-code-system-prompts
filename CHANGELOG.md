@@ -4,6 +4,36 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+#### [2.1.71](https://github.com/Piebald-AI/claude-code-system-prompts/commit/10a9b4f)
+
+_+10,211 tokens_
+
+- **NEW:** Agent Prompt: Security monitor for autonomous agent actions (first part) — Instructs Claude to act as a security monitor that evaluates autonomous coding agent actions against block/allow rules to prevent prompt injection, scope creep, and accidental damage.
+- **NEW:** Agent Prompt: Security monitor for autonomous agent actions (second part) — Defines the environment context, block rules, and allow exceptions that govern which tool actions the agent may or may not perform.
+- **NEW:** Skill: /loop slash command — Parses user input into an interval and prompt, converts the interval to a cron expression, and schedules a recurring task.
+- **NEW:** System Prompt: Memory system (private feedback) — Describes the private feedback memory type for storing user guidance and corrections, with instructions to check for contradictions against team feedback before saving.
+- **NEW:** System Prompt: Team memory content display — Renders shared team memory file contents with path and content for injection into the conversation context.
+- **NEW:** System Prompt: Using your tools (how to use searching tools) — Guidance to use `find` or `grep` via Bash for simple, directed codebase searches like finding a specific file, class, or function.
+- **NEW:** System Prompt: Using your tools (whether to use Explore subagent) — Guidance to use the Explore subagent for broader codebase exploration and deep research, noting it's slower than direct find/grep and should only be used when simple searches are insufficient.
+- **NEW:** Tool Description: CronCreate — Describes the CronCreate tool for enqueuing one-shot or recurring cron-based jobs with jitter and off-minute scheduling guidance.
+- Agent Prompt: Claude guide agent — Consolidated individual tool name references (Read, Glob, Grep) into a single grouped reference for local project file searching.
+- Agent Prompt: Explore strengths and guidelines — Generalized file search guidance from "Use Grep or Glob" to "search broadly when you don't know where something lives."
+- Agent Prompt: Explore — Tool usage guidelines now adapt based on whether embedded tools are active, conditionally including `grep` in allowed Bash operations.
+- Agent Prompt: Plan mode (enhanced) — Exploration instructions now adapt between `find`/`grep` and Glob/Grep tool references depending on embedded tools mode; conditionally includes `grep` in allowed Bash operations.
+- Agent Prompt: Worker fork execution — Removed Grep and Glob from the explicit tool list; added agent metadata block (fork type, inherited model, permission bubbling, max turns).
+- Data: Agent SDK patterns — Python — Added Session History section with examples for listing past sessions and retrieving messages.
+- Data: Agent SDK patterns — TypeScript — Added Session History section with examples for listing past sessions and retrieving messages with pagination.
+- Data: Agent SDK reference — Python — Added `agent_id`/`agent_type` fields on tool-lifecycle hook inputs; added `stop_reason` to result messages; added typed task message subclasses (TaskStarted, TaskProgress, TaskNotification); added Session History section; added MCP Server Management section with runtime add/remove/status operations.
+- Data: Agent SDK reference — TypeScript — Added `agent_id`/`agent_type` fields on tool-lifecycle hook inputs; added `stop_reason` to result messages; added task-related system message subtypes (task_started, task_progress, task_notification); added Session History section with pagination support; added MCP Server Management section with reconnect/toggle/status operations.
+- Data: Claude API reference — Go — Substantially expanded: updated basic example to use `context.Background()` and proper content block type-switching; added full manual agentic tool loop example with key API surface table; added Extended Thinking section with enable/disable/adaptive helpers.
+- Data: Claude API reference — Python — Updated basic message example to iterate content blocks by type instead of indexing `content[0].text`; updated ConversationManager to use `next()` with type filter.
+- Data: Claude API reference — Ruby — Updated basic message example to iterate content blocks by type symbol instead of calling `.first.text`.
+- Data: Claude API reference — TypeScript — Updated basic message example to iterate content blocks with type narrowing instead of indexing `content[0].text`.
+- Skill: Debugging — Added conditional section informing users when debug logging was just enabled (vs. already active), with instructions to reproduce the issue; fixed typo "relevate" → "relevant."
+- Skill: Simplify — Added "Unnecessary JSX nesting" as a new hacky-pattern check for wrapper elements that add no layout value; generalized duplicate-search guidance from tool-specific to broad search language.
+- Tool Description: Bash (prefer dedicated tools) — The list of commands to avoid running via Bash (previously hardcoded as find, grep, cat, head, tail, sed, awk, echo) is now dynamically determined based on context.
+
+
 #### [2.1.70](https://github.com/Piebald-AI/claude-code-system-prompts/commit/186e12a)
 
 _+1,212 tokens_
