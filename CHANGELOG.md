@@ -4,6 +4,31 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+#### [2.1.72](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7a45418)
+
+_+1,643 tokens_
+
+- **NEW:** System Prompt: Auto mode — Continuous task execution mode, akin to a background agent.
+- **NEW:** System Prompt: Brief mode — Codex-like execution mode with short status updates before launching into work.
+- **NEW:** System Prompt: Post checkpoints — Instructions for how to post checkpoints during task execution.
+- **NEW:** Tool Description: ExitWorktree — Tool for leaving a git worktree mid-session, with option to keep or remove it.
+- **NEW:** Tool Description: ToolSearch (second part) — Second part of the ToolSearch tool description with query modes and usage examples.
+- **REMOVED:** System Prompt: Tool permission mode — Removed guidance on tool permission modes and handling denied tool calls.
+- **REMOVED:** System Prompt: Using your tools (how to use searching tools) — Removed standalone searching tools guidance (consolidated into existing direct search and delegate exploration prompts).
+- **REMOVED:** System Prompt: Using your tools (whether to use Explore subagent) — Removed standalone Explore subagent guidance (consolidated into existing delegate exploration prompt).
+- **REMOVED:** Tool Description: ToolSearch extended — Removed extended ToolSearch usage instructions (replaced by ToolSearch second part).
+- Agent Prompt: Claude guide agent — Removed inline agent metadata block (agent type, model, permission mode, tool list, and when-to-use guidance).
+- Agent Prompt: Explore strengths and guidelines — Added agent metadata block with agent type, model, disallowed tools, when-to-use guidance, and critical read-only system reminder (moved from Explore prompt).
+- Agent Prompt: Explore — Removed inline agent metadata block (moved to Explore strengths and guidelines).
+- Agent Prompt: Verification specialist — Significantly expanded with two documented failure patterns (verification avoidance and "first 80%" bias); added structured per-check output format requiring command run, output observed, and result; added self-rationalization recognition section with common excuses to override; added guidance to match rigor to stakes; added pre-FAIL checklist to avoid flagging intentional behavior or already-handled cases; defined PARTIAL as environmental limitations only; updated mobile verification strategy to use accessibility/UI tree dumps instead of screenshots; clarified that test suite results are context, not evidence.
+- Skill: Simplify — Added "Recurring no-op updates" as a new efficiency check for state/store updates in polling loops or event handlers that fire unconditionally without change detection.
+- System Prompt: Fork usage guidelines — Refined forking criteria from a list of use cases to a qualitative "will I need this output again" heuristic; added guidance that forks beat Explore subagent for research because they inherit context and share cache; added warning not to set a different model on forks to preserve cache reuse.
+- System Prompt: Tool usage (delegate exploration) — Generalized individual tool name references to a unified search tools reference.
+- System Prompt: Tool usage (direct search) — Generalized individual tool name references to a unified search tools reference.
+- Tool Description: Agent (usage notes) — Internal variable renames only; no user-facing changes.
+- Tool Description: EnterWorktree — Added mention of ExitWorktree for leaving the worktree mid-session; clarified that the keep/remove prompt on session exit only applies if still in the worktree.
+- Tool Description: WebSearch — Internal variable rename only; no user-facing changes.
+
 #### [2.1.71](https://github.com/Piebald-AI/claude-code-system-prompts/commit/10a9b4f)
 
 _+10,211 tokens_
