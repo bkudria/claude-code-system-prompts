@@ -4,7 +4,47 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
-#### [2.1.72](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7a45418)
+# [2.1.74](https://github.com/Piebald-AI/claude-code-system-prompts/commit/93acf03)
+
+_+1,750 tokens_
+
+- **NEW:** Agent Prompt: Coding session title generator — Generates a title for the coding session.
+- **NEW:** Skill: /stuck — Diagnose frozen or slow Claude Code sessions.
+- Agent Prompt: Memory selection — Added rule to skip API/usage reference memories for tools already in active use, while still selecting warnings, gotchas, and known-issue memories for those tools.
+- Agent Prompt: Security monitor for autonomous agent actions (first part) — Added block rule for agents posting or commenting to shared/external systems when the user only asked a question or requested analysis; added "posting or writing to shared/external systems" to the list of high-severity actions requiring precise user intent; refined messaging context rule to evaluate content sensitivity, accuracy, and audience scope rather than blanket-allowing internal messaging; simplified evaluation procedure wording; added scope-creep example for read-vs-publish distinction.
+- Agent Prompt: Security monitor for autonomous agent actions (second part) — Added "Remote Shell Writes" block rule for writes to production/shared hosts via `kubectl exec`, `docker exec`, or `ssh`; renamed "Preview/Apply Collapse" to "Blind Apply" with clearer description of bypassed confirmation flags; added "External System Writes" block rule covering deletions, modifications, and publishing in external collaboration tools the agent didn't create; added "Content Integrity / Impersonation" block rule for false, fabricated, or misattributed content; added "Real-World Transactions" block rule for purchases, payments, and communications to people outside the user's organization; expanded "Irreversible Local Destruction" to cover untested glob/regex patterns and edits to package-manager-installed files; clarified "Local Operations" allow exception to scope "project scope" as the starting repository only; expanded "Production Deploy" definition to include production services.
+- System Reminder: /btw side question — Rewrote constraint framing from 'CRITICAL CONSTRAINTS' with 'no tools available' messaging to 'IMPORTANT CONTEXT' explaining the responder is a separate lightweight agent; clarified that the main agent continues working independently and that the responder should not reference being interrupted.
+
+
+# [2.1.73](https://github.com/Piebald-AI/claude-code-system-prompts/commit/c02a840)
+
+_+13,443 tokens_
+
+- **NEW:** Data: Claude API reference — cURL — Raw API reference for Claude API for use with cURL or raw HTTP.
+- **NEW:** System Prompt: How to use the SendUserMessage tool — Instructions for using the SendUserMessage tool.
+- **NEW:** System Prompt: Phase four of plan mode — Phase four of plan mode, extracted as a standalone prompt.
+- **NEW:** Tool Description: SendMessageTool (non-agent-teams) — Description of the SendMessageTool for non-agent-teams contexts.
+- **REMOVED:** System Prompt: Brief mode — Removed Codex-like execution mode with short status updates before launching into work.
+- **REMOVED:** System Prompt: Post checkpoints — Removed instructions for how to post checkpoints during task execution.
+- Data: Agent SDK patterns — Python — Clarified that custom SDK MCP tools require `ClaudeSDKClient` (not `query()`); removed `allow_dangerously_skip_permissions` from bypass permissions example; fixed session ID extraction to use `message.data.get("session_id")`; changed `list_sessions` and `get_session_messages` from async to sync functions.
+- Data: Agent SDK reference — Python — Removed `"dontAsk"` permission mode; removed `allow_dangerously_skip_permissions` option and requirement for bypass permissions; reduced available hook events list to a smaller set; fixed session ID extraction to use `message.data.get("session_id")`; renamed task message subclasses to `TaskStartedMessage`, `TaskProgressMessage`, `TaskNotificationMessage`; changed `list_sessions` and `get_session_messages` from async to sync functions; changed MCP server management methods from add/remove to reconnect/toggle/status pattern.
+- Data: Agent SDK reference — TypeScript — Clarified `"dontAsk"` permission mode as denying anything not pre-approved rather than auto-approving; expanded available hook events list with `Elicitation`, `ElicitationResult`, `WorktreeCreate`, `WorktreeRemove`, `InstructionsLoaded`; changed `tools` option to accept a preset object in addition to string arrays; changed `systemPrompt` option to accept a preset object with optional append; corrected stop reason example values; clarified `toggleMcpServer` requires both name and enabled parameters; clarified `mcpServerStatus` returns an array of all configured servers.
+- Data: Claude API reference — C# — Substantially expanded: added content block iteration with `TryPick*` pattern for type-safe narrowing; added adaptive thinking section; added full tool definition and manual tool loop with round-trip conversion guidance; added context editing/compaction beta section with `BetaContentBlock` handling; added effort parameter, prompt caching, token counting, structured output, PDF/document input, server-side tools, and Files API beta sections.
+- Data: Claude API reference — Go — Added stream message accumulation pattern; added `BetaTextBlock` type narrowing for `RunToCompletion` results; replaced fixed-budget extended thinking with adaptive thinking as recommended mode; added server-side tools, PDF/document input, Files API beta, and context editing/compaction beta sections.
+- Data: Claude API reference — Java — Substantially expanded: added adaptive thinking section with `ThinkingConfigAdaptive`; added non-beta tool declaration with manual JSON schema; added `MessageParam` content block building for tool result round-trips; added effort parameter, prompt caching, token counting, structured output with typed parsing, PDF/document input, server-side tools with beta namespace guidance, server tool response reading, and Files API beta sections.
+- Data: Claude API reference — PHP — Substantially expanded: updated Bedrock, Vertex AI, and Foundry client initialization to use new namespaced static factories; added content block type checking for safe text extraction; added SDK version requirement note for streaming; added typed streaming event handling; added full manual tool use loop with camelCase key guidance; added adaptive thinking section; added beta features section with MCP server and server-side tools guidance.
+- Data: Claude API reference — Python — Updated compaction availability from "Opus 4.6 only" to "Opus 4.6 and Sonnet 4.6."
+- Data: Claude API reference — TypeScript — Corrected multi-turn rule from "messages must alternate" to "consecutive same-role messages are allowed"; updated compaction availability from "Opus 4.6 only" to "Opus 4.6 and Sonnet 4.6"; added type guard narrowing for `BetaTextBlock` in compaction example.
+- Data: Claude model catalog — Added retirement date (Apr 19, 2026) for Claude Haiku 3.
+- Data: Files API reference — Python — Updated code examples to iterate content blocks by type instead of indexing `content[0].text`.
+- Data: HTTP error codes reference — Added `request_id` field to error response example.
+- Data: Message Batches API reference — Python — Updated code examples to find text blocks by type instead of indexing `content[0].text`.
+- Data: Tool use reference — Python — Fixed `tool_runner` call from async to sync; updated structured output example to find text blocks by type instead of indexing `content[0].text`.
+- Data: Tool use reference — TypeScript — Added server-side tools section with interface/name/type mapping table and beta mixing warning; fixed `pause_turn` handling to append assistant turn instead of resetting messages; added ESM `__dirname` workaround note; fixed variable shadowing in file download example; added nullability annotations for `container.id` and `parsed_output`; added "Reading Local Files" ESM section.
+- Skill: Build with Claude API — Updated compaction availability from "Opus 4.6 only" to "Opus 4.6 and Sonnet 4.6."
+- System Reminder: Plan mode is active (5-phase) — Extracted Phase 4 (Final Plan) instructions into a separate reusable prompt reference.
+
+# [2.1.72](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7a45418)
 
 _+1,643 tokens_
 
@@ -29,7 +69,7 @@ _+1,643 tokens_
 - Tool Description: EnterWorktree — Added mention of ExitWorktree for leaving the worktree mid-session; clarified that the keep/remove prompt on session exit only applies if still in the worktree.
 - Tool Description: WebSearch — Internal variable rename only; no user-facing changes.
 
-#### [2.1.71](https://github.com/Piebald-AI/claude-code-system-prompts/commit/10a9b4f)
+# [2.1.71](https://github.com/Piebald-AI/claude-code-system-prompts/commit/10a9b4f)
 
 _+10,211 tokens_
 
@@ -59,7 +99,7 @@ _+10,211 tokens_
 - Tool Description: Bash (prefer dedicated tools) — The list of commands to avoid running via Bash (previously hardcoded as find, grep, cat, head, tail, sed, awk, echo) is now dynamically determined based on context.
 
 
-#### [2.1.70](https://github.com/Piebald-AI/claude-code-system-prompts/commit/186e12a)
+# [2.1.70](https://github.com/Piebald-AI/claude-code-system-prompts/commit/186e12a)
 
 _+1,212 tokens_
 
@@ -74,7 +114,7 @@ _+1,212 tokens_
 - Agent Prompt: /security-review slash command — Changed git diff command from `--merge-base origin/HEAD` to `origin/HEAD...`; fixed version tag.
 
 
-#### [2.1.69](https://github.com/Piebald-AI/claude-code-system-prompts/commit/2fde688)
+# [2.1.69](https://github.com/Piebald-AI/claude-code-system-prompts/commit/2fde688)
 
 _+3,310 tokens_
 
@@ -111,7 +151,7 @@ _+3,310 tokens_
 
 <sub>_No changes to the system prompts in v2.1.68._</sub>
 
-#### [2.1.66](https://github.com/Piebald-AI/claude-code-system-prompts/commit/c55bb75)
+# [2.1.66](https://github.com/Piebald-AI/claude-code-system-prompts/commit/c55bb75)
 
 _-1,507 tokens_
 
@@ -127,7 +167,7 @@ _-1,507 tokens_
 - Tool Description: ToolSearch extended — Removed comma-separated multi-tool direct selection; `select:` now loads only a single named tool.
 - Tool Description: ToolSearch — Added `ADDITIONAL_PROMPT_SECTION` variable.
 
-#### [2.1.64](https://github.com/Piebald-AI/claude-code-system-prompts/commit/ac581b8)
+# [2.1.64](https://github.com/Piebald-AI/claude-code-system-prompts/commit/ac581b8)
 
 _+1,291 tokens_
 
@@ -142,7 +182,7 @@ _+1,291 tokens_
 - Tool Description: ToolSearch — Removed `EXTENDED_TOOL_SEARCH_PROMPT` variable; inlined the tool description.
 
 
-#### [2.1.63](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7e37a33)
+# [2.1.63](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7e37a33)
 
 _+4,200 tokens_
 
@@ -179,7 +219,7 @@ _+4,200 tokens_
 
 <sub>_No changes to the system prompts in v2.1.61._</sub>
 
-#### [2.1.59](https://github.com/Piebald-AI/claude-code-system-prompts/commit/6147099)
+# [2.1.59](https://github.com/Piebald-AI/claude-code-system-prompts/commit/6147099)
 
 _-493 tokens_
 
@@ -202,7 +242,7 @@ _-493 tokens_
 
 <sub>_No changes to the system prompts in v2.1.54._</sub>
 
-#### [2.1.53](https://github.com/Piebald-AI/claude-code-system-prompts/commit/f7330d2)
+# [2.1.53](https://github.com/Piebald-AI/claude-code-system-prompts/commit/f7330d2)
 
 _-617 tokens_
 
@@ -223,7 +263,7 @@ _-617 tokens_
 
 <sub>_No changes to the system prompts in v2.1.52._</sub>
 
-#### [2.1.51](https://github.com/Piebald-AI/claude-code-system-prompts/commit/1988a63)
+# [2.1.51](https://github.com/Piebald-AI/claude-code-system-prompts/commit/1988a63)
 
 _+6,918 tokens_
 
@@ -256,7 +296,7 @@ _+6,918 tokens_
 - Widespread internal variable renames across 12 files (e.g., `ADDITIONAL_USER_INPUT` → `USER_INPUT`, `PREVIOUS_AGENT_SUMMARY` → `PREVIOUS_SUMMARY`, `SYSTEM_REMINDER` → `PLAN_STATE`, `COMMIT_CO_AUTHORED_BY_CLAUDE_CODE` → `ATTRIBUTION_TEXT`, `IS_TRUTHY_FN` → `IS_BACKGROUND_TASKS_DISABLED_FN`, `CAN_READ_PDF_FILES` → `IS_PDF_SUPPORTED_FN`, and others).
 
 
-#### [2.1.50](https://github.com/Piebald-AI/claude-code-system-prompts/commit/5fa66df)
+# [2.1.50](https://github.com/Piebald-AI/claude-code-system-prompts/commit/5fa66df)
 
 _+110 tokens_
 
@@ -268,7 +308,7 @@ _+110 tokens_
 
 <sub>_No changes to the system prompts in v2.1.49._</sub>
 
-#### [2.1.48](https://github.com/Piebald-AI/claude-code-system-prompts/commit/0d57836)
+# [2.1.48](https://github.com/Piebald-AI/claude-code-system-prompts/commit/0d57836)
 
 _-1,082 tokens_
 
@@ -276,7 +316,7 @@ _-1,082 tokens_
 - **REMOVED:** System Prompt: MCP CLI - Removed instructions for using mcp-cli to interact with Model Context Protocol servers (1333 tks).
 - Tool Description: Task - Simplified background agent output-file guidance; removed `BASH_TOOL` variable and `tail` instructions; added new "Foreground vs background" bullet explaining when to use each mode (1214 → 1228 tks).
 
-#### [2.1.47](https://github.com/Piebald-AI/claude-code-system-prompts/commit/f58cba9)
+# [2.1.47](https://github.com/Piebald-AI/claude-code-system-prompts/commit/f58cba9)
 
 _+34,752 tokens_
 
@@ -296,7 +336,7 @@ _+34,752 tokens_
 - Agent Prompt: Status line setup - Added `added_dirs` field to the workspace schema for directories added via `/add-dir` (1482 → 1502 tks).
 - Tool Description: AskUserQuestion - Added `EXIT_PLAN_MODE_TOOL_NAME` variable; expanded plan mode guidance to warn against referencing "the plan" in questions, since users cannot see the plan until `ExitPlanMode` is called (194 → 287 tks).
 
-#### [2.1.45](https://github.com/Piebald-AI/claude-code-system-prompts/commit/36d2856)
+# [2.1.45](https://github.com/Piebald-AI/claude-code-system-prompts/commit/36d2856)
 
 _+276 tokens_
 
@@ -310,14 +350,14 @@ _+276 tokens_
 
 <sub>_No changes to the system prompts in v2.1.44._</sub>
 
-#### [2.1.42](https://github.com/Piebald-AI/claude-code-system-prompts/commit/8a1123a)
+# [2.1.42](https://github.com/Piebald-AI/claude-code-system-prompts/commit/8a1123a)
 
 _-1,060 tokens_
 
 - **REMOVED:** Agent Prompt: Remember skill - Removed the `/remember` skill prompt that reviewed session memories and updated CLAUDE.local.md with recurring patterns and learnings (1048 tks).
 - Tool Description: WebSearch - Simplified date-awareness variables; replaced `GET_CURRENT_DATE_FN` and `CURRENT_YEAR` with a single `CURRENT_MONTH_YEAR` variable; updated example to use plain text ("with the current year, NOT last year") instead of template expressions (331 → 319 tks).
 
-#### [2.1.41](https://github.com/Piebald-AI/claude-code-system-prompts/commit/91732e4)
+# [2.1.41](https://github.com/Piebald-AI/claude-code-system-prompts/commit/91732e4)
 
 _+262 tokens_
 
@@ -327,19 +367,19 @@ _+262 tokens_
 - System Reminder: Plan mode is active (5-phase) - Made Explore subagent usage conditional; when disabled, Phase 1 now instructs Claude to use Glob, Grep, and Read tools directly; updated Phase 2 variable references for plan subagent and agent count (1429 → 1500 tks).
 - Agent Prompt: Status line setup - Added `session_name` field (optional human-readable session name set via `/rename`) to the JSON input spec (1460 → 1482 tks).
 
-#### [2.1.40](https://github.com/Piebald-AI/claude-code-system-prompts/commit/06ce2b9)
+# [2.1.40](https://github.com/Piebald-AI/claude-code-system-prompts/commit/06ce2b9)
 
 _-293 tokens_
 
 - **REMOVED:** Agent Prompt: Evolve currently-running skill - Removed agent prompt for evolving a currently-running skill based on user requests or preferences (293 tks).
 
-#### [2.1.39](https://github.com/Piebald-AI/claude-code-system-prompts/commit/11e9ec6)
+# [2.1.39](https://github.com/Piebald-AI/claude-code-system-prompts/commit/11e9ec6)
 
 _+293 tokens_
 
 - **NEW:** Agent Prompt: Evolve currently-running skill - Added new agent prompt for evolving a currently-running skill based on what the user is implicitly or explicitly requesting (293 tks).
 
-#### [2.1.38](https://github.com/Piebald-AI/claude-code-system-prompts/commit/30adcee)
+# [2.1.38](https://github.com/Piebald-AI/claude-code-system-prompts/commit/30adcee)
 
 _+105 tokens_
 
