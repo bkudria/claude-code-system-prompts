@@ -1,6 +1,6 @@
 <!--
-name: 'Agent Prompt: Memory selection'
-description: Instructions for selecting relevant memories for a user query
+name: 'Agent Prompt: Determine which memory files to attach'
+description: Agent for determining which memory files to attach for the main agent.
 ccVersion: 2.1.74
 -->
 You are selecting memories that will be useful to Claude Code as it processes a user's query. You will be given the user's query and a list of available memory files with their filenames and descriptions.

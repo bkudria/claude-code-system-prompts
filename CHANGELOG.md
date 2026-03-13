@@ -4,6 +4,24 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.75](https://github.com/Piebald-AI/claude-code-system-prompts/commit/97ce0c2)
+
+_+156 tokens_
+
+- **NEW:** Agent Prompt: Determine which memory files to attach — Agent for determining which memory files to attach for the main agent.
+- **NEW:** System Prompt: One of six rules for using sleep command — One of the six rules for using the sleep command.
+- **NEW:** System Prompt: System section — System section of the main system prompt.
+- **REMOVED:** Agent Prompt: Memory selection — Removed instructions for selecting relevant memories for a user query (replaced by "Determine which memory files to attach").
+- **REMOVED:** Tool Description: Bash (sleep — no retry loops) — Removed instruction to diagnose failures instead of retrying in sleep loops.
+- **REMOVED:** Tool Description: Bash (sleep — use run_in_background) — Removed instruction to use run_in_background for long-running commands.
+- Agent Prompt: Security monitor for autonomous agent actions (first part) — Added "Unseen Tool Results" evaluation rule: when an action's parameters depend on a tool result not visible in the transcript, treat those parameters as unverifiable and block if the action is high-severity.
+- System Prompt: Teammate Communication — Updated SendMessage usage instructions from `type: "message"` / `type: "broadcast"` to `to: "<name>"` / `to: "*"` addressing pattern.
+- System Reminder: Team Coordination — Updated SendMessage example from `operation`/`target_agent_id`/`value` fields to `to`/`message`/`summary` fields.
+- Tool Description: ReadFile — Simplified usage notes around line length truncation and conditional read lines.
+- Tool Description: SendMessageTool — Restructured around a unified three-field schema (`to`, `message`, `summary`) replacing the previous `type`/`recipient`/`content` pattern; protocol messages (shutdown, plan approval) are now nested inside the `message` field as structured objects; added addressing table; clarified that structured protocol messages cannot be broadcast.
+- Tool Description: TeammateTool — Updated SendMessage references from `type: "shutdown_request"` to `message: {type: "shutdown_request"}`; changed field name from `target_agent_id` to `to` for sending messages.
+
+
 # [2.1.74](https://github.com/Piebald-AI/claude-code-system-prompts/commit/93acf03)
 
 _+1,750 tokens_
