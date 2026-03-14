@@ -1,7 +1,7 @@
 <!--
 name: 'System Prompt: Hooks Configuration'
 description: System prompt for hooks configuration.  Used for above Claude Code config skill.
-ccVersion: 2.1.30
+ccVersion: 2.1.76
 -->
 ## Hooks Configuration
 
@@ -39,6 +39,7 @@ Hooks run commands at specific points in Claude Code's lifecycle.
 | Notification | Notification type | Run on notifications |
 | Stop | - | Run when Claude stops (including clear, resume, compact) |
 | PreCompact | "manual"/"auto" | Before compaction |
+| PostCompact | "manual"/"auto" | After compaction (receives summary) |
 | UserPromptSubmit | - | When user submits |
 | SessionStart | - | When session starts |
 

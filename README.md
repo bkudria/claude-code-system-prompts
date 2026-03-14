@@ -34,7 +34,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 > [!important]
 > **NEW (January 23, 2026): We've added all of Claude Code's ~40 system reminders to this list&mdash;see [System Reminders](#system-reminders).**
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.75](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.75) (March 13th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 125 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.76](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.76) (March 13th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 126 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [changelog](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -108,7 +108,7 @@ Sub-agents and utilities.
 - [Agent Prompt: Quick git commit](./system-prompts/agent-prompt-quick-git-commit.md) (**510** tks) - Streamlined prompt for creating a single git commit with pre-populated context.
 - [Agent Prompt: Recent Message Summarization](./system-prompts/agent-prompt-recent-message-summarization.md) (**559** tks) - Agent prompt used for summarizing recent messages.
 - [Agent Prompt: Security monitor for autonomous agent actions (first part)](./system-prompts/agent-prompt-security-monitor-for-autonomous-agent-actions-first-part.md) (**2675** tks) - Instructs Claude to act as a security monitor that evaluates autonomous coding agent actions against block/allow rules to prevent prompt injection, scope creep, and accidental damage.
-- [Agent Prompt: Security monitor for autonomous agent actions (second part)](./system-prompts/agent-prompt-security-monitor-for-autonomous-agent-actions-second-part.md) (**2925** tks) - Defines the environment context, block rules, and allow exceptions that govern which tool actions the agent may or may not perform.
+- [Agent Prompt: Security monitor for autonomous agent actions (second part)](./system-prompts/agent-prompt-security-monitor-for-autonomous-agent-actions-second-part.md) (**2966** tks) - Defines the environment context, block rules, and allow exceptions that govern which tool actions the agent may or may not perform.
 - [Agent Prompt: Session Search Assistant](./system-prompts/agent-prompt-session-search-assistant.md) (**439** tks) - Agent prompt for the session search assistant that finds relevant sessions based on user queries and metadata.
 - [Agent Prompt: Session memory update instructions](./system-prompts/agent-prompt-session-memory-update-instructions.md) (**756** tks) - Instructions for updating session memory files during conversations.
 - [Agent Prompt: Session title and branch generation](./system-prompts/agent-prompt-session-title-and-branch-generation.md) (**307** tks) - Agent for generating succinct session titles and git branch names.
@@ -180,7 +180,7 @@ Parts of the main system prompt.
 - [System Prompt: Executing actions with care](./system-prompts/system-prompt-executing-actions-with-care.md) (**541** tks) - Instructions for executing actions carefully.
 - [System Prompt: Fork usage guidelines](./system-prompts/system-prompt-fork-usage-guidelines.md) (**339** tks) - Instructions for when to fork subagents and rules against reading fork output mid-flight or fabricating fork results.
 - [System Prompt: Git status](./system-prompts/system-prompt-git-status.md) (**97** tks) - System prompt for displaying the current git status at the start of the conversation.
-- [System Prompt: Hooks Configuration](./system-prompts/system-prompt-hooks-configuration.md) (**1461** tks) - System prompt for hooks configuration.  Used for above Claude Code config skill.
+- [System Prompt: Hooks Configuration](./system-prompts/system-prompt-hooks-configuration.md) (**1482** tks) - System prompt for hooks configuration.  Used for above Claude Code config skill.
 - [System Prompt: How to use the SendUserMessage tool](./system-prompts/system-prompt-how-to-use-the-sendusermessage-tool.md) (**283** tks) - Instructions for using the SendUserMessage tool.
 - [System Prompt: Insights at a glance summary](./system-prompts/system-prompt-insights-at-a-glance-summary.md) (**569** tks) - Generates a concise 4-part summary (what's working, hindrances, quick wins, ambitious workflows) for the insights report.
 - [System Prompt: Insights friction analysis](./system-prompts/system-prompt-insights-friction-analysis.md) (**139** tks) - Analyzes aggregated usage data to identify friction patterns and categorize recurring issues.
@@ -276,8 +276,8 @@ Text for large system reminders.
 - [Tool Description: Grep](./system-prompts/tool-description-grep.md) (**300** tks) - Tool description for content search using ripgrep.
 - [Tool Description: LSP](./system-prompts/tool-description-lsp.md) (**255** tks) - Description for the LSP tool.
 - [Tool Description: NotebookEdit](./system-prompts/tool-description-notebookedit.md) (**121** tks) - Tool description for editing Jupyter notebook cells.
-- [Tool Description: ReadFile](./system-prompts/tool-description-readfile.md) (**463** tks) - Tool description for reading files.
-- [Tool Description: SendMessageTool](./system-prompts/tool-description-sendmessagetool.md) (**1205** tks) - Tool for sending messages to teammates and handling protocol requests/responses in a swarm.
+- [Tool Description: ReadFile](./system-prompts/tool-description-readfile.md) (**440** tks) - Tool description for reading files.
+- [Tool Description: SendMessageTool](./system-prompts/tool-description-sendmessagetool.md) (**1205** tks) - Agent teams version of SendMessageTool.
 - [Tool Description: Skill](./system-prompts/tool-description-skill.md) (**326** tks) - Tool description for executing skills in the main conversation.
 - [Tool Description: Sleep](./system-prompts/tool-description-sleep.md) (**154** tks) - Tool for waiting/sleeping with early wake capability on user input.
 - [Tool Description: TaskCreate](./system-prompts/tool-description-taskcreate.md) (**528** tks) - Tool description for TaskCreate tool.
@@ -353,5 +353,5 @@ Built-in skill prompts for specialized tasks.
 - [Skill: Create verifier skills](./system-prompts/skill-create-verifier-skills.md) (**2625** tks) - Prompt for creating verifier skills for the Verify agent to automatically verify code changes.
 - [Skill: Debugging](./system-prompts/skill-debugging.md) (**412** tks) - Instructions for debugging an issue that the user is encountering in the Claude Code session.
 - [Skill: Simplify](./system-prompts/skill-simplify.md) (**822** tks) - Instructions for simplifying code.
-- [Skill: Update Claude Code Config](./system-prompts/skill-update-claude-code-config.md) (**1228** tks) - Skill for modifying Claude Code configuration file (settings.json).
+- [Skill: Update Claude Code Config](./system-prompts/skill-update-claude-code-config.md) (**1232** tks) - Skill for modifying Claude Code configuration file (settings.json).
 - [Skill: Verification specialist](./system-prompts/skill-verification-specialist.md) (**2472** tks) - Skill for verifying that code changes work correctly.

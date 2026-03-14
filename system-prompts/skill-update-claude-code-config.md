@@ -1,7 +1,7 @@
 <!--
 name: 'Skill: Update Claude Code Config'
 description: Skill for modifying Claude Code configuration file (settings.json).
-ccVersion: 2.1.9
+ccVersion: 2.1.76
 variables:
   - SETTINGS_FILE_LOCATION_PROMPT
   - HOOKS_CONFIGURATION_PROMPT
@@ -20,7 +20,7 @@ If the user wants something to happen automatically in response to an EVENT, the
 - "When I run bash commands, log them" → PreToolUse hook with Bash matcher
 - "Always run tests after code changes" → PostToolUse hook
 
-**Hook events:** PreToolUse, PostToolUse, PreCompact, Stop, Notification, SessionStart
+**Hook events:** PreToolUse, PostToolUse, PreCompact, PostCompact, Stop, Notification, SessionStart
 
 ## CRITICAL: Read Before Write
 

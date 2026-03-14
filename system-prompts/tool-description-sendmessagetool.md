@@ -1,6 +1,6 @@
 <!--
 name: 'Tool Description: SendMessageTool'
-description: Tool for sending messages to teammates and handling protocol requests/responses in a swarm.
+description: Agent teams version of SendMessageTool.
 ccVersion: 2.1.75
 -->
 

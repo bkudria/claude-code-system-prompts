@@ -4,6 +4,16 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.76](https://github.com/Piebald-AI/claude-code-system-prompts/commit/6cc7a81)
+
+_+43 tokens_
+
+- Agent Prompt: Security monitor for autonomous agent actions (second part) — Clarified "base64-encoded" to "encoded (e.g. base64)" for sensitive data detection; broadened code-from-external deserialization examples to "formats that can execute code (eval, exec, yaml.unsafe_load, pickle, etc)"; refined "Modify Shared Resources" examples by removing "model registrations"; improved "Irreversible Local Destruction" formatting and clarified package-manager-controlled directory guidance (explaining files get regenerated on install and suggesting copying into source tree); changed "GitHub issues/PRs" capitalization to "GitHub Issues/PRs" in External System Writes; updated Data Exfiltration to replace "creating gists" with "public plaintext sharing applications (e.g. public GitHub gists)"; quoted rule names in cross-references (e.g. "Local Operations" ALLOW exception, "Irreversible Local Destruction" in BLOCK).
+- Skill: Update Claude Code Config — Added `PostCompact` to the list of available hook events.
+- System Prompt: Hooks Configuration — Added `PostCompact` hook event (fires after compaction, receives summary) to the hooks event table.
+- Tool Description: ReadFile — Condensed and reordered usage notes; added a note about reading full files.
+
+
 # [2.1.75](https://github.com/Piebald-AI/claude-code-system-prompts/commit/97ce0c2)
 
 _+156 tokens_
