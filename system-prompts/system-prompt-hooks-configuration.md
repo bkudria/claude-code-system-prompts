@@ -1,7 +1,7 @@
 <!--
 name: 'System Prompt: Hooks Configuration'
 description: System prompt for hooks configuration.  Used for above Claude Code config skill.
-ccVersion: 2.1.76
+ccVersion: 2.1.77
 -->
 ## Hooks Configuration
 
@@ -116,7 +116,7 @@ Hooks can return JSON to control behavior:
       "matcher": "Write|Edit",
       "hooks": [{
         "type": "command",
-        "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | xargs prettier --write 2>/dev/null || true"
+        "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; prettier --write \\"$f\\"; } 2>/dev/null || true"
       }]
     }]
   }

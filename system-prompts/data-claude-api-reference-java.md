@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — Java'
 description: Java SDK reference including installation, client initialization, basic requests, streaming, and beta tool use
-ccVersion: 2.1.73
+ccVersion: 2.1.77
 -->
 # Claude API — Java
 
@@ -15,14 +15,14 @@ Maven:
 <dependency>
     <groupId>com.anthropic</groupId>
     <artifactId>anthropic-java</artifactId>
-    <version>2.15.0</version>
+    <version>2.16.0</version>
 </dependency>
 \`\`\`
 
 Gradle:
 
 \`\`\`groovy
-implementation("com.anthropic:anthropic-java:2.15.0")
+implementation("com.anthropic:anthropic-java:2.16.0")
 \`\`\`
 
 ## Client Initialization
@@ -152,6 +152,41 @@ for (BetaMessage message : toolRunner) {
     System.out.println(message);
 }
 \`\`\`
+
+### Memory Tool
+
+The Java SDK provides \`BetaMemoryToolHandler\` for implementing the memory tool backend. You supply a handler that manages file storage, and the \`BetaToolRunner\` handles memory tool calls automatically.
+
+\`\`\`java
+import com.anthropic.helpers.BetaMemoryToolHandler;
+import com.anthropic.helpers.BetaToolRunner;
+import com.anthropic.models.beta.messages.BetaMemoryTool20250818;
+import com.anthropic.models.beta.messages.BetaMessage;
+import com.anthropic.models.beta.messages.MessageCreateParams;
+import com.anthropic.models.beta.messages.ToolRunnerCreateParams;
+
+// Implement BetaMemoryToolHandler with your storage backend (e.g., filesystem)
+BetaMemoryToolHandler memoryHandler = new FileSystemMemoryToolHandler(sandboxRoot);
+
+MessageCreateParams createParams = MessageCreateParams.builder()
+    .model("{{OPUS_ID}}")
+    .maxTokens(4096L)
+    .addTool(BetaMemoryTool20250818.builder().build())
+    .addUserMessage("Remember that my favorite color is blue")
+    .build();
+
+BetaToolRunner toolRunner = client.beta().messages().toolRunner(
+    ToolRunnerCreateParams.builder()
+        .betaMemoryToolHandler(memoryHandler)
+        .initialMessageParams(createParams)
+        .build());
+
+for (BetaMessage message : toolRunner) {
+    System.out.println(message);
+}
+\`\`\`
+
+See the [shared memory tool concepts](../shared/tool-use-concepts.md) for more details on the memory tool.
 
 ### Non-Beta Tool Declaration (manual JSON schema)
 

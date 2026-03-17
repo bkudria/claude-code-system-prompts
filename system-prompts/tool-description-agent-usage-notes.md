@@ -1,7 +1,7 @@
 <!--
 name: 'Tool Description: Agent (usage notes)'
 description: Usage notes and instructions for the Task/Agent tool, including guidance on launching subagents, background execution, resumption, and worktree isolation
-ccVersion: 2.1.70
+ccVersion: 2.1.77
 variables:
   - TOOL_BASE_DESCRIPTION
   - TOOL_PARAMETERS_DESCRIPTION
@@ -10,6 +10,7 @@ variables:
   - PROCESS_OBJECT
   - IS_SUBAGENT_CONTEXT_FN
   - HAS_SUBAGENT_TYPES
+  - SEND_MESSAGE_TOOL_NAME
   - TOOL_OBJECT
   - IS_TEAMMATE_CONTEXT_FN
   - ADDITIONAL_USAGE_NOTES
@@ -26,8 +27,7 @@ Usage notes:
 - When the agent is done, it will return a single message back to you. The result returned by the agent is not visible to the user. To show the user the result, you should send a text message back to the user with a concise summary of the result.${!IS_TRUTHY_FN(PROCESS_OBJECT.env.CLAUDE_CODE_DISABLE_BACKGROUND_TASKS)&&!IS_SUBAGENT_CONTEXT_FN()&&!HAS_SUBAGENT_TYPES?`
 - You can optionally run agents in the background using the run_in_background parameter. When an agent runs in the background, you will be automatically notified when it completes — do NOT sleep, poll, or proactively check on its progress. Continue with other work or respond to the user instead.
 - **Foreground vs background**: Use foreground (default) when you need the agent's results before you can proceed — e.g., research agents whose findings inform your next steps. Use background when you have genuinely independent work to do in parallel.`:""}
-- Agents can be resumed using the \`resume\` parameter by passing the agent ID from a previous invocation. When resumed, the agent continues with its full previous context preserved. ${HAS_SUBAGENT_TYPES?"When NOT resuming and you specify a subagent_type, each invocation starts fresh and you should provide a detailed task description with all necessary context.":"When NOT resuming, each invocation starts fresh and you should provide a detailed task description with all necessary context."}
-- When the agent is done, it will return a single message back to you along with its agent ID. You can use this ID to resume the agent later if needed for follow-up work.
+- To continue a previously spawned agent, use ${SEND_MESSAGE_TOOL_NAME} with the agent's ID or name as the \`to\` field. The agent resumes with its full context preserved. ${HAS_SUBAGENT_TYPES?"Each fresh Agent invocation with a subagent_type starts without context — provide a complete task description.":"Each Agent invocation starts fresh — provide a complete task description."}
 ${!HAS_SUBAGENT_TYPES?`- Provide clear, detailed prompts so the agent can work autonomously and return exactly the information you need.
 `:""}- The agent's outputs should generally be trusted
 - Clearly tell the agent whether you expect it to write code or just to do research (search, file reads, web fetches, etc.)${HAS_SUBAGENT_TYPES?"":", since it is not aware of the user's intent"}

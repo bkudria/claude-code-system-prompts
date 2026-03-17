@@ -34,7 +34,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 > [!important]
 > **NEW (January 23, 2026): We've added all of Claude Code's ~40 system reminders to this list&mdash;see [System Reminders](#system-reminders).**
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.76](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.76) (March 13th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 126 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.77](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.77) (March 16th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 127 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [changelog](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -127,7 +127,7 @@ The content of various template files embedded in Claude Code.
 - [Data: Agent SDK reference — TypeScript](./system-prompts/data-agent-sdk-reference-typescript.md) (**2921** tks) - TypeScript Agent SDK reference including installation, quick start, custom tools, and hooks.
 - [Data: Claude API reference — C#](./system-prompts/data-claude-api-reference-c.md) (**4703** tks) - C# SDK reference including installation, client initialization, basic requests, streaming, and tool use.
 - [Data: Claude API reference — Go](./system-prompts/data-claude-api-reference-go.md) (**4341** tks) - Go SDK reference.
-- [Data: Claude API reference — Java](./system-prompts/data-claude-api-reference-java.md) (**4356** tks) - Java SDK reference including installation, client initialization, basic requests, streaming, and beta tool use.
+- [Data: Claude API reference — Java](./system-prompts/data-claude-api-reference-java.md) (**4770** tks) - Java SDK reference including installation, client initialization, basic requests, streaming, and beta tool use.
 - [Data: Claude API reference — PHP](./system-prompts/data-claude-api-reference-php.md) (**2381** tks) - PHP SDK reference.
 - [Data: Claude API reference — Python](./system-prompts/data-claude-api-reference-python.md) (**3518** tks) - Python SDK reference including installation, client initialization, basic requests, thinking, and multi-turn conversation.
 - [Data: Claude API reference — Ruby](./system-prompts/data-claude-api-reference-ruby.md) (**696** tks) - Ruby SDK reference including installation, client initialization, basic requests, streaming, and beta tool runner.
@@ -144,7 +144,7 @@ The content of various template files embedded in Claude Code.
 - [Data: Session memory template](./system-prompts/data-session-memory-template.md) (**292** tks) - Template structure for session memory `summary.md` files.
 - [Data: Streaming reference — Python](./system-prompts/data-streaming-reference-python.md) (**1528** tks) - Python streaming reference including sync/async streaming and handling different content types.
 - [Data: Streaming reference — TypeScript](./system-prompts/data-streaming-reference-typescript.md) (**1703** tks) - TypeScript streaming reference including basic streaming and handling different content types.
-- [Data: Tool use concepts](./system-prompts/data-tool-use-concepts.md) (**3932** tks) - Conceptual foundations of tool use with the Claude API including tool definitions, tool choice, and best practices.
+- [Data: Tool use concepts](./system-prompts/data-tool-use-concepts.md) (**3939** tks) - Conceptual foundations of tool use with the Claude API including tool definitions, tool choice, and best practices.
 - [Data: Tool use reference — Python](./system-prompts/data-tool-use-reference-python.md) (**5106** tks) - Python tool use reference including tool runner, manual agentic loop, code execution, and structured outputs.
 - [Data: Tool use reference — TypeScript](./system-prompts/data-tool-use-reference-typescript.md) (**5033** tks) - TypeScript tool use reference including tool runner, manual agentic loop, code execution, and structured outputs.
 
@@ -180,7 +180,7 @@ Parts of the main system prompt.
 - [System Prompt: Executing actions with care](./system-prompts/system-prompt-executing-actions-with-care.md) (**541** tks) - Instructions for executing actions carefully.
 - [System Prompt: Fork usage guidelines](./system-prompts/system-prompt-fork-usage-guidelines.md) (**339** tks) - Instructions for when to fork subagents and rules against reading fork output mid-flight or fabricating fork results.
 - [System Prompt: Git status](./system-prompts/system-prompt-git-status.md) (**97** tks) - System prompt for displaying the current git status at the start of the conversation.
-- [System Prompt: Hooks Configuration](./system-prompts/system-prompt-hooks-configuration.md) (**1482** tks) - System prompt for hooks configuration.  Used for above Claude Code config skill.
+- [System Prompt: Hooks Configuration](./system-prompts/system-prompt-hooks-configuration.md) (**1493** tks) - System prompt for hooks configuration.  Used for above Claude Code config skill.
 - [System Prompt: How to use the SendUserMessage tool](./system-prompts/system-prompt-how-to-use-the-sendusermessage-tool.md) (**283** tks) - Instructions for using the SendUserMessage tool.
 - [System Prompt: Insights at a glance summary](./system-prompts/system-prompt-insights-at-a-glance-summary.md) (**569** tks) - Generates a concise 4-part summary (what's working, hindrances, quick wins, ambitious workflows) for the insights report.
 - [System Prompt: Insights friction analysis](./system-prompts/system-prompt-insights-friction-analysis.md) (**139** tks) - Analyzes aggregated usage data to identify friction patterns and categorize recurring issues.
@@ -290,7 +290,7 @@ Text for large system reminders.
 
 **Additional notes for some Tool Descriptions**
 
-- [Tool Description: Agent (usage notes)](./system-prompts/tool-description-agent-usage-notes.md) (**931** tks) - Usage notes and instructions for the Task/Agent tool, including guidance on launching subagents, background execution, resumption, and worktree isolation.
+- [Tool Description: Agent (usage notes)](./system-prompts/tool-description-agent-usage-notes.md) (**879** tks) - Usage notes and instructions for the Task/Agent tool, including guidance on launching subagents, background execution, resumption, and worktree isolation.
 - [Tool Description: Agent (when to launch subagents)](./system-prompts/tool-description-agent-when-to-launch-subagents.md) (**186** tks) - Describes _when_ to use the Agent tool - for launching specialized subagent subprocesses to autonomously handle complex multi-step tasks.
 - [Tool Description: AskUserQuestion (preview field)](./system-prompts/tool-description-askuserquestion-preview-field.md) (**134** tks) - Instructions for using the HTML preview field on single-select question options to display visual artifacts like UI mockups, code snippets, and diagrams.
 - [Tool Description: Bash (Git commit and PR creation instructions)](./system-prompts/tool-description-bash-git-commit-and-pr-creation-instructions.md) (**1558** tks) - Instructions for creating git commits and GitHub pull requests.
@@ -346,12 +346,14 @@ Text for large system reminders.
 
 Built-in skill prompts for specialized tasks.
 
-- [Skill: /loop slash command](./system-prompts/skill-loop-slash-command.md) (**984** tks) - Parses user input into an interval and prompt, converts the interval to a cron expression, and schedules a recurring task.
-- [Skill: /stuck slash command](./system-prompts/skill-stuck-slash-command.md) (**865** tks) - Diagnozse frozen or slow Claude Code sessions.
+- [Skill: /init CLAUDE.md and skill setup (new version)](./system-prompts/skill-init-claudemd-and-skill-setup-new-version.md) (**4783** tks) - A comprehensive onboarding flow for setting up CLAUDE.md and related skills/hooks in the current repository, including codebase exploration, user interviews, and iterative proposal refinement.
+- [Skill: /loop slash command](./system-prompts/skill-loop-slash-command.md) (**1033** tks) - Parses user input into an interval and prompt, converts the interval to a cron expression, and schedules a recurring task.
+- [Skill: /stuck slash command](./system-prompts/skill-stuck-slash-command.md) (**964** tks) - Diagnozse frozen or slow Claude Code sessions.
 - [Skill: Build with Claude API (reference guide)](./system-prompts/skill-build-with-claude-api-reference-guide.md) (**410** tks) - Template for presenting language-specific reference documentation with quick task navigation.
 - [Skill: Build with Claude API](./system-prompts/skill-build-with-claude-api.md) (**5144** tks) - Main routing guide for building LLM-powered applications with Claude, including language detection, surface selection, and architecture overview.
 - [Skill: Create verifier skills](./system-prompts/skill-create-verifier-skills.md) (**2625** tks) - Prompt for creating verifier skills for the Verify agent to automatically verify code changes.
 - [Skill: Debugging](./system-prompts/skill-debugging.md) (**412** tks) - Instructions for debugging an issue that the user is encountering in the Claude Code session.
 - [Skill: Simplify](./system-prompts/skill-simplify.md) (**822** tks) - Instructions for simplifying code.
-- [Skill: Update Claude Code Config](./system-prompts/skill-update-claude-code-config.md) (**1232** tks) - Skill for modifying Claude Code configuration file (settings.json).
+- [Skill: Update Claude Code Config](./system-prompts/skill-update-claude-code-config.md) (**1255** tks) - Skill for modifying Claude Code configuration file (settings.json).
 - [Skill: Verification specialist](./system-prompts/skill-verification-specialist.md) (**2472** tks) - Skill for verifying that code changes work correctly.
+- [Skill: update-config (7-step verification flow)](./system-prompts/skill-update-config-7-step-verification-flow.md) (**1160** tks) - A skill that guides Claude through a 7-step process to construct and verify hooks for Claude Code, ensuring they work correctly in the user's specific project environment.
