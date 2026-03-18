@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — Go'
 description: Go SDK reference
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Claude API — Go
 
@@ -37,7 +37,7 @@ client := anthropic.NewClient(
 \`\`\`go
 response, err := client.Messages.New(context.Background(), anthropic.MessageNewParams{
     Model:     anthropic.ModelClaudeOpus4_6,
-    MaxTokens: 1024,
+    MaxTokens: 16000,
     Messages: []anthropic.MessageParam{
         anthropic.NewUserMessage(anthropic.NewTextBlock("What is the capital of France?")),
     },
@@ -60,7 +60,7 @@ for _, block := range response.Content {
 \`\`\`go
 stream := client.Messages.NewStreaming(context.Background(), anthropic.MessageNewParams{
     Model:     anthropic.ModelClaudeOpus4_6,
-    MaxTokens: 1024,
+    MaxTokens: 64000,
     Messages: []anthropic.MessageParam{
         anthropic.NewUserMessage(anthropic.NewTextBlock("Write a haiku")),
     },
@@ -139,7 +139,7 @@ runner := client.Beta.Messages.NewToolRunner(
     anthropic.BetaToolRunnerParams{
         BetaMessageNewParams: anthropic.BetaMessageNewParams{
             Model:     anthropic.ModelClaudeOpus4_6,
-            MaxTokens: 1024,
+            MaxTokens: 16000,
             Messages: []anthropic.BetaMessageParam{
                 anthropic.NewBetaUserMessage(anthropic.NewBetaTextBlock("What's the weather in Paris?")),
             },
@@ -215,7 +215,7 @@ func main() {
     for {
         resp, err := client.Messages.New(context.Background(), anthropic.MessageNewParams{
             Model:     anthropic.ModelClaudeSonnet4_6,
-            MaxTokens: 1024,
+            MaxTokens: 16000,
             Messages:  messages,
             Tools:     tools,
         })
@@ -380,7 +380,7 @@ Use \`Beta.Messages.New\` with \`ContextManagement\` on \`BetaMessageNewParams\`
 \`\`\`go
 params := anthropic.BetaMessageNewParams{
     Model:     anthropic.ModelClaudeOpus4_6,  // also supported: ModelClaudeSonnet4_6
-    MaxTokens: 1024,
+    MaxTokens: 16000,
     Betas:     []anthropic.AnthropicBeta{"compact-2026-01-12"},
     ContextManagement: anthropic.BetaContextManagementConfigParam{
         Edits: []anthropic.BetaContextManagementConfigEditUnionParam{

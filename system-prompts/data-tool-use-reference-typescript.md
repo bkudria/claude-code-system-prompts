@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Tool use reference — TypeScript'
 description: TypeScript tool use reference including tool runner, manual agentic loop, code execution, and structured outputs
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Tool Use — TypeScript
 
@@ -36,7 +36,7 @@ const getWeather = betaZodTool({
 // The tool runner handles the agentic loop and returns the final message
 const finalMessage = await client.beta.messages.toolRunner({
   model: "{{OPUS_ID}}",
-  max_tokens: 4096,
+  max_tokens: 16000,
   tools: [getWeather],
   messages: [{ role: "user", content: "What's the weather in Paris?" }],
 });
@@ -67,7 +67,7 @@ let messages: Anthropic.MessageParam[] = [{ role: "user", content: userInput }];
 while (true) {
   const response = await client.messages.create({
     model: "{{OPUS_ID}}",
-    max_tokens: 4096,
+    max_tokens: 16000,
     tools: tools,
     messages: messages,
   });
@@ -114,7 +114,7 @@ let messages: Anthropic.MessageParam[] = [{ role: "user", content: userInput }];
 while (true) {
   const stream = client.messages.stream({
     model: "{{OPUS_ID}}",
-    max_tokens: 4096,
+    max_tokens: 64000,
     tools,
     messages,
   });
@@ -169,7 +169,7 @@ while (true) {
 \`\`\`typescript
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   tools: tools,
   messages: [{ role: "user", content: "What's the weather in Paris?" }],
 });
@@ -180,7 +180,7 @@ for (const block of response.content) {
 
     const followup = await client.messages.create({
       model: "{{OPUS_ID}}",
-      max_tokens: 1024,
+      max_tokens: 16000,
       tools: tools,
       messages: [
         { role: "user", content: "What's the weather in Paris?" },
@@ -204,7 +204,7 @@ for (const block of response.content) {
 \`\`\`typescript
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   tools: tools,
   tool_choice: { type: "tool", name: "get_weather" },
   messages: [{ role: "user", content: "What's the weather in Paris?" }],
@@ -223,7 +223,7 @@ Version-suffixed \`type\` literals; \`name\` is fixed per interface. Pass plain 
 // ✓ let inference work — no annotation
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   tools: [
     { type: "text_editor_20250728", name: "str_replace_based_edit_tool" },
     { type: "bash_20250124", name: "bash" },
@@ -263,7 +263,7 @@ const client = new Anthropic();
 
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 4096,
+  max_tokens: 16000,
   messages: [
     {
       role: "user",
@@ -311,7 +311,7 @@ const uploaded = await client.beta.files.upload({
 const response = await client.messages.create(
   {
     model: "{{OPUS_ID}}",
-    max_tokens: 4096,
+    max_tokens: 16000,
     messages: [
       {
         role: "user",
@@ -371,7 +371,7 @@ for (const block of response.content) {
 // First request: set up environment
 const response1 = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 4096,
+  max_tokens: 16000,
   messages: [
     {
       role: "user",
@@ -388,7 +388,7 @@ const containerId = response1.container!.id;
 const response2 = await client.messages.create({
   container: containerId,
   model: "{{OPUS_ID}}",
-  max_tokens: 4096,
+  max_tokens: 16000,
   messages: [
     {
       role: "user",
@@ -408,7 +408,7 @@ const response2 = await client.messages.create({
 \`\`\`typescript
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 2048,
+  max_tokens: 16000,
   messages: [
     {
       role: "user",
@@ -442,7 +442,7 @@ const memory = betaMemoryTool(handlers);
 
 const runner = client.beta.messages.toolRunner({
   model: "{{OPUS_ID}}",
-  max_tokens: 2048,
+  max_tokens: 16000,
   tools: [memory],
   messages: [{ role: "user", content: "Remember my preferences" }],
 });
@@ -479,7 +479,7 @@ const client = new Anthropic();
 
 const response = await client.messages.parse({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   messages: [
     {
       role: "user",
@@ -501,7 +501,7 @@ console.log(response.parsed_output!.name); // "Jane Doe"
 \`\`\`typescript
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   messages: [
     {
       role: "user",

@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Streaming reference — TypeScript'
 description: TypeScript streaming reference including basic streaming and handling different content types
-ccVersion: 2.1.63
+ccVersion: 2.1.78
 -->
 # Streaming — TypeScript
 
@@ -10,7 +10,7 @@ ccVersion: 2.1.63
 \`\`\`typescript
 const stream = client.messages.stream({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 64000,
   messages: [{ role: "user", content: "Write a story" }],
 });
 
@@ -33,7 +33,7 @@ for await (const event of stream) {
 \`\`\`typescript
 const stream = client.messages.stream({
   model: "{{OPUS_ID}}",
-  max_tokens: 16000,
+  max_tokens: 64000,
   thinking: { type: "adaptive" },
   messages: [{ role: "user", content: "Analyze this problem" }],
 });
@@ -88,7 +88,7 @@ const getWeather = betaZodTool({
 
 const runner = client.beta.messages.toolRunner({
   model: "{{OPUS_ID}}",
-  max_tokens: 4096,
+  max_tokens: 64000,
   tools: [getWeather],
   messages: [
     { role: "user", content: "What's the weather in Paris and London?" },
@@ -123,7 +123,7 @@ for await (const messageStream of runner) {
 \`\`\`typescript
 const stream = client.messages.stream({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 64000,
   messages: [{ role: "user", content: "Hello" }],
 });
 

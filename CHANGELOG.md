@@ -4,6 +4,25 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.78](https://github.com/Piebald-AI/claude-code-system-prompts/commit/9f2320d)
+
+_+1,956 tokens_
+
+- **NEW:** Agent Prompt: Dream memory consolidation — Instructs an agent to perform a multi-phase memory consolidation pass — orienting on existing memories, gathering recent signal from logs and transcripts, merging updates into topic files, and pruning the index.
+- **REMOVED:** System Prompt: Memory system (private feedback) — Removed description of the private feedback memory type for storing user guidance and corrections.
+- **REMOVED:** System Prompt: Tone and style (concise output — detailed) — Removed instruction for concise, polished output without filler or inner monologue.
+- **NEW:** System Prompt: Memory description of user feedback — Describes the user feedback memory type that stores guidance about work approaches, emphasizing recording both successes and failures and checking for contradictions with team memories.
+- Data: Agent SDK patterns — Python — Added Session Mutations section with `rename_session`, `tag_session` examples including tag clearing and project-directory scoping.
+- Data: Agent SDK patterns — TypeScript — Added `getSessionInfo` to Session History; added `tag` field to session listing output; added Session Mutations section with `renameSession`, `tagSession`, and `forkSession` examples; noted pagination support via `limit`/`offset` on `listSessions`.
+- Data: Agent SDK reference — Python — Added `RateLimitEvent` documentation with example showing how to handle rate-limit status transitions; added Session Mutations section with `rename_session` and `tag_session` (sync functions, optional directory scoping).
+- Data: Agent SDK reference — TypeScript — Added `agentProgressSummaries` option to the options table for enabling periodic AI-generated progress summaries on `task_progress` events; updated `task_progress` description to mention the `summary` field; added `getSessionInfo` for single-session metadata retrieval; added `tag` field to session listing; noted pagination support on `listSessions`; added Session Mutations section with `renameSession`, `tagSession`, and `forkSession`.
+- Data: Claude API reference — Java — Bumped SDK version from 2.16.0 to 2.16.1.
+Data: Claude API references (all languages) and tool use / streaming / batches / files references — Updated `max_tokens` values across code examples, increasing to `16000` for non-streaming and `64000` for streaming to avoid mid-thought truncation.
+- Skill: Build with Claude API — Added `max_tokens` defaults guidance: use ~16000 for non-streaming and ~64000 for streaming; clarified that lowballing `max_tokens` truncates output and requires retries; noted exceptions for classification (~256), cost caps, or deliberately short outputs.
+- System Prompt: Auto mode — Added rule 6: never post to public services (GitHub gists, Mermaid Live, Pastebin, etc.) without explicit written user approval, requiring the user to review content for sensitivity first.
+- System Prompt: Executing actions with care — Added guidance that uploading content to third-party web tools (diagram renderers, pastebins, gists) publishes it and may be cached or indexed, so sensitivity should be considered before sending.
+
+
 # [2.1.77](https://github.com/Piebald-AI/claude-code-system-prompts/commit/87fae2a)
 
 _+6,494 tokens_

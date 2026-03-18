@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK reference — TypeScript'
 description: TypeScript Agent SDK reference including installation, quick start, custom tools, and hooks
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Agent SDK — TypeScript
 
@@ -176,6 +176,7 @@ query({ prompt: "...", options: { ... } })
 | \`betas\`                             | array  | Beta features to enable (e.g., \`["context-1m-2025-08-07"]\`)               |
 | \`settingSources\`                    | array  | Settings to load (e.g., \`["project"]\`). Default: none (no CLAUDE.md files) |
 | \`env\`                               | object | Environment variables to set for the session                               |
+| \`agentProgressSummaries\`            | bool   | Enable periodic AI-generated progress summaries on \`task_progress\` events  |
 
 ---
 
@@ -219,7 +220,7 @@ for await (const message of query({
 
 Task-related system messages are also emitted for subagent operations:
 - \`task_started\` — emitted when a subagent task is registered
-- \`task_progress\` — real-time progress updates with cumulative usage metrics, tool counts, and duration
+- \`task_progress\` — real-time progress updates with cumulative usage metrics, tool counts, and duration (enable \`agentProgressSummaries\` option for periodic AI-generated summaries via the \`summary\` field)
 - \`task_notification\` — task completion notifications (includes \`tool_use_id\` for correlating with originating tool calls)
 
 ---
@@ -229,19 +230,44 @@ Task-related system messages are also emitted for subagent operations:
 Retrieve past session data:
 
 \`\`\`typescript
-import { listSessions, getSessionMessages } from "@anthropic-ai/claude-agent-sdk";
+import { listSessions, getSessionMessages, getSessionInfo } from "@anthropic-ai/claude-agent-sdk";
 
-// List all past sessions
-const sessions = await listSessions();
+// List all past sessions (supports pagination via limit/offset)
+const sessions = await listSessions({ limit: 20, offset: 0 });
 for (const session of sessions) {
-  console.log(\`\${session.sessionId}: \${session.cwd}\`);
+  console.log(\`\${session.sessionId}: \${session.cwd} (tag: \${session.tag})\`);
 }
+
+// Get metadata for a single session
+const sessionId = sessions[0]?.sessionId;
+const info = await getSessionInfo(sessionId);
+console.log(info.tag, info.createdAt);
 
 // Get messages from a specific session (supports pagination via limit/offset)
 const messages = await getSessionMessages(sessionId, { limit: 50, offset: 0 });
 for (const msg of messages) {
   console.log(msg);
 }
+\`\`\`
+
+### Session Mutations
+
+Rename, tag, or fork sessions:
+
+\`\`\`typescript
+import { renameSession, tagSession, forkSession } from "@anthropic-ai/claude-agent-sdk";
+
+// Rename a session
+await renameSession(sessionId, "My refactoring session");
+
+// Tag a session
+await tagSession(sessionId, "experiment");
+
+// Clear a tag
+await tagSession(sessionId, null);
+
+// Fork a session — branch a conversation from a specific point
+const { sessionId: forkedId } = await forkSession(sessionId);
 \`\`\`
 
 ---

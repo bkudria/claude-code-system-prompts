@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Message Batches API reference — Python'
 description: Python Batches API reference including batch creation, status polling, and result retrieval at 50% cost
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Message Batches API — Python
 
@@ -32,7 +32,7 @@ message_batch = client.messages.batches.create(
             custom_id="request-1",
             params=MessageCreateParamsNonStreaming(
                 model="{{OPUS_ID}}",
-                max_tokens=1024,
+                max_tokens=16000,
                 messages=[{"role": "user", "content": "Summarize climate change impacts"}]
             )
         ),
@@ -40,7 +40,7 @@ message_batch = client.messages.batches.create(
             custom_id="request-2",
             params=MessageCreateParamsNonStreaming(
                 model="{{OPUS_ID}}",
-                max_tokens=1024,
+                max_tokens=16000,
                 messages=[{"role": "user", "content": "Explain quantum computing basics"}]
             )
         ),
@@ -123,7 +123,7 @@ message_batch = client.messages.batches.create(
             custom_id=f"analysis-{i}",
             params=MessageCreateParamsNonStreaming(
                 model="{{OPUS_ID}}",
-                max_tokens=1024,
+                max_tokens=16000,
                 system=shared_system,
                 messages=[{"role": "user", "content": question}]
             )

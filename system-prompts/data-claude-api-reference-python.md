@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — Python'
 description: Python SDK reference including installation, client initialization, basic requests, thinking, and multi-turn conversation
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Claude API — Python
 
@@ -33,7 +33,7 @@ async_client = anthropic.AsyncAnthropic()
 \`\`\`python
 response = client.messages.create(
     model="{{OPUS_ID}}",
-    max_tokens=1024,
+    max_tokens=16000,
     messages=[
         {"role": "user", "content": "What is the capital of France?"}
     ]
@@ -52,7 +52,7 @@ for block in response.content:
 \`\`\`python
 response = client.messages.create(
     model="{{OPUS_ID}}",
-    max_tokens=1024,
+    max_tokens=16000,
     system="You are a helpful coding assistant. Always provide examples in Python.",
     messages=[{"role": "user", "content": "How do I read a JSON file?"}]
 )
@@ -72,7 +72,7 @@ with open("image.png", "rb") as f:
 
 response = client.messages.create(
     model="{{OPUS_ID}}",
-    max_tokens=1024,
+    max_tokens=16000,
     messages=[{
         "role": "user",
         "content": [
@@ -95,7 +95,7 @@ response = client.messages.create(
 \`\`\`python
 response = client.messages.create(
     model="{{OPUS_ID}}",
-    max_tokens=1024,
+    max_tokens=16000,
     messages=[{
         "role": "user",
         "content": [
@@ -125,7 +125,7 @@ Use top-level \`cache_control\` to automatically cache the last cacheable block 
 \`\`\`python
 response = client.messages.create(
     model="{{OPUS_ID}}",
-    max_tokens=1024,
+    max_tokens=16000,
     cache_control={"type": "ephemeral"},  # auto-caches the last cacheable block
     system="You are an expert on this large document...",
     messages=[{"role": "user", "content": "Summarize the key points"}]
@@ -139,7 +139,7 @@ For fine-grained control, add \`cache_control\` to specific content blocks:
 \`\`\`python
 response = client.messages.create(
     model="{{OPUS_ID}}",
-    max_tokens=1024,
+    max_tokens=16000,
     system=[{
         "type": "text",
         "text": "You are an expert on this large document...",
@@ -151,7 +151,7 @@ response = client.messages.create(
 # With explicit TTL (time-to-live)
 response = client.messages.create(
     model="{{OPUS_ID}}",
-    max_tokens=1024,
+    max_tokens=16000,
     system=[{
         "type": "text",
         "text": "You are an expert on this large document...",
@@ -237,7 +237,7 @@ class ConversationManager:
 
         response = self.client.messages.create(
             model=self.model,
-            max_tokens=kwargs.get("max_tokens", 1024),
+            max_tokens=kwargs.get("max_tokens", 16000),
             system=self.system,
             messages=self.messages,
             **kwargs
@@ -284,7 +284,7 @@ def chat(user_message: str) -> str:
     response = client.beta.messages.create(
         betas=["compact-2026-01-12"],
         model="{{OPUS_ID}}",
-        max_tokens=4096,
+        max_tokens=16000,
         messages=messages,
         context_management={
             "edits": [{"type": "compact_20260112"}]
@@ -327,7 +327,7 @@ The \`stop_reason\` field in the response indicates why the model stopped genera
 # Automatic caching (simplest — caches the last cacheable block)
 response = client.messages.create(
     model="{{OPUS_ID}}",
-    max_tokens=1024,
+    max_tokens=16000,
     cache_control={"type": "ephemeral"},
     system=large_document_text,  # e.g., 50KB of context
     messages=[{"role": "user", "content": "Summarize the key points"}]
@@ -343,14 +343,14 @@ response = client.messages.create(
 # Default to Opus for most tasks
 response = client.messages.create(
     model="{{OPUS_ID}}",  # $5.00/$25.00 per 1M tokens
-    max_tokens=1024,
+    max_tokens=16000,
     messages=[{"role": "user", "content": "Explain quantum computing"}]
 )
 
 # Use Sonnet for high-volume production workloads
 standard_response = client.messages.create(
     model="{{SONNET_ID}}",  # $3.00/$15.00 per 1M tokens
-    max_tokens=1024,
+    max_tokens=16000,
     messages=[{"role": "user", "content": "Summarize this document"}]
 )
 

@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — C#'
 description: C# SDK reference including installation, client initialization, basic requests, streaming, and tool use
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Claude API — C#
 
@@ -37,7 +37,7 @@ using Anthropic.Models.Messages;
 var parameters = new MessageCreateParams
 {
     Model = Model.ClaudeOpus4_6,
-    MaxTokens = 1024,
+    MaxTokens = 16000,
     Messages = [new() { Role = Role.User, Content = "What is the capital of France?" }]
 };
 var response = await client.Messages.Create(parameters);
@@ -61,7 +61,7 @@ using Anthropic.Models.Messages;
 var parameters = new MessageCreateParams
 {
     Model = Model.ClaudeOpus4_6,
-    MaxTokens = 1024,
+    MaxTokens = 64000,
     Messages = [new() { Role = Role.User, Content = "Write a haiku" }]
 };
 
@@ -132,7 +132,7 @@ using Anthropic.Models.Messages;
 var parameters = new MessageCreateParams
 {
     Model = Model.ClaudeSonnet4_6,
-    MaxTokens = 1024,
+    MaxTokens = 16000,
     Tools = [
         new Tool {
             Name = "get_weather",
@@ -237,7 +237,7 @@ using Anthropic.Models.Beta.Messages;
 var betaParams = new MessageCreateParams   // no Beta prefix — one of only 2 unprefixed
 {
     Model = Model.ClaudeOpus4_6,
-    MaxTokens = 1024,
+    MaxTokens = 16000,
     Betas = ["compact-2026-01-12"],
     ContextManagement = new BetaContextManagementConfig
     {

@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK patterns — Python'
 description: Python Agent SDK patterns including custom tools, hooks, subagents, MCP integration, and session resumption
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Agent SDK Patterns — Python
 
@@ -312,6 +312,28 @@ if sessions:
     messages = get_session_messages(session_id=sessions[0].session_id)
     for msg in messages:
         print(msg)
+\`\`\`
+
+---
+
+## Session Mutations
+
+\`\`\`python
+from claude_agent_sdk import rename_session, tag_session
+
+session_id = "your-session-id"
+
+# Rename a session
+rename_session(session_id=session_id, title="Refactoring auth module")
+
+# Tag a session for filtering
+tag_session(session_id=session_id, tag="experiment-v2")
+
+# Clear a tag
+tag_session(session_id=session_id, tag=None)
+
+# Scope to a specific project directory
+rename_session(session_id=session_id, title="New title", directory="/path/to/project")
 \`\`\`
 
 ---

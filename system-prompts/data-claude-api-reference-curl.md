@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — cURL'
 description: Raw API reference for Claude API for use with cURL or else Raw HTTP
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Claude API — cURL / Raw HTTP
 
@@ -24,7 +24,7 @@ curl https://api.anthropic.com/v1/messages \\
   -H "anthropic-version: 2023-06-01" \\
   -d '{
     "model": "{{OPUS_ID}}",
-    "max_tokens": 1024,
+    "max_tokens": 16000,
     "messages": [
       {"role": "user", "content": "What is the capital of France?"}
     ]
@@ -43,7 +43,7 @@ response=$(curl -s https://api.anthropic.com/v1/messages \\
   -H "Content-Type: application/json" \\
   -H "x-api-key: $ANTHROPIC_API_KEY" \\
   -H "anthropic-version: 2023-06-01" \\
-  -d '{"model":"{{OPUS_ID}}","max_tokens":1024,"messages":[{"role":"user","content":"Hello"}]}')
+  -d '{"model":"{{OPUS_ID}}","max_tokens":16000,"messages":[{"role":"user","content":"Hello"}]}')
 
 # Print the first text block (-r strips the JSON quotes)
 echo "$response" | jq -r '.content[0].text'
@@ -71,7 +71,7 @@ curl https://api.anthropic.com/v1/messages \\
   -H "anthropic-version: 2023-06-01" \\
   -d '{
     "model": "{{OPUS_ID}}",
-    "max_tokens": 1024,
+    "max_tokens": 64000,
     "stream": true,
     "messages": [{"role": "user", "content": "Write a haiku"}]
   }'
@@ -110,7 +110,7 @@ curl https://api.anthropic.com/v1/messages \\
   -H "anthropic-version: 2023-06-01" \\
   -d '{
     "model": "{{OPUS_ID}}",
-    "max_tokens": 1024,
+    "max_tokens": 16000,
     "tools": [{
       "name": "get_weather",
       "description": "Get current weather for a location",
@@ -135,7 +135,7 @@ curl https://api.anthropic.com/v1/messages \\
   -H "anthropic-version: 2023-06-01" \\
   -d '{
     "model": "{{OPUS_ID}}",
-    "max_tokens": 1024,
+    "max_tokens": 16000,
     "tools": [{
       "name": "get_weather",
       "description": "Get current weather for a location",

@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — TypeScript'
 description: TypeScript SDK reference including installation, client initialization, basic requests, thinking, and multi-turn conversation
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Claude API — TypeScript
 
@@ -30,7 +30,7 @@ const client = new Anthropic({ apiKey: "your-api-key" });
 \`\`\`typescript
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   messages: [{ role: "user", content: "What is the capital of France?" }],
 });
 // response.content is ContentBlock[] — a discriminated union. Narrow by .type
@@ -49,7 +49,7 @@ for (const block of response.content) {
 \`\`\`typescript
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   system:
     "You are a helpful coding assistant. Always provide examples in Python.",
   messages: [{ role: "user", content: "How do I read a JSON file?" }],
@@ -65,7 +65,7 @@ const response = await client.messages.create({
 \`\`\`typescript
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   messages: [
     {
       role: "user",
@@ -90,7 +90,7 @@ const imageData = fs.readFileSync("image.png").toString("base64");
 
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   messages: [
     {
       role: "user",
@@ -117,7 +117,7 @@ Use top-level \`cache_control\` to automatically cache the last cacheable block 
 \`\`\`typescript
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   cache_control: { type: "ephemeral" }, // auto-caches the last cacheable block
   system: "You are an expert on this large document...",
   messages: [{ role: "user", content: "Summarize the key points" }],
@@ -131,7 +131,7 @@ For fine-grained control, add \`cache_control\` to specific content blocks:
 \`\`\`typescript
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   system: [
     {
       type: "text",
@@ -145,7 +145,7 @@ const response = await client.messages.create({
 // With explicit TTL (time-to-live)
 const response2 = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   system: [
     {
       type: "text",
@@ -226,7 +226,7 @@ const messages: Anthropic.MessageParam[] = [
 
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   messages: messages,
 });
 \`\`\`
@@ -255,7 +255,7 @@ async function chat(userMessage: string): Promise<string> {
   const response = await client.beta.messages.create({
     betas: ["compact-2026-01-12"],
     model: "{{OPUS_ID}}",
-    max_tokens: 4096,
+    max_tokens: 16000,
     messages,
     context_management: {
       edits: [{ type: "compact_20260112" }],
@@ -302,7 +302,7 @@ The \`stop_reason\` field in the response indicates why the model stopped genera
 // Automatic caching (simplest — caches the last cacheable block)
 const response = await client.messages.create({
   model: "{{OPUS_ID}}",
-  max_tokens: 1024,
+  max_tokens: 16000,
   cache_control: { type: "ephemeral" },
   system: largeDocumentText, // e.g., 50KB of context
   messages: [{ role: "user", content: "Summarize the key points" }],

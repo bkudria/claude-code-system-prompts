@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Claude API reference — PHP'
 description: PHP SDK reference
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Claude API — PHP
 
@@ -62,7 +62,7 @@ $client = Foundry\\Client::withCredentials(
 \`\`\`php
 $message = $client->messages->create(
     model: '{{OPUS_ID}}',
-    maxTokens: 1024,
+    maxTokens: 16000,
     messages: [
         ['role' => 'user', 'content' => 'What is the capital of France?'],
     ],
@@ -102,7 +102,7 @@ use Anthropic\\Messages\\TextDelta;
 
 $stream = $client->messages->createStream(
     model: '{{OPUS_ID}}',
-    maxTokens: 1024,
+    maxTokens: 64000,
     messages: [
         ['role' => 'user', 'content' => 'Write a haiku'],
     ],
@@ -142,7 +142,7 @@ $messages = [['role' => 'user', 'content' => 'What is the weather in SF?']];
 
 $response = $client->messages->create(
     model: '{{OPUS_ID}}',
-    maxTokens: 1024,
+    maxTokens: 16000,
     tools: $tools,
     messages: $messages,
 );
@@ -169,7 +169,7 @@ while ($response->stopReason === 'tool_use') {  // camelCase property
 
     $response = $client->messages->create(
         model: '{{OPUS_ID}}',
-        maxTokens: 1024,
+        maxTokens: 16000,
         tools: $tools,
         messages: $messages,
     );
@@ -231,7 +231,7 @@ use Anthropic\\Beta\\Messages\\BetaRequestMCPServerURLDefinition;
 
 $response = $client->beta->messages->create(
     model: '{{OPUS_ID}}',
-    maxTokens: 1024,
+    maxTokens: 16000,
     mcpServers: [
         BetaRequestMCPServerURLDefinition::with(
             name: 'my-server',

@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK reference — Python'
 description: Python Agent SDK reference including installation, quick start, custom tools via MCP, and hooks
-ccVersion: 2.1.73
+ccVersion: 2.1.78
 -->
 # Agent SDK — Python
 
@@ -225,6 +225,18 @@ Typed task message subclasses are available for better type safety when handling
 - \`TaskProgressMessage\` — real-time progress updates with cumulative usage metrics
 - \`TaskNotificationMessage\` — task completion notifications
 
+\`RateLimitEvent\` is emitted when the rate limit status transitions (e.g., from \`allowed\` to \`allowed_warning\` or \`rejected\`). Use it to warn users or back off gracefully:
+
+\`\`\`python
+from claude_agent_sdk import query, ClaudeAgentOptions, RateLimitEvent
+
+async for message in query(prompt="...", options=ClaudeAgentOptions()):
+    if isinstance(message, RateLimitEvent):
+        print(f"Rate limit status: {message.rate_limit_info.status}")
+        if message.rate_limit_info.resets_at:
+            print(f"Resets at: {message.rate_limit_info.resets_at}")
+\`\`\`
+
 ---
 
 ## Subagents
@@ -287,6 +299,26 @@ for session in sessions:
 messages = get_session_messages(session_id="...")
 for msg in messages:
     print(msg)
+\`\`\`
+
+### Session Mutations
+
+Rename or tag sessions (sync functions — no await):
+
+\`\`\`python
+from claude_agent_sdk import rename_session, tag_session
+
+# Rename a session
+rename_session(session_id="...", title="My refactoring session")
+
+# Tag a session (tags are Unicode-sanitized automatically)
+tag_session(session_id="...", tag="experiment")
+
+# Clear a tag
+tag_session(session_id="...", tag=None)
+
+# Optionally scope to a specific project directory
+rename_session(session_id="...", title="New title", directory="/path/to/project")
 \`\`\`
 
 ---

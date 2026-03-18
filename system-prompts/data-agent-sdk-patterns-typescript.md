@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Agent SDK patterns — TypeScript'
 description: TypeScript Agent SDK patterns including basic agents, hooks, subagents, and MCP integration
-ccVersion: 2.1.71
+ccVersion: 2.1.78
 -->
 # Agent SDK Patterns — TypeScript
 
@@ -136,13 +136,19 @@ for await (const message of query({
 ## Session History
 
 \`\`\`typescript
-import { listSessions, getSessionMessages } from "@anthropic-ai/claude-agent-sdk";
+import { listSessions, getSessionMessages, getSessionInfo } from "@anthropic-ai/claude-agent-sdk";
 
 async function main() {
-  // List past sessions
+  // List past sessions (supports pagination via limit/offset)
   const sessions = await listSessions();
   for (const session of sessions) {
-    console.log(\`Session \${session.sessionId} in \${session.cwd}\`);
+    console.log(\`Session \${session.sessionId} in \${session.cwd} (tag: \${session.tag})\`);
+  }
+
+  // Get metadata for a single session
+  if (sessions.length > 0) {
+    const info = await getSessionInfo(sessions[0].sessionId);
+    console.log(\`Created: \${info.createdAt}, Tag: \${info.tag}\`);
   }
 
   // Retrieve messages from the most recent session
@@ -152,6 +158,33 @@ async function main() {
       console.log(msg);
     }
   }
+}
+
+main();
+\`\`\`
+
+---
+
+## Session Mutations
+
+\`\`\`typescript
+import { renameSession, tagSession, forkSession } from "@anthropic-ai/claude-agent-sdk";
+
+async function main() {
+  const sessionId = "your-session-id";
+
+  // Rename a session
+  await renameSession(sessionId, "Refactoring auth module");
+
+  // Tag a session for filtering
+  await tagSession(sessionId, "experiment-v2");
+
+  // Clear a tag
+  await tagSession(sessionId, null);
+
+  // Fork a conversation to branch from a point
+  const { sessionId: forkedId } = await forkSession(sessionId);
+  console.log(\`Forked session: \${forkedId}\`);
 }
 
 main();
