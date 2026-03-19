@@ -4,6 +4,19 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.79](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7f0098b)
+
+_+714 tokens_
+
+- **REMOVED:** System Prompt: Tool Use Summary Generation — Removed prompt for generating brief past-tense summaries of tool usage.
+- Data: Claude model catalog — Added Programmatic Model Discovery section with Python SDK and raw HTTP examples for querying the Models API to retrieve live capability data (context window, max output tokens, vision, thinking, effort, structured outputs); includes guidance on iterating and filtering models by capability.
+- Skill: Build with Claude API — Added Models API endpoints (`GET /v1/models`, `GET /v1/models/{id}`) to the list of supporting endpoints; added live capability lookup note directing users to query the Models API instead of relying on cached model tables.
+- Skill: /loop slash command — Changed recurring task auto-expiry from a hardcoded 3-day limit to a configurable timeframe.
+- Tool Description: CronCreate — Changed recurring task auto-expiry from a hardcoded 3-day limit to a configurable timeframe.
+- System Prompt: Team memory content display — Updated memory content rendering to use a separate content reference.
+- System Reminder: Memory file contents — Updated memory content rendering to use a separate content reference.
+
+
 # [2.1.78](https://github.com/Piebald-AI/claude-code-system-prompts/commit/9f2320d)
 
 _+1,956 tokens_
