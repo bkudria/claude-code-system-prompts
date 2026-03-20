@@ -4,6 +4,15 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.80](https://github.com/Piebald-AI/claude-code-system-prompts/commit/abbb61f)
+
+_+3,065 tokens_
+
+- **NEW:** Agent Prompt: /schedule slash command — Guides the user through scheduling, updating, listing, or running remote Claude Code agents on cron triggers via the Anthropic cloud API.
+- Agent Prompt: Status line setup — Added `rate_limits` object to the status line JSON schema, exposing Claude.ai subscription usage limits with 5-hour session and 7-day weekly windows (each with used percentage and reset timestamp); added example shell commands for displaying rate limit usage in the status line.
+- Data: HTTP error codes reference — Minor update to HTTP error codes documentation.
+
+
 # [2.1.79](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7f0098b)
 
 _+714 tokens_
