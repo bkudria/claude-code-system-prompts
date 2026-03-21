@@ -4,6 +4,23 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.81](https://github.com/Piebald-AI/claude-code-system-prompts/commit/a82ade6)
+
+_+294 tokens_
+
+- **NEW:** Agent Prompt: /review slash command (remote) — Remote version of the /review slash command.
+- **NEW:** Agent Prompt: Auto mode rule reviewer — Reviews and critiques user-defined auto mode classifier rules for clarity, completeness, conflicts, and actionability.
+- **NEW:** System Prompt: Minimal mode — Describes the behavior and constraints of minimal mode, which skips hooks, LSP, plugins, auto-memory, and other features while requiring explicit context via CLI flags.
+- Agent Prompt: /batch slash command — Changed terminology from "Explore agents" to "subagents" in the scope-understanding step.
+- Agent Prompt: /schedule slash command — Replaced raw curl-based API calls with a dedicated tool for managing remote triggers; simplified the create body shape documentation; removed direct references to auth environment variables.
+- Agent Prompt: Security monitor for autonomous agent actions (first part) — Clarified transcript evaluation target from "final tool_use block" to "agent's most recent action"; strengthened the "Evaluate on Own Merits" rule with an explicit "silence is not consent" principle — the user not intervening between consecutive actions is not evidence of approval.
+- Agent Prompt: Security monitor for autonomous agent actions (second part) — Expanded sensitive data definition to default-classify internal files (repo scripts, diagrams, slides) as sensitive when uploading to public storage such as gists, pastebins, or diagram renderers.
+- Skill: /init CLAUDE.md and skill setup (new version) — Changed terminology from "Explore subagent" to generic "subagent" in the codebase exploration phase.
+- Skill: Simplify — Added "unnecessary comments" check to the hacky-patterns review: delete comments that explain what code does, narrate the change, or reference the task/caller; keep only non-obvious "why" comments.
+- System Prompt: Fork usage guidelines — Changed terminology from referencing a specific subagent type to "a fresh subagent" when explaining cache-sharing advantages of forks.
+- System Prompt: Tool usage (task management) — Simplified tool name reference.
+- System Reminder: Plan mode is active (iterative) — Minor rewording of the explore step's subagent guidance.
+
 # [2.1.80](https://github.com/Piebald-AI/claude-code-system-prompts/commit/abbb61f)
 
 _+3,065 tokens_
