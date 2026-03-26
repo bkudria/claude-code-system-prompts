@@ -1,1525 +1,1560 @@
 # Claude Code System Prompts Index
 
-Authoritative guidance for building, operating, and extending Claude Code — covering everything from how agents are architected and automated to how developers interact with codebases, maintain context, and ship reliable, secure software.
+A technical reference for deploying Claude as an autonomous coding agent, covering everything needed to build, secure, and orchestrate AI-driven development systems — from low-level shell safety and file operations to multi-agent coordination, persistent memory, and real-world developer toolchain integration.
 
 ## Table of Contents
 
-1. [Agent Orchestration & Multi-Agent Systems](#1-agent-orchestration-multi-agent-systems)
-   1. [Planning & Execution Control](#11-planning-execution-control)
-      1. [Plan Mode Workflow & Control](#111-plan-mode-workflow-control)
-         1. [Plan mode is active (5-phase) [System Reminder]](#1111-plan-mode-is-active-5-phase-system-reminder)
-         2. [Plan mode is active (iterative) [System Reminder]](#1112-plan-mode-is-active-iterative-system-reminder)
-         3. [Plan mode is active (subagent) [System Reminder]](#1113-plan-mode-is-active-subagent-system-reminder)
-         4. [Plan mode re-entry (System Reminder)](#1114-plan-mode-re-entry-system-reminder)
-         5. [Plan file reference (System Reminder)](#1115-plan-file-reference-system-reminder)
-         6. [Exited plan mode (System Reminder)](#1116-exited-plan-mode-system-reminder)
-         7. [Verify plan reminder (System Reminder)](#1117-verify-plan-reminder-system-reminder)
-         8. [Phase four of plan mode (System Prompt)](#1118-phase-four-of-plan-mode-system-prompt)
-         9. [EnterPlanMode (Tool Description)](#1119-enterplanmode-tool-description)
-         10. [ExitPlanMode (Tool Description)](#11110-exitplanmode-tool-description)
-         11. [Plan mode (enhanced) [Agent Prompt]](#11111-plan-mode-enhanced-agent-prompt)
-      2. [Autonomous & Auto Mode Execution](#112-autonomous-auto-mode-execution)
-         1. [Auto mode (System Prompt)](#1121-auto-mode-system-prompt)
-         2. [Executing actions with care (System Prompt)](#1122-executing-actions-with-care-system-prompt)
-         3. [Tool execution denied (System Prompt)](#1123-tool-execution-denied-system-prompt)
-         4. [System section (System Prompt)](#1124-system-section-system-prompt)
-   2. [Task Tracking & Work Decomposition](#12-task-tracking-work-decomposition)
-      1. [Task & Todo Tracking](#121-task-todo-tracking)
-         1. [Task status (System Reminder)](#1211-task-status-system-reminder)
-         2. [Task tools reminder (System Reminder)](#1212-task-tools-reminder-system-reminder)
-         3. [TodoWrite reminder (System Reminder)](#1213-todowrite-reminder-system-reminder)
-         4. [TaskCreate (Tool Description)](#1214-taskcreate-tool-description)
-         5. [TodoWrite (Tool Description)](#1215-todowrite-tool-description)
-         6. [Tool usage (task management) [System Prompt]](#1216-tool-usage-task-management-system-prompt)
-      2. [Parallel Tool Execution & Efficiency](#122-parallel-tool-execution-efficiency)
-         1. [Parallel tool call note (part of "Tool usage policy") [System Prompt]](#1221-parallel-tool-call-note-part-of-tool-usage-policy-system-prompt)
-         2. [/batch slash command (Agent Prompt)](#1222-batch-slash-command-agent-prompt)
-   3. [Subagent Spawning & Team Coordination](#13-subagent-spawning-team-coordination)
-      1. [Multi-Agent Team Coordination & Swarm Management](#131-multi-agent-team-coordination-swarm-management)
-         1. [Team Coordination (System Reminder)](#1311-team-coordination-system-reminder)
-         2. [Team Shutdown (System Reminder)](#1312-team-shutdown-system-reminder)
-         3. [Teammate Communication (System Prompt)](#1313-teammate-communication-system-prompt)
-         4. [Team memory content display (System Prompt)](#1314-team-memory-content-display-system-prompt)
-         5. [TeammateTool (Tool Description)](#1315-teammatetool-tool-description)
-         6. [TeamDelete (Tool Description)](#1316-teamdelete-tool-description)
-         7. [SendMessageTool (Tool Description)](#1317-sendmessagetool-tool-description)
-         8. [TaskList (teammate workflow) [Tool Description]](#1318-tasklist-teammate-workflow-tool-description)
-         9. [Subagent delegation examples (System Prompt)](#1319-subagent-delegation-examples-system-prompt)
-         10. [Fork usage guidelines (System Prompt)](#13110-fork-usage-guidelines-system-prompt)
-      2. [Subagent Spawning & Delegation](#132-subagent-spawning-delegation)
-         1. [Agent (usage notes) [Tool Description]](#1321-agent-usage-notes-tool-description)
-         2. [Agent (when to launch subagents) [Tool Description]](#1322-agent-when-to-launch-subagents-tool-description)
-         3. [Tool usage (delegate exploration) [System Prompt]](#1323-tool-usage-delegate-exploration-system-prompt)
-         4. [Tool usage (subagent guidance) [System Prompt]](#1324-tool-usage-subagent-guidance-system-prompt)
-         5. [Writing subagent prompts (System Prompt)](#1325-writing-subagent-prompts-system-prompt)
-         6. [Worker fork execution (Agent Prompt)](#1326-worker-fork-execution-agent-prompt)
-         7. [Common suffix (response format) [Agent Prompt]](#1327-common-suffix-response-format-agent-prompt)
-   4. [Agent Design & Architecture](#14-agent-design-architecture)
-      1. [Agent creation architect (Agent Prompt)](#141-agent-creation-architect-agent-prompt)
-      2. [Auto mode rule reviewer (Agent Prompt)](#142-auto-mode-rule-reviewer-agent-prompt)
-      3. [Agent Summary Generation (System Prompt)](#143-agent-summary-generation-system-prompt)
-      4. [Agent thread notes (System Prompt)](#144-agent-thread-notes-system-prompt)
-2. [Shell, File & External Tool Operations](#2-shell-file-external-tool-operations)
-   1. [Bash Command Execution](#21-bash-command-execution)
-      1. [Bash Tool Usage & Command Execution](#211-bash-tool-usage-command-execution)
-         1. [Bash (overview) [Tool Description]](#2111-bash-overview-tool-description)
-         2. [Bash (command description) [Tool Description]](#2112-bash-command-description-tool-description)
-         3. [Bash (maintain cwd) [Tool Description]](#2113-bash-maintain-cwd-tool-description)
-         4. [Bash (working directory) [Tool Description]](#2114-bash-working-directory-tool-description)
-         5. [Bash (no newlines) [Tool Description]](#2115-bash-no-newlines-tool-description)
-         6. [Bash (quote file paths) [Tool Description]](#2116-bash-quote-file-paths-tool-description)
-         7. [Bash (parallel commands) [Tool Description]](#2117-bash-parallel-commands-tool-description)
-         8. [Bash (sequential commands) [Tool Description]](#2118-bash-sequential-commands-tool-description)
-         9. [Bash (semicolon usage) [Tool Description]](#2119-bash-semicolon-usage-tool-description)
-         10. [Bash (sleep — keep short) [Tool Description]](#21110-bash-sleep-—-keep-short-tool-description)
-         11. [Bash (sleep — no polling background tasks) [Tool Description]](#21111-bash-sleep-—-no-polling-background-tasks-tool-description)
-         12. [Bash (sleep — run immediately) [Tool Description]](#21112-bash-sleep-—-run-immediately-tool-description)
-         13. [Bash (sleep — use check commands) [Tool Description]](#21113-bash-sleep-—-use-check-commands-tool-description)
-         14. [Bash (timeout) [Tool Description]](#21114-bash-timeout-tool-description)
-         15. [Bash (verify parent directory) [Tool Description]](#21115-bash-verify-parent-directory-tool-description)
-         16. [Bash (built-in tools note) [Tool Description]](#21116-bash-built-in-tools-note-tool-description)
-         17. [Bash (prefer dedicated tools) [Tool Description]](#21117-bash-prefer-dedicated-tools-tool-description)
-         18. [One of six rules for using sleep command (System Prompt)](#21118-one-of-six-rules-for-using-sleep-command-system-prompt)
-      2. [Bash Tool Alternatives — Prefer Dedicated Tools](#212-bash-tool-alternatives-—-prefer-dedicated-tools)
-         1. [Bash (alternative — communication) [Tool Description]](#2121-bash-alternative-—-communication-tool-description)
-         2. [Bash (alternative — content search) [Tool Description]](#2122-bash-alternative-—-content-search-tool-description)
-         3. [Bash (alternative — edit files) [Tool Description]](#2123-bash-alternative-—-edit-files-tool-description)
-         4. [Bash (alternative — file search) [Tool Description]](#2124-bash-alternative-—-file-search-tool-description)
-         5. [Bash (alternative — read files) [Tool Description]](#2125-bash-alternative-—-read-files-tool-description)
-         6. [Bash (alternative — write files) [Tool Description]](#2126-bash-alternative-—-write-files-tool-description)
-         7. [Tool usage (create files) [System Prompt]](#2127-tool-usage-create-files-system-prompt)
-         8. [Tool usage (edit files) [System Prompt]](#2128-tool-usage-edit-files-system-prompt)
-         9. [Tool usage (read files) [System Prompt]](#2129-tool-usage-read-files-system-prompt)
-         10. [Tool usage (search content) [System Prompt]](#21210-tool-usage-search-content-system-prompt)
-         11. [Tool usage (search files) [System Prompt]](#21211-tool-usage-search-files-system-prompt)
-         12. [Tool usage (reserve Bash) [System Prompt]](#21212-tool-usage-reserve-bash-system-prompt)
-   2. [Bash Sandbox Security & Restrictions](#22-bash-sandbox-security-restrictions)
-      1. [Bash (sandbox — adjust settings) [Tool Description]](#221-bash-sandbox-—-adjust-settings-tool-description)
-      2. [Bash (sandbox — default to sandbox) [Tool Description]](#222-bash-sandbox-—-default-to-sandbox-tool-description)
-      3. [Bash (sandbox — evidence: access denied) [Tool Description]](#223-bash-sandbox-—-evidence-access-denied-tool-description)
-      4. [Bash (sandbox — evidence list header) [Tool Description]](#224-bash-sandbox-—-evidence-list-header-tool-description)
-      5. [Bash (sandbox — evidence: network failures) [Tool Description]](#225-bash-sandbox-—-evidence-network-failures-tool-description)
-      6. [Bash (sandbox — evidence: operation not permitted) [Tool Description]](#226-bash-sandbox-—-evidence-operation-not-permitted-tool-description)
-      7. [Bash (sandbox — evidence: unix socket errors) [Tool Description]](#227-bash-sandbox-—-evidence-unix-socket-errors-tool-description)
-      8. [Bash (sandbox — explain restriction) [Tool Description]](#228-bash-sandbox-—-explain-restriction-tool-description)
-      9. [Bash (sandbox — failure evidence condition) [Tool Description]](#229-bash-sandbox-—-failure-evidence-condition-tool-description)
-      10. [Bash (sandbox — mandatory mode) [Tool Description]](#2210-bash-sandbox-—-mandatory-mode-tool-description)
-      11. [Bash (sandbox — no exceptions) [Tool Description]](#2211-bash-sandbox-—-no-exceptions-tool-description)
-      12. [Bash (sandbox — no sensitive paths) [Tool Description]](#2212-bash-sandbox-—-no-sensitive-paths-tool-description)
-      13. [Bash (sandbox — per-command) [Tool Description]](#2213-bash-sandbox-—-per-command-tool-description)
-      14. [Bash (sandbox — response header) [Tool Description]](#2214-bash-sandbox-—-response-header-tool-description)
-      15. [Bash (sandbox — retry without sandbox) [Tool Description]](#2215-bash-sandbox-—-retry-without-sandbox-tool-description)
-      16. [Bash (sandbox — tmpdir) [Tool Description]](#2216-bash-sandbox-—-tmpdir-tool-description)
-      17. [Bash (sandbox — user permission prompt) [Tool Description]](#2217-bash-sandbox-—-user-permission-prompt-tool-description)
-   3. [File System Tools — Read, Write, Edit, Search](#23-file-system-tools-—-read-write-edit-search)
-      1. [ReadFile (Tool Description)](#231-readfile-tool-description)
-      2. [Write (Tool Description)](#232-write-tool-description)
-      3. [Edit (Tool Description)](#233-edit-tool-description)
-      4. [Glob (Tool Description)](#234-glob-tool-description)
-      5. [Grep (Tool Description)](#235-grep-tool-description)
-      6. [Tool usage (direct search) [System Prompt]](#236-tool-usage-direct-search-system-prompt)
-   4. [Browser Automation & Web Interaction](#24-browser-automation-web-interaction)
-      1. [Computer (Tool Description)](#241-computer-tool-description)
-      2. [Computer action (Tool Parameter)](#242-computer-action-tool-parameter)
-      3. [Claude in Chrome browser automation (System Prompt)](#243-claude-in-chrome-browser-automation-system-prompt)
-      4. [Chrome browser MCP tools (System Prompt)](#244-chrome-browser-mcp-tools-system-prompt)
-      5. [WebFetch (Tool Description)](#245-webfetch-tool-description)
-      6. [WebSearch (Tool Description)](#246-websearch-tool-description)
-      7. [WebFetch summarizer (Agent Prompt)](#247-webfetch-summarizer-agent-prompt)
-3. [Session, Memory & Context Management](#3-session-memory-context-management)
-   1. [Memory Management & Persistence](#31-memory-management-persistence)
-      1. [Memory file contents (System Reminder)](#311-memory-file-contents-system-reminder)
-      2. [Nested memory contents (System Reminder)](#312-nested-memory-contents-system-reminder)
-      3. [Memory description of user feedback (System Prompt)](#313-memory-description-of-user-feedback-system-prompt)
-      4. [Description part of memory instructions (System Prompt)](#314-description-part-of-memory-instructions-system-prompt)
-      5. [Agent memory instructions (System Prompt)](#315-agent-memory-instructions-system-prompt)
-      6. [Determine which memory files to attach (Agent Prompt)](#316-determine-which-memory-files-to-attach-agent-prompt)
-      7. [Dream memory consolidation (Agent Prompt)](#317-dream-memory-consolidation-agent-prompt)
-      8. [Session memory template (Data)](#318-session-memory-template-data)
-   2. [Context Compaction & Conversation Summarization](#32-context-compaction-conversation-summarization)
-      1. [Analysis instructions for full compact prompt (full conversation) [System Prompt]](#321-analysis-instructions-for-full-compact-prompt-full-conversation-system-prompt)
-      2. [Analysis instructions for full compact prompt (minimal and via feature flag) [System Prompt]](#322-analysis-instructions-for-full-compact-prompt-minimal-and-via-feature-flag-system-prompt)
-      3. [Analysis instructions for full compact prompt (recent messages) [System Prompt]](#323-analysis-instructions-for-full-compact-prompt-recent-messages-system-prompt)
-      4. [Context compaction summary (System Prompt)](#324-context-compaction-summary-system-prompt)
-      5. [Conversation summarization (Agent Prompt)](#325-conversation-summarization-agent-prompt)
-      6. [Recent Message Summarization (Agent Prompt)](#326-recent-message-summarization-agent-prompt)
-   3. [Session Management & State](#33-session-management-state)
-      1. [Session continuation (System Reminder)](#331-session-continuation-system-reminder)
-      2. [File exists but empty (System Reminder)](#332-file-exists-but-empty-system-reminder)
-      3. [File modified by user or linter (System Reminder)](#333-file-modified-by-user-or-linter-system-reminder)
-      4. [File opened in IDE (System Reminder)](#334-file-opened-in-ide-system-reminder)
-      5. [File truncated (System Reminder)](#335-file-truncated-system-reminder)
-      6. [File shorter than offset (System Reminder)](#336-file-shorter-than-offset-system-reminder)
-      7. [Lines selected in IDE (System Reminder)](#337-lines-selected-in-ide-system-reminder)
-      8. [Compact file reference (System Reminder)](#338-compact-file-reference-system-reminder)
-      9. [Session Search Assistant (Agent Prompt)](#339-session-search-assistant-agent-prompt)
-      10. [Session title and branch generation (Agent Prompt)](#3310-session-title-and-branch-generation-agent-prompt)
-      11. [Coding session title generator (Agent Prompt)](#3311-coding-session-title-generator-agent-prompt)
-      12. [Session memory update instructions (Agent Prompt)](#3312-session-memory-update-instructions-agent-prompt)
-   4. [Resource Budgeting & Usage Analytics](#34-resource-budgeting-usage-analytics)
-      1. [Resource & Budget Tracking](#341-resource-budget-tracking)
-         1. [Token usage (System Reminder)](#3411-token-usage-system-reminder)
-         2. [USD budget (System Reminder)](#3412-usd-budget-system-reminder)
-         3. [Invoked skills (System Reminder)](#3413-invoked-skills-system-reminder)
-      2. [Usage Insights & Analytics](#342-usage-insights-analytics)
-         1. [Insights at a glance summary (System Prompt)](#3421-insights-at-a-glance-summary-system-prompt)
-         2. [Insights friction analysis (System Prompt)](#3422-insights-friction-analysis-system-prompt)
-         3. [Insights on the horizon (System Prompt)](#3423-insights-on-the-horizon-system-prompt)
-         4. [Insights session facets extraction (System Prompt)](#3424-insights-session-facets-extraction-system-prompt)
-         5. [Insights suggestions (System Prompt)](#3425-insights-suggestions-system-prompt)
-4. [Code Quality, Security & Review](#4-code-quality-security-review)
-   1. [Code Quality & Engineering Best Practices](#41-code-quality-engineering-best-practices)
-      1. [Doing tasks (avoid over-engineering) [System Prompt]](#411-doing-tasks-avoid-over-engineering-system-prompt)
-      2. [Doing tasks (no premature abstractions) [System Prompt]](#412-doing-tasks-no-premature-abstractions-system-prompt)
-      3. [Doing tasks (no compatibility hacks) [System Prompt]](#413-doing-tasks-no-compatibility-hacks-system-prompt)
-      4. [Doing tasks (no unnecessary additions) [System Prompt]](#414-doing-tasks-no-unnecessary-additions-system-prompt)
-      5. [Doing tasks (no unnecessary error handling) [System Prompt]](#415-doing-tasks-no-unnecessary-error-handling-system-prompt)
-      6. [Doing tasks (minimize file creation) [System Prompt]](#416-doing-tasks-minimize-file-creation-system-prompt)
-      7. [Doing tasks (read before modifying) [System Prompt]](#417-doing-tasks-read-before-modifying-system-prompt)
-      8. [Doing tasks (security) [System Prompt]](#418-doing-tasks-security-system-prompt)
-      9. [Doing tasks (software engineering focus) [System Prompt]](#419-doing-tasks-software-engineering-focus-system-prompt)
-      10. [Doing tasks (ambitious tasks) [System Prompt]](#4110-doing-tasks-ambitious-tasks-system-prompt)
-      11. [Doing tasks (blocked approach) [System Prompt]](#4111-doing-tasks-blocked-approach-system-prompt)
-      12. [Doing tasks (no time estimates) [System Prompt]](#4112-doing-tasks-no-time-estimates-system-prompt)
-      13. [Doing tasks (help and feedback) [System Prompt]](#4113-doing-tasks-help-and-feedback-system-prompt)
-   2. [Security Monitoring & Vulnerability Analysis](#42-security-monitoring-vulnerability-analysis)
-      1. [Security monitor for autonomous agent actions (first part) [Agent Prompt]](#421-security-monitor-for-autonomous-agent-actions-first-part-agent-prompt)
-      2. [Security monitor for autonomous agent actions (second part) [Agent Prompt]](#422-security-monitor-for-autonomous-agent-actions-second-part-agent-prompt)
-      3. [/security-review slash command (Agent Prompt)](#423-security-review-slash-command-agent-prompt)
-      4. [Malware analysis after Read tool call (System Reminder)](#424-malware-analysis-after-read-tool-call-system-reminder)
-      5. [Censoring assistance with malicious activities (System Prompt)](#425-censoring-assistance-with-malicious-activities-system-prompt)
-      6. [Diagnostics & Error Detection](#426-diagnostics-error-detection)
-         1. [New diagnostics detected (System Reminder)](#4261-new-diagnostics-detected-system-reminder)
-         2. [Bash command prefix detection (Agent Prompt)](#4262-bash-command-prefix-detection-agent-prompt)
-   3. [Code Review & PR Management](#43-code-review-pr-management)
-      1. [/review-pr slash command (Agent Prompt)](#431-review-pr-slash-command-agent-prompt)
-      2. [/review slash command (remote) [Agent Prompt]](#432-review-slash-command-remote-agent-prompt)
-      3. [/pr-comments slash command (Agent Prompt)](#433-pr-comments-slash-command-agent-prompt)
-      4. [Simplify (Skill)](#434-simplify-skill)
-   4. [Verification & Testing](#44-verification-testing)
-      1. [Verification specialist (Agent Prompt)](#441-verification-specialist-agent-prompt)
-      2. [Verification specialist (Skill)](#442-verification-specialist-skill)
-      3. [Create verifier skills (Skill)](#443-create-verifier-skills-skill)
-      4. [update-config (7-step verification flow) [Skill]](#444-update-config-7-step-verification-flow-skill)
-5. [Hooks, Automation & Scheduling](#5-hooks-automation-scheduling)
-   1. [Hook System Notifications & Events](#51-hook-system-notifications-events)
-      1. [Hook stopped continuation prefix (System Reminder)](#511-hook-stopped-continuation-prefix-system-reminder)
-      2. [Hook stopped continuation (System Reminder)](#512-hook-stopped-continuation-system-reminder)
-      3. [Hook success (System Reminder)](#513-hook-success-system-reminder)
-      4. [Hook additional context (System Reminder)](#514-hook-additional-context-system-reminder)
-      5. [Hook blocking error (System Reminder)](#515-hook-blocking-error-system-reminder)
-      6. [Hooks Configuration (System Prompt)](#516-hooks-configuration-system-prompt)
-      7. [Hook condition evaluator (Agent Prompt)](#517-hook-condition-evaluator-agent-prompt)
-      8. [Agent Hook (Agent Prompt)](#518-agent-hook-agent-prompt)
-   2. [Skills System & Slash Commands](#52-skills-system-slash-commands)
-      1. [Skill (Tool Description)](#521-skill-tool-description)
-      2. [Tool usage (skill invocation) [System Prompt]](#522-tool-usage-skill-invocation-system-prompt)
-      3. [Skillify Current Session (System Prompt)](#523-skillify-current-session-system-prompt)
-      4. [/loop slash command (Skill)](#524-loop-slash-command-skill)
-      5. [/stuck slash command (Skill)](#525-stuck-slash-command-skill)
-      6. [Update Claude Code Config (Skill)](#526-update-claude-code-config-skill)
-      7. [Debugging (Skill)](#527-debugging-skill)
-   3. [Scheduling & Cron Jobs](#53-scheduling-cron-jobs)
-      1. [CronCreate (Tool Description)](#531-croncreate-tool-description)
-      2. [/schedule slash command (Agent Prompt)](#532-schedule-slash-command-agent-prompt)
-      3. [Sleep (Tool Description)](#533-sleep-tool-description)
-   4. [GitHub Integration & CI/CD](#54-github-integration-cicd)
-      1. [GitHub Actions workflow for @claude mentions (Data)](#541-github-actions-workflow-for-claude-mentions-data)
-      2. [GitHub App installation PR description (Data)](#542-github-app-installation-pr-description-data)
-6. [Codebase Navigation, Git & Workspace](#6-codebase-navigation-git-workspace)
-   1. [Codebase Exploration & Documentation](#61-codebase-exploration-documentation)
-      1. [Codebase Exploration & Analysis](#611-codebase-exploration-analysis)
-         1. [Explore (Agent Prompt)](#6111-explore-agent-prompt)
-         2. [Explore strengths and guidelines (Agent Prompt)](#6112-explore-strengths-and-guidelines-agent-prompt)
-         3. [LSP (Tool Description)](#6113-lsp-tool-description)
-         4. [CLAUDE.md creation (Agent Prompt)](#6114-claudemd-creation-agent-prompt)
-         5. [/init CLAUDE.md and skill setup (new version) [Skill]](#6115-init-claudemd-and-skill-setup-new-version-skill)
-      2. [Documentation & Knowledge Management](#612-documentation-knowledge-management)
-         1. [Update Magic Docs (Agent Prompt)](#6121-update-magic-docs-agent-prompt)
-         2. [Prompt Suggestion Generator v2 (Agent Prompt)](#6122-prompt-suggestion-generator-v2-agent-prompt)
-         3. [Claude guide agent (Agent Prompt)](#6123-claude-guide-agent-agent-prompt)
-   2. [Git Operations & Version Control](#62-git-operations-version-control)
-      1. [Bash (git — avoid destructive ops) [Tool Description]](#621-bash-git-—-avoid-destructive-ops-tool-description)
-      2. [Bash (Git commit and PR creation instructions) [Tool Description]](#622-bash-git-commit-and-pr-creation-instructions-tool-description)
-      3. [Bash (git — never skip hooks) [Tool Description]](#623-bash-git-—-never-skip-hooks-tool-description)
-      4. [Bash (git — prefer new commits) [Tool Description]](#624-bash-git-—-prefer-new-commits-tool-description)
-      5. [Git status (System Prompt)](#625-git-status-system-prompt)
-      6. [Quick git commit (Agent Prompt)](#626-quick-git-commit-agent-prompt)
-      7. [Quick PR creation (Agent Prompt)](#627-quick-pr-creation-agent-prompt)
-      8. [EnterWorktree (Tool Description)](#628-enterworktree-tool-description)
-      9. [ExitWorktree (Tool Description)](#629-exitworktree-tool-description)
-   3. [Workspace & File Management](#63-workspace-file-management)
-      1. [Scratchpad directory (System Prompt)](#631-scratchpad-directory-system-prompt)
-      2. [Minimal mode (System Prompt)](#632-minimal-mode-system-prompt)
-      3. [NotebookEdit (Tool Description)](#633-notebookedit-tool-description)
-      4. [Worker instructions (System Prompt)](#634-worker-instructions-system-prompt)
-      5. [Status line setup (Agent Prompt)](#635-status-line-setup-agent-prompt)
-   4. [MCP Resources & Tool Discovery](#64-mcp-resources-tool-discovery)
-      1. [MCP resource no content (System Reminder)](#641-mcp-resource-no-content-system-reminder)
-      2. [MCP resource no displayable content (System Reminder)](#642-mcp-resource-no-displayable-content-system-reminder)
-      3. [ToolSearch (second part) [Tool Description]](#643-toolsearch-second-part-tool-description)
-7. [API, SDK Reference & User Interaction](#7-api-sdk-reference-user-interaction)
-   1. [Claude API Reference — Language SDKs](#71-claude-api-reference-—-language-sdks)
-      1. [Claude API reference — Python (Data)](#711-claude-api-reference-—-python-data)
-      2. [Claude API reference — TypeScript (Data)](#712-claude-api-reference-—-typescript-data)
-      3. [Claude API reference — Go (Data)](#713-claude-api-reference-—-go-data)
-      4. [Claude API reference — Java (Data)](#714-claude-api-reference-—-java-data)
-      5. [Claude API reference — C# (Data)](#715-claude-api-reference-—-c-data)
-      6. [Claude API reference — Ruby (Data)](#716-claude-api-reference-—-ruby-data)
-      7. [Claude API reference — PHP (Data)](#717-claude-api-reference-—-php-data)
-      8. [Claude API reference — cURL (Data)](#718-claude-api-reference-—-curl-data)
-      9. [Claude model catalog (Data)](#719-claude-model-catalog-data)
-   2. [Agent SDK Reference & Patterns](#72-agent-sdk-reference-patterns)
-      1. [Agent SDK reference — Python (Data)](#721-agent-sdk-reference-—-python-data)
-      2. [Agent SDK reference — TypeScript (Data)](#722-agent-sdk-reference-—-typescript-data)
-      3. [Agent SDK patterns — Python (Data)](#723-agent-sdk-patterns-—-python-data)
-      4. [Agent SDK patterns — TypeScript (Data)](#724-agent-sdk-patterns-—-typescript-data)
-      5. [Build with Claude API (Skill)](#725-build-with-claude-api-skill)
-      6. [Build with Claude API (reference guide) [Skill]](#726-build-with-claude-api-reference-guide-skill)
-   3. [API Features — Tool Use, Streaming & Files](#73-api-features-—-tool-use-streaming-files)
-      1. [Tool use concepts (Data)](#731-tool-use-concepts-data)
-      2. [Tool use reference — Python (Data)](#732-tool-use-reference-—-python-data)
-      3. [Tool use reference — TypeScript (Data)](#733-tool-use-reference-—-typescript-data)
-      4. [Streaming reference — Python (Data)](#734-streaming-reference-—-python-data)
-      5. [Streaming reference — TypeScript (Data)](#735-streaming-reference-—-typescript-data)
-      6. [Files API reference — Python (Data)](#736-files-api-reference-—-python-data)
-      7. [Files API reference — TypeScript (Data)](#737-files-api-reference-—-typescript-data)
-      8. [Message Batches API reference — Python (Data)](#738-message-batches-api-reference-—-python-data)
-      9. [HTTP error codes reference (Data)](#739-http-error-codes-reference-data)
-      10. [Live documentation sources (Data)](#7310-live-documentation-sources-data)
-   4. [User Interaction & Communication](#74-user-interaction-communication)
-      1. [User Interaction & Question Asking](#741-user-interaction-question-asking)
-         1. [AskUserQuestion (Tool Description)](#7411-askuserquestion-tool-description)
-         2. [AskUserQuestion (preview field) [Tool Description]](#7412-askuserquestion-preview-field-tool-description)
-         3. [Option previewer (System Prompt)](#7413-option-previewer-system-prompt)
-         4. [/btw side question (System Reminder)](#7414-btw-side-question-system-reminder)
-         5. [Agent mention (System Reminder)](#7415-agent-mention-system-reminder)
-      2. [Output Style, Tone & Communication](#742-output-style-tone-communication)
-         1. [Tone and style (code references) [System Prompt]](#7421-tone-and-style-code-references-system-prompt)
-         2. [Tone and style (concise output — short) [System Prompt]](#7422-tone-and-style-concise-output-—-short-system-prompt)
-         3. [Output efficiency (System Prompt)](#7423-output-efficiency-system-prompt)
-         4. [How to use the SendUserMessage tool (System Prompt)](#7424-how-to-use-the-sendusermessage-tool-system-prompt)
-         5. [SendMessageTool (non-agent-teams) [Tool Description]](#7425-sendmessagetool-non-agent-teams-tool-description)
-         6. [Output style active (System Reminder)](#7426-output-style-active-system-reminder)
-         7. [Bash command description writer (Agent Prompt)](#7427-bash-command-description-writer-agent-prompt)
-      3. [Learning Mode & Educational Features](#743-learning-mode-educational-features)
-         1. [Learning mode (System Prompt)](#7431-learning-mode-system-prompt)
-         2. [Learning mode (insights) [System Prompt]](#7432-learning-mode-insights-system-prompt)
+1. [Bash Execution & Shell Safety](#1-bash-execution-shell-safety)
+   1. [Bash Command Execution Rules & Best Practices](#11-bash-command-execution-rules-best-practices)
+      1. [Bash (prefer dedicated tools) [Tool Description]](#111-bash-prefer-dedicated-tools-tool-description)
+      2. [Bash (quote file paths) [Tool Description]](#112-bash-quote-file-paths-tool-description)
+      3. [Bash (semicolon usage) [Tool Description]](#113-bash-semicolon-usage-tool-description)
+      4. [Bash (sequential commands) [Tool Description]](#114-bash-sequential-commands-tool-description)
+      5. [Bash (sleep — keep short) [Tool Description]](#115-bash-sleep-—-keep-short-tool-description)
+      6. [Bash (sleep — no polling background tasks) [Tool Description]](#116-bash-sleep-—-no-polling-background-tasks-tool-description)
+      7. [Bash (sleep — run immediately) [Tool Description]](#117-bash-sleep-—-run-immediately-tool-description)
+      8. [Bash (sleep — use check commands) [Tool Description]](#118-bash-sleep-—-use-check-commands-tool-description)
+      9. [Bash (alternative — communication) [Tool Description]](#119-bash-alternative-—-communication-tool-description)
+      10. [Bash (alternative — content search) [Tool Description]](#1110-bash-alternative-—-content-search-tool-description)
+      11. [Bash (alternative — edit files) [Tool Description]](#1111-bash-alternative-—-edit-files-tool-description)
+      12. [Bash (alternative — file search) [Tool Description]](#1112-bash-alternative-—-file-search-tool-description)
+      13. [Bash (alternative — read files) [Tool Description]](#1113-bash-alternative-—-read-files-tool-description)
+      14. [Bash (alternative — write files) [Tool Description]](#1114-bash-alternative-—-write-files-tool-description)
+      15. [Bash (built-in tools note) [Tool Description]](#1115-bash-built-in-tools-note-tool-description)
+      16. [Bash (command description) [Tool Description]](#1116-bash-command-description-tool-description)
+      17. [Bash (maintain cwd) [Tool Description]](#1117-bash-maintain-cwd-tool-description)
+      18. [Bash (no newlines) [Tool Description]](#1118-bash-no-newlines-tool-description)
+      19. [Bash (overview) [Tool Description]](#1119-bash-overview-tool-description)
+      20. [Bash (parallel commands) [Tool Description]](#1120-bash-parallel-commands-tool-description)
+      21. [Bash (timeout) [Tool Description]](#1121-bash-timeout-tool-description)
+      22. [Bash (verify parent directory) [Tool Description]](#1122-bash-verify-parent-directory-tool-description)
+      23. [Bash (working directory) [Tool Description]](#1123-bash-working-directory-tool-description)
+   2. [Bash Sandbox Policy & Detection](#12-bash-sandbox-policy-detection)
+      1. [Bash (sandbox — adjust settings) [Tool Description]](#121-bash-sandbox-—-adjust-settings-tool-description)
+      2. [Bash (sandbox — default to sandbox) [Tool Description]](#122-bash-sandbox-—-default-to-sandbox-tool-description)
+      3. [Bash (sandbox — evidence: access denied) [Tool Description]](#123-bash-sandbox-—-evidence-access-denied-tool-description)
+      4. [Bash (sandbox — evidence list header) [Tool Description]](#124-bash-sandbox-—-evidence-list-header-tool-description)
+      5. [Bash (sandbox — evidence: network failures) [Tool Description]](#125-bash-sandbox-—-evidence-network-failures-tool-description)
+      6. [Bash (sandbox — evidence: operation not permitted) [Tool Description]](#126-bash-sandbox-—-evidence-operation-not-permitted-tool-description)
+      7. [Bash (sandbox — evidence: unix socket errors) [Tool Description]](#127-bash-sandbox-—-evidence-unix-socket-errors-tool-description)
+      8. [Bash (sandbox — explain restriction) [Tool Description]](#128-bash-sandbox-—-explain-restriction-tool-description)
+      9. [Bash (sandbox — failure evidence condition) [Tool Description]](#129-bash-sandbox-—-failure-evidence-condition-tool-description)
+      10. [Bash (sandbox — mandatory mode) [Tool Description]](#1210-bash-sandbox-—-mandatory-mode-tool-description)
+      11. [Bash (sandbox — no exceptions) [Tool Description]](#1211-bash-sandbox-—-no-exceptions-tool-description)
+      12. [Bash (sandbox — no sensitive paths) [Tool Description]](#1212-bash-sandbox-—-no-sensitive-paths-tool-description)
+      13. [Bash (sandbox — per-command) [Tool Description]](#1213-bash-sandbox-—-per-command-tool-description)
+      14. [Bash (sandbox — response header) [Tool Description]](#1214-bash-sandbox-—-response-header-tool-description)
+      15. [Bash (sandbox — retry without sandbox) [Tool Description]](#1215-bash-sandbox-—-retry-without-sandbox-tool-description)
+      16. [Bash (sandbox — tmpdir) [Tool Description]](#1216-bash-sandbox-—-tmpdir-tool-description)
+      17. [Bash (sandbox — user permission prompt) [Tool Description]](#1217-bash-sandbox-—-user-permission-prompt-tool-description)
+   3. [Bash Command Documentation & Safety](#13-bash-command-documentation-safety)
+      1. [Bash command description writer (Agent Prompt)](#131-bash-command-description-writer-agent-prompt)
+      2. [Bash command prefix detection (Agent Prompt)](#132-bash-command-prefix-detection-agent-prompt)
+2. [File, Code, and Notebook Operations](#2-file-code-and-notebook-operations)
+   1. [File System Operations & Tool Preferences](#21-file-system-operations-tool-preferences)
+      1. [ReadFile (Tool Description)](#211-readfile-tool-description)
+      2. [Edit (Tool Description)](#212-edit-tool-description)
+      3. [Write (Tool Description)](#213-write-tool-description)
+      4. [Glob (Tool Description)](#214-glob-tool-description)
+      5. [Grep (Tool Description)](#215-grep-tool-description)
+      6. [Tool usage (create files) [System Prompt]](#216-tool-usage-create-files-system-prompt)
+      7. [Tool usage (edit files) [System Prompt]](#217-tool-usage-edit-files-system-prompt)
+      8. [Tool usage (read files) [System Prompt]](#218-tool-usage-read-files-system-prompt)
+      9. [Tool usage (search content) [System Prompt]](#219-tool-usage-search-content-system-prompt)
+      10. [Tool usage (search files) [System Prompt]](#2110-tool-usage-search-files-system-prompt)
+      11. [Tool usage (reserve Bash) [System Prompt]](#2111-tool-usage-reserve-bash-system-prompt)
+      12. [File shorter than offset (System Reminder)](#2112-file-shorter-than-offset-system-reminder)
+      13. [File truncated (System Reminder)](#2113-file-truncated-system-reminder)
+      14. [File exists but empty (System Reminder)](#2114-file-exists-but-empty-system-reminder)
+      15. [File modified by user or linter (System Reminder)](#2115-file-modified-by-user-or-linter-system-reminder)
+      16. [File opened in IDE (System Reminder)](#2116-file-opened-in-ide-system-reminder)
+   2. [Code Quality & Engineering Discipline](#22-code-quality-engineering-discipline)
+      1. [Doing tasks (avoid over-engineering) [System Prompt]](#221-doing-tasks-avoid-over-engineering-system-prompt)
+      2. [Doing tasks (no premature abstractions) [System Prompt]](#222-doing-tasks-no-premature-abstractions-system-prompt)
+      3. [Doing tasks (no unnecessary additions) [System Prompt]](#223-doing-tasks-no-unnecessary-additions-system-prompt)
+      4. [Doing tasks (no unnecessary error handling) [System Prompt]](#224-doing-tasks-no-unnecessary-error-handling-system-prompt)
+      5. [Doing tasks (no compatibility hacks) [System Prompt]](#225-doing-tasks-no-compatibility-hacks-system-prompt)
+      6. [Doing tasks (minimize file creation) [System Prompt]](#226-doing-tasks-minimize-file-creation-system-prompt)
+      7. [Doing tasks (read before modifying) [System Prompt]](#227-doing-tasks-read-before-modifying-system-prompt)
+      8. [Doing tasks (software engineering focus) [System Prompt]](#228-doing-tasks-software-engineering-focus-system-prompt)
+      9. [Doing tasks (ambitious tasks) [System Prompt]](#229-doing-tasks-ambitious-tasks-system-prompt)
+      10. [Doing tasks (blocked approach) [System Prompt]](#2210-doing-tasks-blocked-approach-system-prompt)
+      11. [Doing tasks (no time estimates) [System Prompt]](#2211-doing-tasks-no-time-estimates-system-prompt)
+      12. [Doing tasks (help and feedback) [System Prompt]](#2212-doing-tasks-help-and-feedback-system-prompt)
+      13. [Doing tasks (security) [System Prompt]](#2213-doing-tasks-security-system-prompt)
+   3. [Code Verification & Testing](#23-code-verification-testing)
+      1. [Verification specialist (Agent Prompt)](#231-verification-specialist-agent-prompt)
+      2. [Verify skill (Skill)](#232-verify-skill-skill)
+      3. [Verify CLI changes (example for Verify skill) [Skill]](#233-verify-cli-changes-example-for-verify-skill-skill)
+      4. [Verify server/API changes (example for Verify skill) [Skill]](#234-verify-serverapi-changes-example-for-verify-skill-skill)
+      5. [Worker instructions (System Prompt)](#235-worker-instructions-system-prompt)
+      6. [New diagnostics detected (System Reminder)](#236-new-diagnostics-detected-system-reminder)
+   4. [Jupyter Notebook & Specialized File Handling](#24-jupyter-notebook-specialized-file-handling)
+      1. [NotebookEdit (Tool Description)](#241-notebookedit-tool-description)
+      2. [Sleep (Tool Description)](#242-sleep-tool-description)
+3. [Agent Architecture & Runtime Behavior](#3-agent-architecture-runtime-behavior)
+   1. [Multi-Agent Coordination](#31-multi-agent-coordination)
+      1. [Multi-Agent Team Coordination & Swarm Management](#311-multi-agent-team-coordination-swarm-management)
+         1. [SendMessageTool (Tool Description)](#3111-sendmessagetool-tool-description)
+         2. [TeammateTool (Tool Description)](#3112-teammatetool-tool-description)
+         3. [TeamDelete (Tool Description)](#3113-teamdelete-tool-description)
+         4. [TaskList (teammate workflow) [Tool Description]](#3114-tasklist-teammate-workflow-tool-description)
+         5. [Teammate Communication (System Prompt)](#3115-teammate-communication-system-prompt)
+         6. [Team memory content display (System Prompt)](#3116-team-memory-content-display-system-prompt)
+         7. [Team Coordination (System Reminder)](#3117-team-coordination-system-reminder)
+         8. [Team Shutdown (System Reminder)](#3118-team-shutdown-system-reminder)
+         9. [Writing subagent prompts (System Prompt)](#3119-writing-subagent-prompts-system-prompt)
+         10. [Subagent delegation examples (System Prompt)](#31110-subagent-delegation-examples-system-prompt)
+         11. [Fork usage guidelines (System Prompt)](#31111-fork-usage-guidelines-system-prompt)
+         12. [Agent (usage notes) [Tool Description]](#31112-agent-usage-notes-tool-description)
+         13. [Agent (when to launch subagents) [Tool Description]](#31113-agent-when-to-launch-subagents-tool-description)
+      2. [Agent Design, Configuration & Orchestration](#312-agent-design-configuration-orchestration)
+         1. [Agent creation architect (Agent Prompt)](#3121-agent-creation-architect-agent-prompt)
+         2. [CLAUDE.md creation (Agent Prompt)](#3122-claudemd-creation-agent-prompt)
+         3. [/batch slash command (Agent Prompt)](#3123-batch-slash-command-agent-prompt)
+         4. [Auto mode rule reviewer (Agent Prompt)](#3124-auto-mode-rule-reviewer-agent-prompt)
+         5. [Worker fork execution (Agent Prompt)](#3125-worker-fork-execution-agent-prompt)
+         6. [Auto mode (System Prompt)](#3126-auto-mode-system-prompt)
+   2. [Agent Thread Protocols & Access Control](#32-agent-thread-protocols-access-control)
+      1. [Agent Thread Behavior & Response Guidelines](#321-agent-thread-behavior-response-guidelines)
+         1. [Agent thread notes (System Prompt)](#3211-agent-thread-notes-system-prompt)
+         2. [Advisor tool instructions (System Prompt)](#3212-advisor-tool-instructions-system-prompt)
+         3. [/btw side question (System Reminder)](#3213-btw-side-question-system-reminder)
+         4. [Agent mention (System Reminder)](#3214-agent-mention-system-reminder)
+      2. [Permission Management & Tool Execution Control](#322-permission-management-tool-execution-control)
+         1. [Tool execution denied (System Prompt)](#3221-tool-execution-denied-system-prompt)
+         2. [System section (System Prompt)](#3222-system-section-system-prompt)
+         3. [Parallel tool call note (part of "Tool usage policy") [System Prompt]](#3223-parallel-tool-call-note-part-of-tool-usage-policy-system-prompt)
+   3. [Session Identity & Operational Settings](#33-session-identity-operational-settings)
+      1. [Agent Metadata & Session Naming](#331-agent-metadata-session-naming)
+         1. [Coding session title generator (Agent Prompt)](#3311-coding-session-title-generator-agent-prompt)
+         2. [Agent Summary Generation (System Prompt)](#3312-agent-summary-generation-system-prompt)
+         3. [Status line setup (Agent Prompt)](#3313-status-line-setup-agent-prompt)
+      2. [Operational Mode Configuration](#332-operational-mode-configuration)
+         1. [Minimal mode (System Prompt)](#3321-minimal-mode-system-prompt)
+         2. [Scratchpad directory (System Prompt)](#3322-scratchpad-directory-system-prompt)
+         3. [One of six rules for using sleep command (System Prompt)](#3323-one-of-six-rules-for-using-sleep-command-system-prompt)
+4. [Planning, Memory & Context Management](#4-planning-memory-context-management)
+   1. [Planning Mode & Implementation Design](#41-planning-mode-implementation-design)
+      1. [EnterPlanMode (Tool Description)](#411-enterplanmode-tool-description)
+      2. [ExitPlanMode (Tool Description)](#412-exitplanmode-tool-description)
+      3. [Plan mode is active (5-phase) [System Reminder]](#413-plan-mode-is-active-5-phase-system-reminder)
+      4. [Plan mode is active (iterative) [System Reminder]](#414-plan-mode-is-active-iterative-system-reminder)
+      5. [Plan mode is active (subagent) [System Reminder]](#415-plan-mode-is-active-subagent-system-reminder)
+      6. [Plan mode re-entry (System Reminder)](#416-plan-mode-re-entry-system-reminder)
+      7. [Ultraplan mode (System Reminder)](#417-ultraplan-mode-system-reminder)
+      8. [Exited plan mode (System Reminder)](#418-exited-plan-mode-system-reminder)
+      9. [Plan file reference (System Reminder)](#419-plan-file-reference-system-reminder)
+      10. [Verify plan reminder (System Reminder)](#4110-verify-plan-reminder-system-reminder)
+      11. [Plan mode (enhanced) [Agent Prompt]](#4111-plan-mode-enhanced-agent-prompt)
+      12. [Phase four of plan mode (System Prompt)](#4112-phase-four-of-plan-mode-system-prompt)
+   2. [Memory & Session Persistence](#42-memory-session-persistence)
+      1. [Memory file contents (System Reminder)](#421-memory-file-contents-system-reminder)
+      2. [Nested memory contents (System Reminder)](#422-nested-memory-contents-system-reminder)
+      3. [Session continuation (System Reminder)](#423-session-continuation-system-reminder)
+      4. [Invoked skills (System Reminder)](#424-invoked-skills-system-reminder)
+      5. [Session memory update instructions (Agent Prompt)](#425-session-memory-update-instructions-agent-prompt)
+      6. [Dream memory consolidation (Agent Prompt)](#426-dream-memory-consolidation-agent-prompt)
+      7. [Determine which memory files to attach (Agent Prompt)](#427-determine-which-memory-files-to-attach-agent-prompt)
+      8. [Agent memory instructions (System Prompt)](#428-agent-memory-instructions-system-prompt)
+      9. [Memory description of user feedback (System Prompt)](#429-memory-description-of-user-feedback-system-prompt)
+      10. [Description part of memory instructions (System Prompt)](#4210-description-part-of-memory-instructions-system-prompt)
+      11. [Session memory template (Data)](#4211-session-memory-template-data)
+   3. [Context Compaction & Conversation Summarization](#43-context-compaction-conversation-summarization)
+      1. [Context compaction summary (System Prompt)](#431-context-compaction-summary-system-prompt)
+      2. [Analysis instructions for full compact prompt (full conversation) [System Prompt]](#432-analysis-instructions-for-full-compact-prompt-full-conversation-system-prompt)
+      3. [Analysis instructions for full compact prompt (minimal and via feature flag) [System Prompt]](#433-analysis-instructions-for-full-compact-prompt-minimal-and-via-feature-flag-system-prompt)
+      4. [Analysis instructions for full compact prompt (recent messages) [System Prompt]](#434-analysis-instructions-for-full-compact-prompt-recent-messages-system-prompt)
+      5. [Conversation summarization (Agent Prompt)](#435-conversation-summarization-agent-prompt)
+      6. [Recent Message Summarization (Agent Prompt)](#436-recent-message-summarization-agent-prompt)
+      7. [Compact file reference (System Reminder)](#437-compact-file-reference-system-reminder)
+   4. [Task Tracking & Progress Management](#44-task-tracking-progress-management)
+      1. [TodoWrite (Tool Description)](#441-todowrite-tool-description)
+      2. [TaskCreate (Tool Description)](#442-taskcreate-tool-description)
+      3. [TodoWrite reminder (System Reminder)](#443-todowrite-reminder-system-reminder)
+      4. [Task tools reminder (System Reminder)](#444-task-tools-reminder-system-reminder)
+      5. [Tool usage (task management) [System Prompt]](#445-tool-usage-task-management-system-prompt)
+5. [Claude API, SDKs & External Integrations](#5-claude-api-sdks-external-integrations)
+   1. [API Reference & Advanced Features](#51-api-reference-advanced-features)
+      1. [Claude API SDK Reference Documentation](#511-claude-api-sdk-reference-documentation)
+         1. [Claude API reference — Python (Data)](#5111-claude-api-reference-—-python-data)
+         2. [Claude API reference — TypeScript (Data)](#5112-claude-api-reference-—-typescript-data)
+         3. [Claude API reference — Go (Data)](#5113-claude-api-reference-—-go-data)
+         4. [Claude API reference — Java (Data)](#5114-claude-api-reference-—-java-data)
+         5. [Claude API reference — Ruby (Data)](#5115-claude-api-reference-—-ruby-data)
+         6. [Claude API reference — PHP (Data)](#5116-claude-api-reference-—-php-data)
+         7. [Claude API reference — C# (Data)](#5117-claude-api-reference-—-c-data)
+         8. [Claude API reference — cURL (Data)](#5118-claude-api-reference-—-curl-data)
+         9. [Claude model catalog (Data)](#5119-claude-model-catalog-data)
+         10. [HTTP error codes reference (Data)](#51110-http-error-codes-reference-data)
+         11. [Live documentation sources (Data)](#51111-live-documentation-sources-data)
+      2. [Advanced API Features Reference](#512-advanced-api-features-reference)
+         1. [Streaming reference — Python (Data)](#5121-streaming-reference-—-python-data)
+         2. [Streaming reference — TypeScript (Data)](#5122-streaming-reference-—-typescript-data)
+         3. [Tool use concepts (Data)](#5123-tool-use-concepts-data)
+         4. [Tool use reference — Python (Data)](#5124-tool-use-reference-—-python-data)
+         5. [Tool use reference — TypeScript (Data)](#5125-tool-use-reference-—-typescript-data)
+         6. [Files API reference — Python (Data)](#5126-files-api-reference-—-python-data)
+         7. [Files API reference — TypeScript (Data)](#5127-files-api-reference-—-typescript-data)
+         8. [Message Batches API reference — Python (Data)](#5128-message-batches-api-reference-—-python-data)
+         9. [Prompt Caching — Design & Optimization (Data)](#5129-prompt-caching-—-design-optimization-data)
+   2. [Agent SDK & MCP Integration](#52-agent-sdk-mcp-integration)
+      1. [Agent SDK Patterns & Reference](#521-agent-sdk-patterns-reference)
+         1. [Agent SDK patterns — Python (Data)](#5211-agent-sdk-patterns-—-python-data)
+         2. [Agent SDK patterns — TypeScript (Data)](#5212-agent-sdk-patterns-—-typescript-data)
+         3. [Agent SDK reference — Python (Data)](#5213-agent-sdk-reference-—-python-data)
+         4. [Agent SDK reference — TypeScript (Data)](#5214-agent-sdk-reference-—-typescript-data)
+         5. [Build with Claude API (Skill)](#5215-build-with-claude-api-skill)
+         6. [Build with Claude API (reference guide) [Skill]](#5216-build-with-claude-api-reference-guide-skill)
+      2. [MCP Resources & Tool Discovery](#522-mcp-resources-tool-discovery)
+         1. [MCP resource no content (System Reminder)](#5221-mcp-resource-no-content-system-reminder)
+         2. [MCP resource no displayable content (System Reminder)](#5222-mcp-resource-no-displayable-content-system-reminder)
+         3. [ToolSearch (second part) [Tool Description]](#5223-toolsearch-second-part-tool-description)
+   3. [GitHub, Browser & Web Integrations](#53-github-browser-web-integrations)
+      1. [GitHub Integration & CI/CD](#531-github-integration-cicd)
+         1. [GitHub Actions workflow for @claude mentions (Data)](#5311-github-actions-workflow-for-claude-mentions-data)
+         2. [GitHub App installation PR description (Data)](#5312-github-app-installation-pr-description-data)
+         3. [/pr-comments slash command (Agent Prompt)](#5313-pr-comments-slash-command-agent-prompt)
+         4. [/review-pr slash command (Agent Prompt)](#5314-review-pr-slash-command-agent-prompt)
+         5. [/review slash command (remote) [Agent Prompt]](#5315-review-slash-command-remote-agent-prompt)
+      2. [Browser Automation & Web Tools](#532-browser-automation-web-tools)
+         1. [Computer (Tool Description)](#5321-computer-tool-description)
+         2. [Computer action (Tool Parameter)](#5322-computer-action-tool-parameter)
+         3. [WebFetch (Tool Description)](#5323-webfetch-tool-description)
+         4. [WebSearch (Tool Description)](#5324-websearch-tool-description)
+         5. [Chrome browser MCP tools (System Prompt)](#5325-chrome-browser-mcp-tools-system-prompt)
+         6. [Claude in Chrome browser automation (System Prompt)](#5326-claude-in-chrome-browser-automation-system-prompt)
+6. [Developer Workflow Tools & Automation](#6-developer-workflow-tools-automation)
+   1. [Git & Version Control Operations](#61-git-version-control-operations)
+      1. [Bash (git — avoid destructive ops) [Tool Description]](#611-bash-git-—-avoid-destructive-ops-tool-description)
+      2. [Bash (Git commit and PR creation instructions) [Tool Description]](#612-bash-git-commit-and-pr-creation-instructions-tool-description)
+      3. [Bash (git — never skip hooks) [Tool Description]](#613-bash-git-—-never-skip-hooks-tool-description)
+      4. [Bash (git — prefer new commits) [Tool Description]](#614-bash-git-—-prefer-new-commits-tool-description)
+      5. [EnterWorktree (Tool Description)](#615-enterworktree-tool-description)
+      6. [ExitWorktree (Tool Description)](#616-exitworktree-tool-description)
+      7. [Quick git commit (Agent Prompt)](#617-quick-git-commit-agent-prompt)
+      8. [Quick PR creation (Agent Prompt)](#618-quick-pr-creation-agent-prompt)
+      9. [Session title and branch generation (Agent Prompt)](#619-session-title-and-branch-generation-agent-prompt)
+      10. [Git status (System Prompt)](#6110-git-status-system-prompt)
+   2. [Codebase Exploration & Slash Commands](#62-codebase-exploration-slash-commands)
+      1. [Codebase Exploration & Search Agents](#621-codebase-exploration-search-agents)
+         1. [Explore (Agent Prompt)](#6211-explore-agent-prompt)
+         2. [Explore strengths and guidelines (Agent Prompt)](#6212-explore-strengths-and-guidelines-agent-prompt)
+         3. [LSP (Tool Description)](#6213-lsp-tool-description)
+         4. [Tool usage (direct search) [System Prompt]](#6214-tool-usage-direct-search-system-prompt)
+         5. [Tool usage (delegate exploration) [System Prompt]](#6215-tool-usage-delegate-exploration-system-prompt)
+         6. [Tool usage (subagent guidance) [System Prompt]](#6216-tool-usage-subagent-guidance-system-prompt)
+      2. [Skills & Slash Command Implementations](#622-skills-slash-command-implementations)
+         1. [Skill (Tool Description)](#6221-skill-tool-description)
+         2. [Tool usage (skill invocation) [System Prompt]](#6222-tool-usage-skill-invocation-system-prompt)
+         3. [Debugging (Skill)](#6223-debugging-skill)
+         4. [Simplify (Skill)](#6224-simplify-skill)
+         5. [/loop slash command (Skill)](#6225-loop-slash-command-skill)
+         6. [/stuck slash command (Skill)](#6226-stuck-slash-command-skill)
+         7. [Update Claude Code Config (Skill)](#6227-update-claude-code-config-skill)
+         8. [update-config (7-step verification flow) [Skill]](#6228-update-config-7-step-verification-flow-skill)
+         9. [/init CLAUDE.md and skill setup (new version) [Skill]](#6229-init-claudemd-and-skill-setup-new-version-skill)
+         10. [Create verifier skills (Skill)](#62210-create-verifier-skills-skill)
+         11. [Skillify Current Session (System Prompt)](#62211-skillify-current-session-system-prompt)
+   3. [Lifecycle Hooks, Scheduling & IDE Context](#63-lifecycle-hooks-scheduling-ide-context)
+      1. [Hook System & Lifecycle Automation](#631-hook-system-lifecycle-automation)
+         1. [Hooks Configuration (System Prompt)](#6311-hooks-configuration-system-prompt)
+         2. [Hook additional context (System Reminder)](#6312-hook-additional-context-system-reminder)
+         3. [Hook blocking error (System Reminder)](#6313-hook-blocking-error-system-reminder)
+         4. [Hook stopped continuation prefix (System Reminder)](#6314-hook-stopped-continuation-prefix-system-reminder)
+         5. [Hook stopped continuation (System Reminder)](#6315-hook-stopped-continuation-system-reminder)
+         6. [Hook success (System Reminder)](#6316-hook-success-system-reminder)
+         7. [Hook condition evaluator (Agent Prompt)](#6317-hook-condition-evaluator-agent-prompt)
+         8. [Agent Hook (Agent Prompt)](#6318-agent-hook-agent-prompt)
+      2. [Scheduling & Cron Job Management](#632-scheduling-cron-job-management)
+         1. [CronCreate (Tool Description)](#6321-croncreate-tool-description)
+         2. [/schedule slash command (Agent Prompt)](#6322-schedule-slash-command-agent-prompt)
+      3. [IDE Integration & Editor Context](#633-ide-integration-editor-context)
+         1. [Lines selected in IDE (System Reminder)](#6331-lines-selected-in-ide-system-reminder)
+7. [Security, Communication & User Interaction](#7-security-communication-user-interaction)
+   1. [Security Monitoring & Vulnerability Analysis](#71-security-monitoring-vulnerability-analysis)
+      1. [Security monitor for autonomous agent actions (first part) [Agent Prompt]](#711-security-monitor-for-autonomous-agent-actions-first-part-agent-prompt)
+      2. [Security monitor for autonomous agent actions (second part) [Agent Prompt]](#712-security-monitor-for-autonomous-agent-actions-second-part-agent-prompt)
+      3. [/security-review slash command (Agent Prompt)](#713-security-review-slash-command-agent-prompt)
+      4. [Malware analysis after Read tool call (System Reminder)](#714-malware-analysis-after-read-tool-call-system-reminder)
+      5. [Censoring assistance with malicious activities (System Prompt)](#715-censoring-assistance-with-malicious-activities-system-prompt)
+      6. [Executing actions with care (System Prompt)](#716-executing-actions-with-care-system-prompt)
+   2. [Output Formatting & User Communication](#72-output-formatting-user-communication)
+      1. [Output Style, Formatting & Communication](#721-output-style-formatting-communication)
+         1. [Tone and style (code references) [System Prompt]](#7211-tone-and-style-code-references-system-prompt)
+         2. [Tone and style (concise output — short) [System Prompt]](#7212-tone-and-style-concise-output-—-short-system-prompt)
+         3. [Output efficiency (System Prompt)](#7213-output-efficiency-system-prompt)
+         4. [Output style active (System Reminder)](#7214-output-style-active-system-reminder)
+         5. [How to use the SendUserMessage tool (System Prompt)](#7215-how-to-use-the-sendusermessage-tool-system-prompt)
+         6. [SendMessageTool (non-agent-teams) [Tool Description]](#7216-sendmessagetool-non-agent-teams-tool-description)
+         7. [Common suffix (response format) [Agent Prompt]](#7217-common-suffix-response-format-agent-prompt)
+      2. [User Interaction & Clarification Tools](#722-user-interaction-clarification-tools)
+         1. [AskUserQuestion (Tool Description)](#7221-askuserquestion-tool-description)
+         2. [AskUserQuestion (preview field) [Tool Description]](#7222-askuserquestion-preview-field-tool-description)
+         3. [Option previewer (System Prompt)](#7223-option-previewer-system-prompt)
+         4. [Prompt Suggestion Generator v2 (Agent Prompt)](#7224-prompt-suggestion-generator-v2-agent-prompt)
+      3. [Learning Mode & Educational Workflows](#723-learning-mode-educational-workflows)
+         1. [Learning mode (System Prompt)](#7231-learning-mode-system-prompt)
+         2. [Learning mode (insights) [System Prompt]](#7232-learning-mode-insights-system-prompt)
+   3. [Analytics, Research & Knowledge Management](#73-analytics-research-knowledge-management)
+      1. [Session & Usage Insights Analytics](#731-session-usage-insights-analytics)
+         1. [Insights at a glance summary (System Prompt)](#7311-insights-at-a-glance-summary-system-prompt)
+         2. [Insights friction analysis (System Prompt)](#7312-insights-friction-analysis-system-prompt)
+         3. [Insights on the horizon (System Prompt)](#7313-insights-on-the-horizon-system-prompt)
+         4. [Insights session facets extraction (System Prompt)](#7314-insights-session-facets-extraction-system-prompt)
+         5. [Insights suggestions (System Prompt)](#7315-insights-suggestions-system-prompt)
+         6. [Session Search Assistant (Agent Prompt)](#7316-session-search-assistant-agent-prompt)
+      2. [Web Content Summarization & Research](#732-web-content-summarization-research)
+         1. [WebFetch summarizer (Agent Prompt)](#7321-webfetch-summarizer-agent-prompt)
+         2. [Claude guide agent (Agent Prompt)](#7322-claude-guide-agent-agent-prompt)
+      3. [Resource Monitoring & Budget Tracking](#733-resource-monitoring-budget-tracking)
+         1. [Token usage (System Reminder)](#7331-token-usage-system-reminder)
+         2. [USD budget (System Reminder)](#7332-usd-budget-system-reminder)
+      4. [Documentation & Knowledge Base Management](#734-documentation-knowledge-base-management)
+         1. [Update Magic Docs (Agent Prompt)](#7341-update-magic-docs-agent-prompt)
 
 ---
 
-## 1. Agent Orchestration & Multi-Agent Systems
+## 1. Bash Execution & Shell Safety
 
-Frameworks for designing, spawning, and coordinating AI agents — from single-agent plan-mode workflows to swarms of parallel subagents with shared task queues and messaging protocols.
+Rules, patterns, and security controls governing how Bash commands are executed, documented, and sandboxed. Covers tool selection, command chaining, sandbox enforcement, and injection detection.
 
-### 1.1 Planning & Execution Control
+### 1.1 Bash Command Execution Rules & Best Practices
 
-Plan mode enforces read-only exploration before implementation, with variants for multi-agent workflows, iterative pair-planning, and autonomous execution with graduated safety controls.
+Execution patterns and tool selection guidelines for Bash commands. Prioritizes dedicated tools over Bash for file operations and searching; chains dependent commands with `&&` for proper error handling; avoids polling and unnecessary delays; maintains working directory with absolute paths; and provides clear command descriptions for transparency.
 
-#### 1.1.1 Plan Mode Workflow & Control
+#### 1.1.1 [Bash (prefer dedicated tools) [Tool Description]](system-prompts/tool-description-bash-prefer-dedicated-tools.md)
 
-Plan mode enforces a read-only exploration phase where Claude designs implementation strategies before writing code, with variants supporting five-phase multi-agent workflows, iterative pair-planning with users, or simplified subagent modes. Transitions in and out of plan mode gate execution, require plan file updates, and optionally trigger verification after implementation to confirm all planned changes were executed.
+Avoid using Bash for find, grep, cat, and similar searching commands; use dedicated tools instead for better user experience.
 
-##### 1.1.1.1 [Plan mode is active (5-phase) [System Reminder]](system-prompts/system-reminder-plan-mode-is-active-5-phase.md)
+#### 1.1.2 [Bash (quote file paths) [Tool Description]](system-prompts/tool-description-bash-quote-file-paths.md)
 
-Comprehensive plan mode workflow with five phases: initial understanding via parallel exploration agents, design via planning agents, review, phase four execution, and plan mode exit. Enforces read-only restrictions and requires plan file updates before execution.
+Always quote file paths containing spaces with double quotes in Bash commands.
 
-##### 1.1.1.2 [Plan mode is active (iterative) [System Reminder]](system-prompts/system-reminder-plan-mode-is-active-iterative.md)
+#### 1.1.3 [Bash (semicolon usage) [Tool Description]](system-prompts/tool-description-bash-semicolon-usage.md)
 
-Iterative pair-planning workflow where Claude explores code, updates the plan file incrementally, asks clarifying questions, and converges on a complete plan before execution. Enforces read-only restrictions except for plan file edits.
+Use semicolons (`;`) only when running commands sequentially where earlier command failures do not matter.
 
-##### 1.1.1.3 [Plan mode is active (subagent) [System Reminder]](system-prompts/system-reminder-plan-mode-is-active-subagent.md)
+#### 1.1.4 [Bash (sequential commands) [Tool Description]](system-prompts/tool-description-bash-sequential-commands.md)
 
-Simplified plan mode for subagents enforcing read-only restrictions and plan file editing, with instructions to answer queries and ask clarifying questions.
+Chain dependent commands with `&&` in a single Bash call to ensure sequential execution with failure handling.
 
-##### 1.1.1.4 [Plan mode re-entry (System Reminder)](system-prompts/system-reminder-plan-mode-re-entry.md)
+#### 1.1.5 [Bash (sleep — keep short) [Tool Description]](system-prompts/tool-description-bash-sleep-keep-short.md)
 
-Guidance for re-entering plan mode after previous exit, requiring evaluation of existing plan against current request and decision to continue or start fresh.
+Keep sleep durations short (1-5 seconds) to avoid blocking the user.
 
-##### 1.1.1.5 [Plan file reference (System Reminder)](system-prompts/system-reminder-plan-file-reference.md)
+#### 1.1.6 [Bash (sleep — no polling background tasks) [Tool Description]](system-prompts/tool-description-bash-sleep-no-polling-background-tasks.md)
 
-Reference to an existing plan file with its contents, suggesting continuation if relevant and incomplete.
+Do not poll background tasks started with `run_in_background`; wait for completion notification instead.
 
-##### 1.1.1.6 [Exited plan mode (System Reminder)](system-prompts/system-reminder-exited-plan-mode.md)
+#### 1.1.7 [Bash (sleep — run immediately) [Tool Description]](system-prompts/tool-description-bash-sleep-run-immediately.md)
 
-Notifies Claude that plan mode has been exited and it can now make edits, run tools, and take actions, optionally referencing the plan file location.
+Do not sleep between commands that can run immediately; execute them without delay.
 
-##### 1.1.1.7 [Verify plan reminder (System Reminder)](system-prompts/system-reminder-verify-plan-reminder.md)
+#### 1.1.8 [Bash (sleep — use check commands) [Tool Description]](system-prompts/tool-description-bash-sleep-use-check-commands.md)
 
-Instructs Claude to call a verification tool directly after completing plan implementation to confirm all plan items were executed correctly.
+When polling an external process, use check commands like `gh run view` instead of sleeping first.
 
-##### 1.1.1.8 [Phase four of plan mode (System Prompt)](system-prompts/system-prompt-phase-four-of-plan-mode.md)
+#### 1.1.9 [Bash (alternative — communication) [Tool Description]](system-prompts/tool-description-bash-alternative-communication.md)
 
-Final phase of plan mode that writes a concise plan file with file paths, changes, function references, and a single verification command, limited to 40 lines.
+Instructs to output text directly rather than using echo or printf commands.
 
-##### 1.1.1.9 [EnterPlanMode (Tool Description)](system-prompts/tool-description-enterplanmode.md)
+#### 1.1.10 [Bash (alternative — content search) [Tool Description]](system-prompts/tool-description-bash-alternative-content-search.md)
 
-Transitions Claude into plan mode to explore codebases and design implementation approaches before writing code. Guides when to use planning for non-trivial tasks involving multiple approaches, architectural decisions, or multi-file changes, and when to skip it for simple fixes.
+Directs to use the Grep tool instead of grep or rg commands for content searching.
 
-##### 1.1.1.10 [ExitPlanMode (Tool Description)](system-prompts/tool-description-exitplanmode.md)
+#### 1.1.11 [Bash (alternative — edit files) [Tool Description]](system-prompts/tool-description-bash-alternative-edit-files.md)
 
-Signals completion of planning and requests user approval before proceeding with implementation. Reads the plan from a file and presents it for review, distinguishing between implementation planning and research tasks.
+Directs to use the Edit tool instead of sed or awk for file editing.
 
-##### 1.1.1.11 [Plan mode (enhanced) [Agent Prompt]](system-prompts/agent-prompt-plan-mode-enhanced.md)
+#### 1.1.12 [Bash (alternative — file search) [Tool Description]](system-prompts/tool-description-bash-alternative-file-search.md)
 
-Software architect agent that explores codebases and designs implementation plans in read-only mode. Identifies critical files, traces code paths, and provides step-by-step implementation strategies with architectural trade-off analysis.
+Directs to use the Glob tool instead of find or ls for file searching.
 
-#### 1.1.2 Autonomous & Auto Mode Execution
+#### 1.1.13 [Bash (alternative — read files) [Tool Description]](system-prompts/tool-description-bash-alternative-read-files.md)
 
-Governs autonomous task execution with graduated safety controls: auto mode prioritizes action with security guardrails, careful execution requires confirmation for destructive operations, and denied tools trigger workaround attempts rather than retries. Together they balance speed with reversibility and user oversight.
+Directs to use the Read tool instead of cat, head, or tail for file reading.
 
-##### 1.1.2.1 [Auto mode (System Prompt)](system-prompts/system-prompt-auto-mode.md)
+#### 1.1.14 [Bash (alternative — write files) [Tool Description]](system-prompts/tool-description-bash-alternative-write-files.md)
 
-Enables continuous autonomous task execution with immediate implementation, minimal interruptions, preference for action over planning, and strict prohibition on posting to public services without explicit user approval.
+Directs to use the Write tool instead of echo or cat for file writing.
 
-##### 1.1.2.2 [Executing actions with care (System Prompt)](system-prompts/system-prompt-executing-actions-with-care.md)
+#### 1.1.15 [Bash (built-in tools note) [Tool Description]](system-prompts/tool-description-bash-built-in-tools-note.md)
 
-Requires careful consideration of reversibility and blast radius, confirming risky actions like deletions, force-pushes, shared state changes, and third-party uploads before proceeding unless explicitly authorized in durable instructions.
+Notes that built-in tools provide better user experience and transparency than bash equivalents for file and search operations.
 
-##### 1.1.2.3 [Tool execution denied (System Prompt)](system-prompts/system-prompt-tool-execution-denied.md)
+#### 1.1.16 [Bash (command description) [Tool Description]](system-prompts/tool-description-bash-command-description.md)
 
-Instructs Claude to respect tool execution denials by attempting only reasonable workarounds, not malicious bypasses, and to stop and explain to the user if the denied capability is essential to complete their request.
+Instructs to write clear, concise descriptions of bash commands, with brief summaries for simple commands and contextual detail for complex piped or obscure commands.
 
-##### 1.1.2.4 [System section (System Prompt)](system-prompts/system-prompt-system-section.md)
+#### 1.1.17 [Bash (maintain cwd) [Tool Description]](system-prompts/tool-description-bash-maintain-cwd.md)
 
-Describes tool permission modes and user approval workflows, instructing Claude to adjust approach if tools are denied rather than retrying.
+Instructs to maintain current working directory by using absolute paths and avoiding cd commands unless explicitly requested.
 
-### 1.2 Task Tracking & Work Decomposition
+#### 1.1.18 [Bash (no newlines) [Tool Description]](system-prompts/tool-description-bash-no-newlines.md)
 
-Tools for breaking complex work into tracked steps, managing task states, and decomposing large changes into parallelizable units with progress visibility.
+Instructs not to use newlines to separate bash commands.
 
-#### 1.2.1 Task & Todo Tracking
-
-Task and todo tools break down complex work into tracked steps with state management (pending, in_progress, completed), emphasizing immediate completion marking and limiting concurrent in_progress tasks. These tools organize multi-step coding sessions and provide progress visibility without requiring explicit status checks.
-
-##### 1.2.1.1 [Task status (System Reminder)](system-prompts/system-reminder-task-status.md)
-
-Brief reminder that task output can be checked using the TaskOutput tool.
-
-##### 1.2.1.2 [Task tools reminder (System Reminder)](system-prompts/system-reminder-task-tools-reminder.md)
-
-Gentle reminder to use task creation and update tools for tracking progress on relevant work.
-
-##### 1.2.1.3 [TodoWrite reminder (System Reminder)](system-prompts/system-reminder-todowrite-reminder.md)
-
-Gentle reminder to use TodoWrite tool for task tracking and to clean up stale todo lists.
-
-##### 1.2.1.4 [TaskCreate (Tool Description)](system-prompts/tool-description-taskcreate.md)
-
-Creates structured task lists for coding sessions to track progress and organize complex multi-step work. Emphasizes using it for non-trivial tasks with 3+ steps and marking tasks in_progress before starting work.
-
-##### 1.2.1.5 [TodoWrite (Tool Description)](system-prompts/tool-description-todowrite.md)
-
-Creates and manages task lists for coding sessions with state tracking (pending, in_progress, completed) and dual task forms (imperative and active continuous). Emphasizes limiting to one in_progress task and marking completion only when fully accomplished.
-
-##### 1.2.1.6 [Tool usage (task management) [System Prompt]](system-prompts/system-prompt-tool-usage-task-management.md)
-
-Instructs Claude to use TodoWrite to break down work into tracked tasks, marking each as completed immediately upon finishing rather than batching completions.
-
-#### 1.2.2 Parallel Tool Execution & Efficiency
-
-Maximizes throughput by executing independent operations concurrently while respecting sequential dependencies. Decomposes large codebase changes into parallelizable units with background workers, tracking progress across distributed work.
-
-##### 1.2.2.1 [Parallel tool call note (part of "Tool usage policy") [System Prompt]](system-prompts/system-prompt-parallel-tool-call-note-part-of-tool-usage-policy.md)
-
-Instructs Claude to call independent tools in parallel and sequential tools in order to maximize efficiency.
-
-##### 1.2.2.2 [/batch slash command (Agent Prompt)](system-prompts/agent-prompt-batch-slash-command.md)
-
-Orchestrates large parallelizable codebase changes by researching scope, decomposing work into 5-30 independent units, determining e2e test recipes, and spawning background worker agents. Tracks progress and consolidates results across all units.
-
-### 1.3 Subagent Spawning & Team Coordination
-
-Spawning specialized subagents for parallel work, coordinating agent teams through shared queues and messaging protocols, and managing graceful shutdown workflows.
-
-#### 1.3.1 Multi-Agent Team Coordination & Swarm Management
-
-Teams coordinate multiple agents working in parallel through shared task lists, messaging protocols, and graceful shutdown workflows. Agents discover work from shared queues, communicate via SendMessage tool, and coordinate shutdown before cleanup, with support for delegating tasks to specialized subagents and forking for parallel research or implementation.
-
-##### 1.3.1.1 [Team Coordination (System Reminder)](system-prompts/system-reminder-team-coordination.md)
-
-Establishes team identity and coordination protocols including team name, agent name, task list management, and messaging conventions using teammate names.
-
-##### 1.3.1.2 [Team Shutdown (System Reminder)](system-prompts/system-reminder-team-shutdown.md)
-
-Requires graceful team shutdown via shutdown requests, approval waiting, and cleanup before returning final response to user.
-
-##### 1.3.1.3 [Teammate Communication (System Prompt)](system-prompts/system-prompt-teammate-communication.md)
-
-Instructs agents in a team to use SendMessage tool for teammate communication, with support for individual and broadcast messaging.
-
-##### 1.3.1.4 [Team memory content display (System Prompt)](system-prompts/system-prompt-team-memory-content-display.md)
-
-Renders shared team memory file contents with path and metadata for injection into conversation context.
-
-##### 1.3.1.5 [TeammateTool (Tool Description)](system-prompts/tool-description-teammatetool.md)
-
-Manages teams and coordinates multiple agents working in parallel on complex projects. Covers team creation, task assignment, teammate spawning, idle state management, and graceful shutdown workflows with emphasis on automatic message delivery and task list coordination.
-
-##### 1.3.1.6 [TeamDelete (Tool Description)](system-prompts/tool-description-teamdelete.md)
-
-Removes team and task directories when swarm work is complete, with a requirement that all active team members be gracefully terminated first.
-
-##### 1.3.1.7 [SendMessageTool (Tool Description)](system-prompts/tool-description-sendmessagetool.md)
-
-Enables agent teammates to send messages and handle protocol requests in a swarm. Supports direct messaging, broadcasting, and structured protocol messages for shutdown and plan approval workflows.
-
-##### 1.3.1.8 [TaskList (teammate workflow) [Tool Description]](system-prompts/tool-description-tasklist-teammate-workflow.md)
-
-Describes how teammates discover and claim available work from a shared task list, preferring tasks in ID order and checking for unblocked pending tasks after completing each assignment.
-
-##### 1.3.1.9 [Subagent delegation examples (System Prompt)](system-prompts/system-prompt-subagent-delegation-examples.md)
-
-Provides examples of delegating tasks to subagents, handling waiting states, and reporting results with independent context and specialized agent types.
-
-##### 1.3.1.10 [Fork usage guidelines (System Prompt)](system-prompts/system-prompt-fork-usage-guidelines.md)
-
-Guides fork usage for research and implementation work, prohibiting mid-flight output reading and fabrication of fork results, requiring trust in completion notifications and status reporting if user asks before fork finishes.
-
-#### 1.3.2 Subagent Spawning & Delegation
-
-Coordinates multi-agent task execution by spawning specialized subagents for parallel work, codebase exploration, and complex workflows. Manages context inheritance, prompt composition, and output aggregation while preventing redundant effort and respecting scope boundaries.
-
-##### 1.3.2.1 [Agent (usage notes) [Tool Description]](system-prompts/tool-description-agent-usage-notes.md)
-
-Provides comprehensive usage guidance for the Agent tool, covering concurrent agent launches, background execution, agent resumption via SendMessage, worktree isolation, and context-specific parameter availability for subagents and teammates.
-
-##### 1.3.2.2 [Agent (when to launch subagents) [Tool Description]](system-prompts/tool-description-agent-when-to-launch-subagents.md)
-
-Describes when to use the Agent tool to launch specialized subagent subprocesses for autonomous handling of complex multi-step tasks, with guidance on selecting agent types or forking context.
-
-##### 1.3.2.3 [Tool usage (delegate exploration) [System Prompt]](system-prompts/system-prompt-tool-usage-delegate-exploration.md)
-
-Instructs Claude to use the Task tool with exploration subagents for broad codebase research when simple directed searches are insufficient or will exceed query limits.
-
-##### 1.3.2.4 [Tool usage (subagent guidance) [System Prompt]](system-prompts/system-prompt-tool-usage-subagent-guidance.md)
-
-Provides guidance on using the Task tool with specialized subagents for parallelizing queries and protecting context, while avoiding redundant work already performed by delegated agents.
-
-##### 1.3.2.5 [Writing subagent prompts (System Prompt)](system-prompts/system-prompt-writing-subagent-prompts.md)
-
-Provides guidelines for writing effective subagent prompts, distinguishing between context-inheriting agents (which need directives and scope clarification) and fresh agents (which need background explanation and context), while emphasizing that prompts should prove understanding rather than delegate synthesis.
-
-##### 1.3.2.6 [Worker fork execution (Agent Prompt)](system-prompts/agent-prompt-worker-fork-execution.md)
-
-System prompt for a forked worker sub-agent that executes directives directly without spawning further sub-agents. Enforces silent tool execution, structured reporting, and scope adherence with 500-word limit.
-
-##### 1.3.2.7 [Common suffix (response format) [Agent Prompt]](system-prompts/agent-prompt-common-suffix-response-format.md)
-
-Appends response format instructions to agent prompts, switching between concise sub-agent reporting and detailed standalone writeups based on whether the agent is a subagent or primary agent.
-
-### 1.4 Agent Design & Architecture
-
-Frameworks for designing and validating AI agents through system prompt engineering, persona creation, and rule specification. Covers agent architecture patterns, auto-mode classifier rule validation, and behavioral guidelines for consistent agent thread execution.
-
-#### 1.4.1 [Agent creation architect (Agent Prompt)](system-prompts/agent-prompt-agent-creation-architect.md)
-
-Instructs Claude to architect custom AI agents by extracting user intent, designing expert personas, writing comprehensive system prompts, and creating memorable identifiers. Emphasizes translating requirements into precisely-tuned specifications that align with project patterns and anticipate edge cases.
-
-#### 1.4.2 [Auto mode rule reviewer (Agent Prompt)](system-prompts/agent-prompt-auto-mode-rule-reviewer.md)
-
-Reviews user-defined auto mode classifier rules for clarity, completeness, conflicts, and actionability. Evaluates allow, soft_deny, and environment rule categories to ensure the LLM classifier can correctly interpret and act on them.
-
-#### 1.4.3 [Agent Summary Generation (System Prompt)](system-prompts/system-prompt-agent-summary-generation.md)
-
-System prompt for generating concise agent action summaries in present tense, avoiding past tense and branch names.
-
-#### 1.4.4 [Agent thread notes (System Prompt)](system-prompts/system-prompt-agent-thread-notes.md)
-
-Establishes behavioral guidelines for agent threads: use absolute file paths only, avoid emojis, include relevant file paths and code snippets in final responses, and omit colons before tool calls.
-
----
-
-## 2. Shell, File & External Tool Operations
-
-Practical execution layer covering bash command execution, file system operations, browser automation, and strategic tool selection — including security sandboxing for shell commands.
-
-### 2.1 Bash Command Execution
-
-Guidelines for executing shell commands efficiently — syntax conventions, command chaining, parallel vs. sequential execution, and working directory management.
-
-#### 2.1.1 Bash Tool Usage & Command Execution
-
-Comprehensive guidelines for executing shell commands efficiently, covering syntax conventions, working directory management, command chaining strategies, and timing considerations. Emphasizes parallel execution for independent operations and sequential chaining with error handling for dependent commands.
-
-##### 2.1.1.1 [Bash (overview) [Tool Description]](system-prompts/tool-description-bash-overview.md)
+#### 1.1.19 [Bash (overview) [Tool Description]](system-prompts/tool-description-bash-overview.md)
 
 Describes the Bash tool as executing bash commands and returning their output.
 
-##### 2.1.1.2 [Bash (command description) [Tool Description]](system-prompts/tool-description-bash-command-description.md)
+#### 1.1.20 [Bash (parallel commands) [Tool Description]](system-prompts/tool-description-bash-parallel-commands.md)
 
-Instructs writing clear, concise descriptions of bash commands, with brief descriptions for simple commands and contextual detail for complex piped or obscure commands.
+Instructs to run independent bash commands as parallel tool calls in a single message to improve efficiency.
 
-##### 2.1.1.3 [Bash (maintain cwd) [Tool Description]](system-prompts/tool-description-bash-maintain-cwd.md)
+#### 1.1.21 [Bash (timeout) [Tool Description]](system-prompts/tool-description-bash-timeout.md)
 
-Instructs maintaining current working directory by using absolute paths and avoiding cd unless explicitly requested.
+Specifies optional timeout configuration for bash commands, allowing users to set custom timeouts up to a maximum or use the default timeout value.
 
-##### 2.1.1.4 [Bash (working directory) [Tool Description]](system-prompts/tool-description-bash-working-directory.md)
+#### 1.1.22 [Bash (verify parent directory) [Tool Description]](system-prompts/tool-description-bash-verify-parent-directory.md)
 
-Notes that working directory persists between commands but shell state does not, with environment initialized from user profile.
+Instructs to verify parent directory existence before creating new files or directories using ls.
 
-##### 2.1.1.5 [Bash (no newlines) [Tool Description]](system-prompts/tool-description-bash-no-newlines.md)
+#### 1.1.23 [Bash (working directory) [Tool Description]](system-prompts/tool-description-bash-working-directory.md)
 
-Prohibits using newlines to separate bash commands outside of quoted strings.
+Notes that working directory persists between bash commands but shell state does not, with environment initialized from user profile.
 
-##### 2.1.1.6 [Bash (quote file paths) [Tool Description]](system-prompts/tool-description-bash-quote-file-paths.md)
+### 1.2 Bash Sandbox Policy & Detection
 
-Instructs quoting file paths containing spaces with double quotes in bash commands.
+Sandbox enforcement and failure diagnosis for Bash command execution. All commands run in sandbox mode by default with mandatory restrictions; failures are detected through access denied errors, network connection failures, and permission violations. When sandbox restrictions cause failures, the system automatically retries without sandbox and explains the restriction to the user.
 
-##### 2.1.1.7 [Bash (parallel commands) [Tool Description]](system-prompts/tool-description-bash-parallel-commands.md)
+#### 1.2.1 [Bash (sandbox — adjust settings) [Tool Description]](system-prompts/tool-description-bash-sandbox-adjust-settings.md)
 
-Instructs running independent bash commands as parallel tool calls in a single message to improve efficiency.
+When a command fails due to sandbox restrictions, collaborate with the user to adjust sandbox settings.
 
-##### 2.1.1.8 [Bash (sequential commands) [Tool Description]](system-prompts/tool-description-bash-sequential-commands.md)
+#### 1.2.2 [Bash (sandbox — default to sandbox) [Tool Description]](system-prompts/tool-description-bash-sandbox-default-to-sandbox.md)
 
-Instructs to chain dependent commands with '&&' in a single call when they must run sequentially.
+Default to running Bash commands within the sandbox; only bypass when the user explicitly requests or sandbox restrictions are evident.
 
-##### 2.1.1.9 [Bash (semicolon usage) [Tool Description]](system-prompts/tool-description-bash-semicolon-usage.md)
+#### 1.2.3 [Bash (sandbox — evidence: access denied) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-access-denied.md)
 
-Instructs to use semicolons only when running commands sequentially but failure of earlier commands is acceptable.
+Access denied errors to paths outside allowed directories indicate sandbox restrictions.
 
-##### 2.1.1.10 [Bash (sleep — keep short) [Tool Description]](system-prompts/tool-description-bash-sleep-keep-short.md)
+#### 1.2.4 [Bash (sandbox — evidence list header) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-list-header.md)
 
-Instructs to keep sleep duration short (1-5 seconds) to avoid blocking the user.
+Header introducing a list of indicators that show sandbox-caused command failures.
 
-##### 2.1.1.11 [Bash (sleep — no polling background tasks) [Tool Description]](system-prompts/tool-description-bash-sleep-no-polling-background-tasks.md)
+#### 1.2.5 [Bash (sandbox — evidence: network failures) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-network-failures.md)
 
-Instructs not to poll background tasks started with `run_in_background` since completion notifications will be provided.
+Network connection failures to non-whitelisted hosts indicate sandbox network restrictions.
 
-##### 2.1.1.12 [Bash (sleep — run immediately) [Tool Description]](system-prompts/tool-description-bash-sleep-run-immediately.md)
+#### 1.2.6 [Bash (sandbox — evidence: operation not permitted) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-operation-not-permitted.md)
 
-Instructs not to sleep between commands that can run immediately.
+"Operation not permitted" errors for file or network operations signal sandbox restrictions.
 
-##### 2.1.1.13 [Bash (sleep — use check commands) [Tool Description]](system-prompts/tool-description-bash-sleep-use-check-commands.md)
+#### 1.2.7 [Bash (sandbox — evidence: unix socket errors) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-unix-socket-errors.md)
 
-Instructs to use check commands like `gh run view` rather than sleeping when polling external processes.
+Unix socket connection errors indicate sandbox restrictions on inter-process communication.
 
-##### 2.1.1.14 [Bash (timeout) [Tool Description]](system-prompts/tool-description-bash-timeout.md)
+#### 1.2.8 [Bash (sandbox — explain restriction) [Tool Description]](system-prompts/tool-description-bash-sandbox-explain-restriction.md)
 
-Documents optional timeout configuration in milliseconds with maximum and default values, allowing Claude to specify execution time limits.
+Briefly explain which sandbox restriction caused a command failure and mention the `/sandbox` command for managing restrictions.
 
-##### 2.1.1.15 [Bash (verify parent directory) [Tool Description]](system-prompts/tool-description-bash-verify-parent-directory.md)
+#### 1.2.9 [Bash (sandbox — failure evidence condition) [Tool Description]](system-prompts/tool-description-bash-sandbox-failure-evidence-condition.md)
 
-Instructs to verify parent directory existence and correctness with `ls` before creating new files or directories.
+Describes the condition when a command fails with clear evidence of sandbox restrictions, distinguishing sandbox failures from other error causes.
 
-##### 2.1.1.16 [Bash (built-in tools note) [Tool Description]](system-prompts/tool-description-bash-built-in-tools-note.md)
+#### 1.2.10 [Bash (sandbox — mandatory mode) [Tool Description]](system-prompts/tool-description-bash-sandbox-mandatory-mode.md)
 
-Notes that built-in tools provide better user experience and easier permission review than Bash equivalents.
+All Bash commands must run in sandbox mode; the `dangerouslyDisableSandbox` parameter is disabled by policy.
 
-##### 2.1.1.17 [Bash (prefer dedicated tools) [Tool Description]](system-prompts/tool-description-bash-prefer-dedicated-tools.md)
+#### 1.2.11 [Bash (sandbox — no exceptions) [Tool Description]](system-prompts/tool-description-bash-sandbox-no-exceptions.md)
 
-Warns against using Bash for find, grep, cat, and similar read-only searching commands, directing use of appropriate dedicated tools instead.
+Commands cannot run outside the sandbox under any circumstances.
 
-##### 2.1.1.18 [One of six rules for using sleep command (System Prompt)](system-prompts/system-prompt-one-of-six-rules-for-using-sleep-command.md)
+#### 1.2.12 [Bash (sandbox — no sensitive paths) [Tool Description]](system-prompts/tool-description-bash-sandbox-no-sensitive-paths.md)
 
-Rule prohibiting retry loops with sleep for failing commands; diagnose root cause instead.
+Do not suggest adding sensitive paths like ~/.bashrc, ~/.zshrc, ~/.ssh/*, or credential files to the sandbox allowlist.
 
-#### 2.1.2 Bash Tool Alternatives — Prefer Dedicated Tools
+#### 1.2.13 [Bash (sandbox — per-command) [Tool Description]](system-prompts/tool-description-bash-sandbox-per-command.md)
 
-Strategic guidance to delegate file operations, text searching, and content manipulation to specialized tools rather than bash equivalents, improving user experience and permission transparency. Reserves bash for system commands and terminal operations where dedicated tools cannot substitute.
+Treat each command individually; even after running a command with sandbox disabled, default to sandbox mode for future commands.
 
-##### 2.1.2.1 [Bash (alternative — communication) [Tool Description]](system-prompts/tool-description-bash-alternative-communication.md)
+#### 1.2.14 [Bash (sandbox — response header) [Tool Description]](system-prompts/tool-description-bash-sandbox-response-header.md)
 
-Directs output of text directly rather than using echo or printf commands.
+Header introducing the response strategy when sandbox-caused failures are detected.
 
-##### 2.1.2.2 [Bash (alternative — content search) [Tool Description]](system-prompts/tool-description-bash-alternative-content-search.md)
+#### 1.2.15 [Bash (sandbox — retry without sandbox) [Tool Description]](system-prompts/tool-description-bash-sandbox-retry-without-sandbox.md)
 
-Recommends using the Grep tool instead of grep or rg for content search operations.
+Immediately retry a failed command with `dangerouslyDisableSandbox: true` without asking the user.
 
-##### 2.1.2.3 [Bash (alternative — edit files) [Tool Description]](system-prompts/tool-description-bash-alternative-edit-files.md)
+#### 1.2.16 [Bash (sandbox — tmpdir) [Tool Description]](system-prompts/tool-description-bash-sandbox-tmpdir.md)
 
-Recommends using the Edit tool instead of sed or awk for file editing operations.
+Always use the `$TMPDIR` environment variable (or `${SANDBOX_TMPDIR_FN()}` as fallback) for temporary files in sandbox mode, not `/tmp` directly.
 
-##### 2.1.2.4 [Bash (alternative — file search) [Tool Description]](system-prompts/tool-description-bash-alternative-file-search.md)
+#### 1.2.17 [Bash (sandbox — user permission prompt) [Tool Description]](system-prompts/tool-description-bash-sandbox-user-permission-prompt.md)
 
-Recommends using the Glob tool instead of find or ls for file search operations.
+Disabling the sandbox will prompt the user for permission.
 
-##### 2.1.2.5 [Bash (alternative — read files) [Tool Description]](system-prompts/tool-description-bash-alternative-read-files.md)
+### 1.3 Bash Command Documentation & Safety
 
-Recommends using the Read tool instead of cat, head, or tail for file reading operations.
+Generates clear descriptions of bash commands while detecting command injection attacks through prefix extraction and malicious pattern recognition. Enforces safety by identifying executable boundaries and flagging dangerous command chaining.
 
-##### 2.1.2.6 [Bash (alternative — write files) [Tool Description]](system-prompts/tool-description-bash-alternative-write-files.md)
+#### 1.3.1 [Bash command description writer (Agent Prompt)](system-prompts/agent-prompt-bash-command-description-writer.md)
 
-Recommends using the Write tool instead of echo or cat for file writing operations.
+Generates clear, concise active-voice descriptions of bash commands, keeping simple commands brief (5-10 words) and adding context for complex piped or obscure-flag commands.
 
-##### 2.1.2.7 [Tool usage (create files) [System Prompt]](system-prompts/system-prompt-tool-usage-create-files.md)
+#### 1.3.2 [Bash command prefix detection (Agent Prompt)](system-prompts/agent-prompt-bash-command-prefix-detection.md)
 
-Directs Claude to use the Write tool for file creation instead of cat heredoc or echo redirection.
-
-##### 2.1.2.8 [Tool usage (edit files) [System Prompt]](system-prompts/system-prompt-tool-usage-edit-files.md)
-
-Directs Claude to use the Edit tool for file modifications instead of sed or awk.
-
-##### 2.1.2.9 [Tool usage (read files) [System Prompt]](system-prompts/system-prompt-tool-usage-read-files.md)
-
-Directs Claude to use the Read tool for file access instead of cat, head, tail, or sed.
-
-##### 2.1.2.10 [Tool usage (search content) [System Prompt]](system-prompts/system-prompt-tool-usage-search-content.md)
-
-Directs Claude to use the Grep tool for file content searches instead of grep or rg.
-
-##### 2.1.2.11 [Tool usage (search files) [System Prompt]](system-prompts/system-prompt-tool-usage-search-files.md)
-
-Directs Claude to use the Glob tool for file discovery instead of find or ls.
-
-##### 2.1.2.12 [Tool usage (reserve Bash) [System Prompt]](system-prompts/system-prompt-tool-usage-reserve-bash.md)
-
-Instructs Claude to reserve the Bash tool exclusively for system commands and terminal operations, defaulting to dedicated tools when available.
-
-### 2.2 Bash Sandbox Security & Restrictions
-
-Enforces mandatory sandboxing for all bash commands with configurable allowlists, automatic restriction detection via error patterns (access denied, network failures, socket errors), and user-guided remediation. Sandbox mode is the default; disabling requires explicit user permission and is never automatic.
-
-#### 2.2.1 [Bash (sandbox — adjust settings) [Tool Description]](system-prompts/tool-description-bash-sandbox-adjust-settings.md)
-
-Directs working with the user to adjust sandbox settings when commands fail due to sandbox restrictions.
-
-#### 2.2.2 [Bash (sandbox — default to sandbox) [Tool Description]](system-prompts/tool-description-bash-sandbox-default-to-sandbox.md)
-
-Instructs defaulting to sandbox mode and only disabling it when explicitly requested or evidence of sandbox restriction appears.
-
-#### 2.2.3 [Bash (sandbox — evidence: access denied) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-access-denied.md)
-
-Documents access denied errors as evidence of sandbox restrictions blocking paths outside allowed directories.
-
-#### 2.2.4 [Bash (sandbox — evidence list header) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-list-header.md)
-
-Header text introducing a list of sandbox-caused failure evidence types.
-
-#### 2.2.5 [Bash (sandbox — evidence: network failures) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-network-failures.md)
-
-Documents network connection failures to non-whitelisted hosts as sandbox restriction evidence.
-
-#### 2.2.6 [Bash (sandbox — evidence: operation not permitted) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-operation-not-permitted.md)
-
-Documents "operation not permitted" errors for file and network operations as sandbox evidence.
-
-#### 2.2.7 [Bash (sandbox — evidence: unix socket errors) [Tool Description]](system-prompts/tool-description-bash-sandbox-evidence-unix-socket-errors.md)
-
-Documents Unix socket connection errors as evidence of sandbox restrictions.
-
-#### 2.2.8 [Bash (sandbox — explain restriction) [Tool Description]](system-prompts/tool-description-bash-sandbox-explain-restriction.md)
-
-Instructs Claude to briefly explain which sandbox restriction caused a failure and mention the `/sandbox` command for managing restrictions.
-
-#### 2.2.9 [Bash (sandbox — failure evidence condition) [Tool Description]](system-prompts/tool-description-bash-sandbox-failure-evidence-condition.md)
-
-Defines the condition when a command fails with evidence of sandbox restrictions, distinguishing sandbox-caused failures from other failure types.
-
-#### 2.2.10 [Bash (sandbox — mandatory mode) [Tool Description]](system-prompts/tool-description-bash-sandbox-mandatory-mode.md)
-
-Enforces that all commands must run in sandbox mode with the `dangerouslyDisableSandbox` parameter disabled by policy.
-
-#### 2.2.11 [Bash (sandbox — no exceptions) [Tool Description]](system-prompts/tool-description-bash-sandbox-no-exceptions.md)
-
-Establishes that commands cannot run outside the sandbox under any circumstances.
-
-#### 2.2.12 [Bash (sandbox — no sensitive paths) [Tool Description]](system-prompts/tool-description-bash-sandbox-no-sensitive-paths.md)
-
-Prohibits suggesting sensitive paths like ~/.bashrc, ~/.ssh/*, or credential files be added to the sandbox allowlist.
-
-#### 2.2.13 [Bash (sandbox — per-command) [Tool Description]](system-prompts/tool-description-bash-sandbox-per-command.md)
-
-Instructs Claude to treat each command individually and default to sandbox mode for future commands even after running one with `dangerouslyDisableSandbox: true`.
-
-#### 2.2.14 [Bash (sandbox — response header) [Tool Description]](system-prompts/tool-description-bash-sandbox-response-header.md)
-
-Header text for instructions on how to respond when sandbox-caused failures are detected.
-
-#### 2.2.15 [Bash (sandbox — retry without sandbox) [Tool Description]](system-prompts/tool-description-bash-sandbox-retry-without-sandbox.md)
-
-Instructs Claude to immediately retry with `dangerouslyDisableSandbox: true` upon sandbox failure without asking the user.
-
-#### 2.2.16 [Bash (sandbox — tmpdir) [Tool Description]](system-prompts/tool-description-bash-sandbox-tmpdir.md)
-
-Requires using the `$TMPDIR` environment variable or `${SANDBOX_TMPDIR_FN()}` fallback for temporary files in sandbox mode instead of `/tmp` directly.
-
-#### 2.2.17 [Bash (sandbox — user permission prompt) [Tool Description]](system-prompts/tool-description-bash-sandbox-user-permission-prompt.md)
-
-Notes that disabling the sandbox will prompt the user for permission.
-
-### 2.3 File System Tools — Read, Write, Edit, Search
-
-Provides comprehensive file system operations including reading (with PDF and image support), writing, precise string-based editing, and fast content discovery via glob patterns and regex search. Emphasizes in-place edits over file creation and supports bulk operations.
-
-#### 2.3.1 [ReadFile (Tool Description)](system-prompts/tool-description-readfile.md)
-
-Reads files from the local filesystem with support for images, PDFs (with page range limits for large files), and Jupyter notebooks. Defaults to reading a configurable number of lines and requires absolute paths.
-
-#### 2.3.2 [Write (Tool Description)](system-prompts/tool-description-write.md)
-
-Writes files to the local filesystem with preference for using Edit for modifications. Avoids creating documentation or README files unless explicitly requested and excludes emojis unless requested.
-
-#### 2.3.3 [Edit (Tool Description)](system-prompts/tool-description-edit.md)
-
-Performs exact string replacements in files with support for preserving indentation and handling non-unique matches. Emphasizes preferring edits to existing files over creating new ones and includes options for bulk replacements.
-
-#### 2.3.4 [Glob (Tool Description)](system-prompts/tool-description-glob.md)
-
-Fast file pattern matching tool supporting glob syntax like `**/*.js` for finding files by name patterns, returning results sorted by modification time.
-
-#### 2.3.5 [Grep (Tool Description)](system-prompts/tool-description-grep.md)
-
-Powerful content search built on ripgrep with full regex support, file filtering by glob or type, and multiple output modes. Supports multiline pattern matching and requires proper escaping for special characters.
-
-#### 2.3.6 [Tool usage (direct search) [System Prompt]](system-prompts/system-prompt-tool-usage-direct-search.md)
-
-Directs Claude to use Glob or Grep tools directly for simple, targeted codebase searches.
-
-### 2.4 Browser Automation & Web Interaction
-
-Enables web interaction through Chrome automation with mouse/keyboard control and screenshot analysis, plus web content fetching and search for current information. Includes debugging via console inspection, GIF recording, and content summarization with source attribution.
-
-#### 2.4.1 [Computer (Tool Description)](system-prompts/tool-description-computer.md)
-
-Describes a Chrome browser automation tool for mouse and keyboard interaction with web pages and screenshot capture, emphasizing precise cursor positioning and consulting screenshots before clicking elements.
-
-#### 2.4.2 [Computer action (Tool Parameter)](system-prompts/tool-parameter-computer-action.md)
-
-Defines action parameters for Chrome browser automation including mouse operations (click, drag, scroll), keyboard input, screenshots, and element interaction via references.
-
-#### 2.4.3 [Claude in Chrome browser automation (System Prompt)](system-prompts/system-prompt-claude-in-chrome-browser-automation.md)
-
-Provides comprehensive guidelines for browser automation including GIF recording with extra frames, console debugging with regex filtering, avoiding JavaScript dialogs that block commands, preventing rabbit holes, and managing tab context at session startup.
-
-#### 2.4.4 [Chrome browser MCP tools (System Prompt)](system-prompts/system-prompt-chrome-browser-mcp-tools.md)
-
-Requires loading Chrome browser MCP tools via ToolSearch before use, specifying the tool name in the select parameter before calling the corresponding mcp__claude-in-chrome__* tool.
-
-#### 2.4.5 [WebFetch (Tool Description)](system-prompts/tool-description-webfetch.md)
-
-Fetches and analyzes web content by converting HTML to markdown and processing it with a small model. Includes redirect handling, 15-minute caching, and preference for MCP-provided alternatives.
-
-#### 2.4.6 [WebSearch (Tool Description)](system-prompts/tool-description-websearch.md)
-
-Searches the web for current information beyond Claude's knowledge cutoff with mandatory source attribution. Requires including a Sources section with markdown hyperlinks in responses and uses current year in search queries.
-
-#### 2.4.7 [WebFetch summarizer (Agent Prompt)](system-prompts/agent-prompt-webfetch-summarizer.md)
-
-Prompt for agent that summarizes verbose WebFetch output for the main model. Enforces conciseness and applies content restrictions for untrusted domains including character limits on quotes and paraphrasing requirements.
+Detects command prefixes and identifies command injection attacks in bash commands by extracting the executable prefix (e.g., git, npm, find) and flagging malicious chaining patterns to enforce safety allowlisting.
 
 ---
 
-## 3. Session, Memory & Context Management
+## 2. File, Code, and Notebook Operations
 
-Mechanisms for maintaining continuity across conversations — persistent memory files, context compaction, session state tracking, resource budgeting, and usage analytics.
+Specialized tools and discipline for reading, editing, searching, and verifying files and code. Covers filesystem tool preferences, engineering quality standards, notebook cell manipulation, and code validation workflows.
 
-### 3.1 Memory Management & Persistence
+### 2.1 File System Operations & Tool Preferences
 
-Persistent memory files store user feedback, preferences, domain knowledge, and session context across conversations, with selective attachment to sessions based on relevance. Consolidation agents periodically merge recent signals from logs and transcripts into organized topic files, pruning stale entries to maintain durable institutional knowledge.
+Dedicated file tools provide optimized operations for reading (with multimodal support), editing (via precise string replacement), writing, and searching (glob patterns and regex). System guidance reserves Bash for system commands while defaulting to specialized tools for filesystem work.
 
-#### 3.1.1 [Memory file contents (System Reminder)](system-prompts/system-reminder-memory-file-contents.md)
+#### 2.1.1 [ReadFile (Tool Description)](system-prompts/tool-description-readfile.md)
 
-Template displaying the contents of a memory file by path with type description.
+Reads files from local filesystem with support for images, PDFs (with page ranges for large files), and Jupyter notebooks, defaulting to a configurable line limit.
 
-#### 3.1.2 [Nested memory contents (System Reminder)](system-prompts/system-reminder-nested-memory-contents.md)
+#### 2.1.2 [Edit (Tool Description)](system-prompts/tool-description-edit.md)
 
-Template displaying contents of a nested memory file structure.
+Performs exact string replacements in files with precise indentation matching and supports bulk replacement via replace_all parameter.
 
-#### 3.1.3 [Memory description of user feedback (System Prompt)](system-prompts/system-prompt-memory-description-of-user-feedback.md)
+#### 2.1.3 [Write (Tool Description)](system-prompts/tool-description-write.md)
 
-Describes user feedback memory for storing guidance about work approaches, emphasizing recording both successes and failures while checking for contradictions with team memories.
+Writes files to the local filesystem with full overwrite capability. Prefers the Edit tool for modifications and prohibits creating documentation or README files unless explicitly requested.
 
-#### 3.1.4 [Description part of memory instructions (System Prompt)](system-prompts/system-prompt-description-part-of-memory-instructions.md)
+#### 2.1.4 [Glob (Tool Description)](system-prompts/tool-description-glob.md)
 
-Defines user memory descriptions as capturing role, goals, responsibilities, and knowledge to tailor behavior and collaboration style while avoiding negative judgments or irrelevant details.
+Fast file pattern matching tool supporting glob patterns like **/*.js, returning results sorted by modification time.
 
-#### 3.1.5 [Agent memory instructions (System Prompt)](system-prompts/system-prompt-agent-memory-instructions.md)
+#### 2.1.5 [Grep (Tool Description)](system-prompts/tool-description-grep.md)
 
-Guidance for including domain-specific memory update instructions in agent system prompts to build institutional knowledge.
+Powerful search tool built on ripgrep supporting regex patterns, file filtering by glob or type, and multiple output modes including content, file paths, and match counts.
 
-#### 3.1.6 [Determine which memory files to attach (Agent Prompt)](system-prompts/agent-prompt-determine-which-memory-files-to-attach.md)
+#### 2.1.6 [Tool usage (create files) [System Prompt]](system-prompts/system-prompt-tool-usage-create-files.md)
 
-Selects up to 5 relevant memory files from available options to attach to Claude Code sessions, excluding usage documentation for recently-used tools while retaining warnings and gotchas.
+Directs use of the Write tool to create files instead of cat heredoc or echo redirection.
 
-#### 3.1.7 [Dream memory consolidation (Agent Prompt)](system-prompts/agent-prompt-dream-memory-consolidation.md)
+#### 2.1.7 [Tool usage (edit files) [System Prompt]](system-prompts/system-prompt-tool-usage-edit-files.md)
 
-Performs reflective memory consolidation by orienting on existing memories, gathering recent signal from logs and transcripts, merging updates into topic files, and pruning the index to keep memories durable and well-organized.
+Directs use of the Edit tool to modify files instead of sed or awk.
 
-#### 3.1.8 [Session memory template (Data)](system-prompts/data-session-memory-template.md)
+#### 2.1.8 [Tool usage (read files) [System Prompt]](system-prompts/system-prompt-tool-usage-read-files.md)
 
-Template structure for session memory summary.md files documenting current state, task specification, files, workflow, errors, and key results.
+Directs use of the Read tool to access file contents instead of cat, head, tail, or sed.
 
-### 3.2 Context Compaction & Conversation Summarization
+#### 2.1.9 [Tool usage (search content) [System Prompt]](system-prompts/system-prompt-tool-usage-search-content.md)
 
-Structured approaches to distilling conversation history into resumable context, ranging from comprehensive chronological analysis to minimal feature-flagged coverage. Enables efficient task continuation across context windows by preserving technical decisions, errors, user feedback, and actionable next steps.
+Directs use of the Grep tool to search file contents instead of grep or rg.
 
-#### 3.2.1 [Analysis instructions for full compact prompt (full conversation) [System Prompt]](system-prompts/system-prompt-analysis-instructions-for-full-compact-prompt-full-conversation.md)
+#### 2.1.10 [Tool usage (search files) [System Prompt]](system-prompts/system-prompt-tool-usage-search-files.md)
 
-Instructs Claude to wrap analysis in tags before summarizing, chronologically examining each conversation section to identify user requests, technical decisions, code patterns, specific details, errors, and user feedback for complete and accurate context compaction.
+Directs use of the Glob tool to search for files instead of find or ls.
 
-#### 3.2.2 [Analysis instructions for full compact prompt (minimal and via feature flag) [System Prompt]](system-prompts/system-prompt-analysis-instructions-for-full-compact-prompt-minimal-and-via-feature-flag.md)
+#### 2.1.11 [Tool usage (reserve Bash) [System Prompt]](system-prompts/system-prompt-tool-usage-reserve-bash.md)
 
-Defines a lean analysis approach using tags as a planning scratchpad to flag coverage across nine sections without including code snippets or verbatim quotes, reserving detail for the summary section.
+Reserves the Bash tool exclusively for system commands and terminal operations, defaulting to dedicated tools when available.
 
-#### 3.2.3 [Analysis instructions for full compact prompt (recent messages) [System Prompt]](system-prompts/system-prompt-analysis-instructions-for-full-compact-prompt-recent-messages.md)
+#### 2.1.12 [File shorter than offset (System Reminder)](system-prompts/system-reminder-file-shorter-than-offset.md)
 
-Guides analysis of recent messages within tags, identifying user requests, implementation approaches, technical decisions, specific details, errors, and user feedback to ensure thorough and accurate context preservation.
+Alerts Claude when a file read offset exceeds the file's actual length.
 
-#### 3.2.4 [Context compaction summary (System Prompt)](system-prompts/system-prompt-context-compaction-summary.md)
+#### 2.1.13 [File truncated (System Reminder)](system-prompts/system-reminder-file-truncated.md)
 
-Structures continuation summaries with task overview, current state, important discoveries, next steps, and context preservation to enable efficient task resumption across context windows.
+Notifies Claude that a large file was truncated to a maximum line limit and instructs use of the read tool for additional content.
 
-#### 3.2.5 [Conversation summarization (Agent Prompt)](system-prompts/agent-prompt-conversation-summarization.md)
+#### 2.1.14 [File exists but empty (System Reminder)](system-prompts/system-reminder-file-exists-but-empty.md)
 
-Creates detailed conversation summaries covering primary requests, technical concepts, files examined, errors encountered, problem-solving efforts, user messages, pending tasks, current work, and next steps with code snippets and direct quotes.
+Warns that a file exists but contains no content.
 
-#### 3.2.6 [Recent Message Summarization (Agent Prompt)](system-prompts/agent-prompt-recent-message-summarization.md)
+#### 2.1.15 [File modified by user or linter (System Reminder)](system-prompts/system-reminder-file-modified-by-user-or-linter.md)
 
-Summarizes recent conversation messages covering requests, technical concepts, files modified, errors fixed, problems solved, user messages, pending tasks, current work, and next steps with code snippets and direct quotes.
+Notifies the agent that a file was modified externally by the user or linter and provides a diff snippet, instructing the agent to account for the changes without reverting unless requested.
 
-### 3.3 Session Management & State
+#### 2.1.16 [File opened in IDE (System Reminder)](system-prompts/system-reminder-file-opened-in-ide.md)
 
-Mechanisms for tracking session continuity, file state changes, and user interactions within the IDE. Includes session discovery, naming conventions, and memory management to maintain coherent work context across machine boundaries and conversation windows.
+Notifies the agent that the user opened a file in the IDE, which may or may not relate to the current task.
 
-#### 3.3.1 [Session continuation (System Reminder)](system-prompts/system-reminder-session-continuation.md)
+### 2.2 Code Quality & Engineering Discipline
 
-Notification that the session continues from another machine with updated working directory.
+Directives for maintaining focused, pragmatic code changes by avoiding over-engineering, premature abstractions, and unnecessary additions. Emphasizes reading existing code before modification, minimizing file creation, trusting framework guarantees, and deferring to user judgment on scope and approach.
 
-#### 3.3.2 [File exists but empty (System Reminder)](system-prompts/system-reminder-file-exists-but-empty.md)
+#### 2.2.1 [Doing tasks (avoid over-engineering) [System Prompt]](system-prompts/system-prompt-doing-tasks-avoid-over-engineering.md)
 
-Warns Claude that a file exists but contains no content.
+Directive to avoid over-engineering by making only directly requested or clearly necessary changes, keeping solutions simple and focused.
 
-#### 3.3.3 [File modified by user or linter (System Reminder)](system-prompts/system-reminder-file-modified-by-user-or-linter.md)
+#### 2.2.2 [Doing tasks (no premature abstractions) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-premature-abstractions.md)
 
-Notifies Claude that a file was externally modified by the user or linter and provides the relevant changes with line numbers, instructing Claude to account for the changes without reverting unless requested.
+Directive against creating helpers, utilities, or abstractions for one-time operations or hypothetical future requirements.
 
-#### 3.3.4 [File opened in IDE (System Reminder)](system-prompts/system-reminder-file-opened-in-ide.md)
+#### 2.2.3 [Doing tasks (no unnecessary additions) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-unnecessary-additions.md)
 
-Notifies Claude that the user opened a file in the IDE, which may or may not be related to the current task.
+Directive against adding features, refactoring, or improving beyond what was asked, including unnecessary docstrings or type annotations.
 
-#### 3.3.5 [File truncated (System Reminder)](system-prompts/system-reminder-file-truncated.md)
+#### 2.2.4 [Doing tasks (no unnecessary error handling) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-unnecessary-error-handling.md)
 
-Notifies Claude that a large file was truncated to a maximum line count and directs Claude to use the Read tool if more content is needed, without informing the user.
+Directive against adding error handling for impossible scenarios, trusting internal code and framework guarantees while validating only at system boundaries.
 
-#### 3.3.6 [File shorter than offset (System Reminder)](system-prompts/system-reminder-file-shorter-than-offset.md)
+#### 2.2.5 [Doing tasks (no compatibility hacks) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-compatibility-hacks.md)
 
-Warns Claude that a file read offset exceeds the file's length and provides the actual file length.
+Directive to delete unused code completely rather than adding compatibility shims, re-exports, or removed comments.
 
-#### 3.3.7 [Lines selected in IDE (System Reminder)](system-prompts/system-reminder-lines-selected-in-ide.md)
+#### 2.2.6 [Doing tasks (minimize file creation) [System Prompt]](system-prompts/system-prompt-doing-tasks-minimize-file-creation.md)
 
-Notification that the user selected specific lines in the IDE, with line numbers and file context.
+Directive to prefer editing existing files over creating new ones to prevent file bloat and build on existing work.
 
-#### 3.3.8 [Compact file reference (System Reminder)](system-prompts/system-reminder-compact-file-reference.md)
+#### 2.2.7 [Doing tasks (read before modifying) [System Prompt]](system-prompts/system-prompt-doing-tasks-read-before-modifying.md)
 
-Notifies Claude that a file was read before conversation summarization but is too large to include, directing Claude to use the Read tool if access is needed.
+Directive to read and understand existing code before proposing or making modifications.
 
-#### 3.3.9 [Session Search Assistant (Agent Prompt)](system-prompts/agent-prompt-session-search-assistant.md)
+#### 2.2.8 [Doing tasks (software engineering focus) [System Prompt]](system-prompts/system-prompt-doing-tasks-software-engineering-focus.md)
 
-Agent prompt for finding relevant sessions based on user queries and metadata. Prioritizes exact tag matches, then partial matches, title, branch, and semantic similarity with inclusive matching strategy.
+Directs Claude to interpret user requests in the context of software engineering tasks like bug fixes, refactoring, and code modifications, applying instructions to actual codebase changes rather than abstract responses.
 
-#### 3.3.10 [Session title and branch generation (Agent Prompt)](system-prompts/agent-prompt-session-title-and-branch-generation.md)
+#### 2.2.9 [Doing tasks (ambitious tasks) [System Prompt]](system-prompts/system-prompt-doing-tasks-ambitious-tasks.md)
 
-Agent for generating succinct session titles and git branch names from task descriptions. Produces sentence-case titles (max 6 words) and lowercase branch names prefixed with 'claude/' (max 4 words).
+Directive to enable users to complete ambitious tasks by deferring to user judgement on scope rather than declining based on complexity.
 
-#### 3.3.11 [Coding session title generator (Agent Prompt)](system-prompts/agent-prompt-coding-session-title-generator.md)
+#### 2.2.10 [Doing tasks (blocked approach) [System Prompt]](system-prompts/system-prompt-doing-tasks-blocked-approach.md)
 
-Generates concise 3-7 word sentence-case titles capturing the main goal of a coding session for easy recognition in session lists.
+Directive to consider alternative approaches when blocked instead of brute-forcing, using AskUserQuestion to align on the right path forward.
 
-#### 3.3.12 [Session memory update instructions (Agent Prompt)](system-prompts/agent-prompt-session-memory-update-instructions.md)
+#### 2.2.11 [Doing tasks (no time estimates) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-time-estimates.md)
 
-Instructions for updating session memory files during conversations, preserving exact file structure with headers and italic descriptions while updating content sections with detailed, actionable information.
+Directive to avoid giving time estimates or predictions for task duration.
 
-### 3.4 Resource Budgeting & Usage Analytics
+#### 2.2.12 [Doing tasks (help and feedback) [System Prompt]](system-prompts/system-prompt-doing-tasks-help-and-feedback.md)
 
-Real-time token consumption and cost tracking for cost-aware decision-making, plus analysis of usage patterns to surface friction points and recommend workflow improvements.
+Brief directive to inform users of help and feedback channels when requested.
 
-#### 3.4.1 Resource & Budget Tracking
+#### 2.2.13 [Doing tasks (security) [System Prompt]](system-prompts/system-prompt-doing-tasks-security.md)
 
-Real-time visibility into token consumption and financial expenditure during sessions, enabling cost-aware decision-making and resource allocation.
+Instructs Claude to avoid introducing security vulnerabilities like command injection, XSS, and SQL injection, prioritizing safe and secure code.
 
-##### 3.4.1.1 [Token usage (System Reminder)](system-prompts/system-reminder-token-usage.md)
+### 2.3 Code Verification & Testing
 
-Displays current token usage statistics including used, total, and remaining tokens.
+Systematic approaches to validating code changes through behavioral observation, adversarial testing, and platform-specific verification workflows that establish evidence-based confidence in implementations.
 
-##### 3.4.1.2 [USD budget (System Reminder)](system-prompts/system-reminder-usd-budget.md)
+#### 2.3.1 [Verification specialist (Agent Prompt)](system-prompts/agent-prompt-verification-specialist.md)
 
-Displays current USD budget statistics including used, total, and remaining amounts.
+System prompt for a verification subagent that adversarially tests implementations through builds, test suites, linters, and adversarial probes, issuing PASS/FAIL/PARTIAL verdicts with command evidence.
 
-##### 3.4.1.3 [Invoked skills (System Reminder)](system-prompts/system-reminder-invoked-skills.md)
+#### 2.3.2 [Verify skill (Skill)](system-prompts/skill-verify-skill.md)
 
-Reminder to follow guidelines for skills invoked during the current session.
+Opinionated verification workflow for validating code changes by running the app and observing behavior rather than reading diffs or running tests. Defines a discovery ladder for reaching the changed code's surface (CLI, API, GUI, or library), a process for planning minimal interactions, and verdict criteria (PASS/FAIL/BLOCKED) based on captured evidence of the change's effect.
 
-#### 3.4.2 Usage Insights & Analytics
+#### 2.3.3 [Verify CLI changes (example for Verify skill) [Skill]](system-prompts/skill-verify-cli-changes-example-for-verify-skill.md)
 
-Analyzes Claude Code usage patterns to surface what's working, identify friction points, and recommend feature adoption and workflow improvements. Extracts structured session data including satisfaction signals and error categories, then synthesizes findings into actionable suggestions and future capability planning.
+Example workflow for verifying CLI changes by building, running with test arguments, and comparing output and exit codes.
 
-##### 3.4.2.1 [Insights at a glance summary (System Prompt)](system-prompts/system-prompt-insights-at-a-glance-summary.md)
+#### 2.3.4 [Verify server/API changes (example for Verify skill) [Skill]](system-prompts/skill-verify-serverapi-changes-example-for-verify-skill.md)
 
-Generates a 4-part insights summary covering what's working, hindrances, quick wins, and ambitious workflows for improved Claude Code usage.
+Example workflow for verifying server/API changes by starting the server, making curl requests, and validating response status and headers.
 
-##### 3.4.2.2 [Insights friction analysis (System Prompt)](system-prompts/system-prompt-insights-friction-analysis.md)
+#### 2.3.5 [Worker instructions (System Prompt)](system-prompts/system-prompt-worker-instructions.md)
 
-Analyzes usage data to identify and categorize friction patterns with 3 categories and 2 examples each, helping users understand recurring issues.
+Defines a five-step workflow for workers implementing changes: simplify code, run unit tests, test end-to-end, commit and push, and report the PR URL. Includes guidance on test discovery and error handling.
 
-##### 3.4.2.3 [Insights on the horizon (System Prompt)](system-prompts/system-prompt-insights-on-the-horizon.md)
+#### 2.3.6 [New diagnostics detected (System Reminder)](system-prompts/system-reminder-new-diagnostics-detected.md)
 
-Identifies 3 ambitious future workflows and autonomous AI-assisted development opportunities with actionable prompts for users to try.
+Alerts Claude to newly detected diagnostic issues in the codebase.
 
-##### 3.4.2.4 [Insights session facets extraction (System Prompt)](system-prompts/system-prompt-insights-session-facets-extraction.md)
+### 2.4 Jupyter Notebook & Specialized File Handling
 
-Extracts structured facets from session transcripts including goal categories, user satisfaction signals, and friction types with specific classification rules.
+Targeted manipulation of notebook cell contents and temporal control primitives for managing execution flow and interactive workflows.
 
-##### 3.4.2.5 [Insights suggestions (System Prompt)](system-prompts/system-prompt-insights-suggestions.md)
+#### 2.4.1 [NotebookEdit (Tool Description)](system-prompts/tool-description-notebookedit.md)
 
-Generates actionable suggestions including CLAUDE.md additions, feature recommendations (MCP Servers, Custom Skills, Hooks, Headless Mode, Task Agents), and usage patterns based on session data.
+Replaces contents of specific cells in Jupyter notebooks, supporting insert and delete operations on 0-indexed cells.
+
+#### 2.4.2 [Sleep (Tool Description)](system-prompts/tool-description-sleep.md)
+
+Waits for a specified duration with user interrupt capability, receiving periodic tick prompts for check-ins without holding shell processes.
 
 ---
 
-## 4. Code Quality, Security & Review
+## 3. Agent Architecture & Runtime Behavior
 
-Engineering discipline, security analysis, and review workflows — from scope control and YAGNI principles to vulnerability detection, adversarial testing, and pull request review.
+Design, configuration, and runtime protocols for autonomous agents and multi-agent systems. Covers orchestration, worker coordination, response formatting, permission controls, session labeling, and operational mode settings.
 
-### 4.1 Code Quality & Engineering Best Practices
+### 3.1 Multi-Agent Coordination
 
-Directives that enforce disciplined software engineering by eliminating unnecessary complexity, scope creep, and premature optimization. Emphasizes reading existing code before modification, restricting changes to requested scope, avoiding speculative abstractions, and prioritizing security vulnerabilities while trusting framework guarantees for internal validation.
+Orchestration of agent teams for parallel task execution, including swarm management, task assignment, inter-agent messaging, and context inheritance for subagents.
 
-#### 4.1.1 [Doing tasks (avoid over-engineering) [System Prompt]](system-prompts/system-prompt-doing-tasks-avoid-over-engineering.md)
+#### 3.1.1 Multi-Agent Team Coordination & Swarm Management
 
-Restricts changes to directly requested or clearly necessary modifications, maintaining simplicity and focus.
+Orchestration of multi-agent teams for parallel task execution and complex workflows. Agents communicate via message passing, coordinate through shared task lists and team memory, and operate autonomously within assigned scopes. Supports team creation, task assignment, graceful shutdown, and context inheritance for specialized subagents.
 
-#### 4.1.2 [Doing tasks (no premature abstractions) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-premature-abstractions.md)
+##### 3.1.1.1 [SendMessageTool (Tool Description)](system-prompts/tool-description-sendmessagetool.md)
 
-Avoids creating helpers, utilities, or abstractions for one-time operations or hypothetical requirements, maintaining minimal necessary complexity.
+Sends messages to other agents in a team, supporting broadcast to all teammates and legacy protocol responses for shutdown and plan approval requests.
 
-#### 4.1.3 [Doing tasks (no compatibility hacks) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-compatibility-hacks.md)
+##### 3.1.1.2 [TeammateTool (Tool Description)](system-prompts/tool-description-teammatetool.md)
 
-Eliminates unused code completely rather than adding compatibility shims, renames, or re-exports.
+Manages teams and coordinates multiple agents in a swarm, handling team creation, task assignment, message delivery, and teammate lifecycle including idle states and graceful shutdown.
 
-#### 4.1.4 [Doing tasks (no unnecessary additions) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-unnecessary-additions.md)
+##### 3.1.1.3 [TeamDelete (Tool Description)](system-prompts/tool-description-teamdelete.md)
 
-Restricts changes to requested scope, avoiding feature additions, refactoring, docstrings, or type annotations beyond what was asked.
+Removes team and task directories after swarm work completion, requiring all active members to be terminated first.
 
-#### 4.1.5 [Doing tasks (no unnecessary error handling) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-unnecessary-error-handling.md)
+##### 3.1.1.4 [TaskList (teammate workflow) [Tool Description]](system-prompts/tool-description-tasklist-teammate-workflow.md)
 
-Omits error handling for impossible scenarios and validates only at system boundaries, trusting internal code and framework guarantees.
+Describes teammate workflow for finding and claiming available tasks from shared task lists, prioritizing by ID order and managing blockers.
 
-#### 4.1.6 [Doing tasks (minimize file creation) [System Prompt]](system-prompts/system-prompt-doing-tasks-minimize-file-creation.md)
+##### 3.1.1.5 [Teammate Communication (System Prompt)](system-prompts/system-prompt-teammate-communication.md)
 
-Prefers editing existing files over creating new ones to prevent file bloat and build on existing work.
+Instructs agents in a team to use the SendMessage tool to communicate with teammates, either individually or via team-wide broadcasts, since text responses are not visible to other team members.
 
-#### 4.1.7 [Doing tasks (read before modifying) [System Prompt]](system-prompts/system-prompt-doing-tasks-read-before-modifying.md)
+##### 3.1.1.6 [Team memory content display (System Prompt)](system-prompts/system-prompt-team-memory-content-display.md)
 
-Requires reading and understanding existing code before proposing modifications.
+Renders shared team memory file contents with path and content for injection into conversation context.
 
-#### 4.1.8 [Doing tasks (security) [System Prompt]](system-prompts/system-prompt-doing-tasks-security.md)
+##### 3.1.1.7 [Team Coordination (System Reminder)](system-prompts/system-reminder-team-coordination.md)
 
-Prioritizes avoiding security vulnerabilities including command injection, XSS, SQL injection, and OWASP top 10 risks, fixing insecure code immediately.
+Establishes Claude as a team member with a name and identity, directing it to read team config, check task lists, and communicate with teammates by name.
 
-#### 4.1.9 [Doing tasks (software engineering focus) [System Prompt]](system-prompts/system-prompt-doing-tasks-software-engineering-focus.md)
+##### 3.1.1.8 [Team Shutdown (System Reminder)](system-prompts/system-reminder-team-shutdown.md)
 
-Interprets user instructions in the context of software engineering tasks including bug fixes, feature additions, refactoring, and code explanation, applying instructions to actual code rather than abstract responses.
+Requires Claude to shut down its team gracefully before returning a response to the user in non-interactive mode.
 
-#### 4.1.10 [Doing tasks (ambitious tasks) [System Prompt]](system-prompts/system-prompt-doing-tasks-ambitious-tasks.md)
+##### 3.1.1.9 [Writing subagent prompts (System Prompt)](system-prompts/system-prompt-writing-subagent-prompts.md)
 
-Empowers users to complete ambitious tasks by deferring to their judgment on scope rather than imposing artificial limitations.
+Provides guidelines for writing effective subagent prompts, distinguishing between context-inheriting agents (which need directives and scope) and fresh subagents (which need background and context). Emphasizes proving understanding through specific details rather than delegating synthesis.
 
-#### 4.1.11 [Doing tasks (blocked approach) [System Prompt]](system-prompts/system-prompt-doing-tasks-blocked-approach.md)
+##### 3.1.1.10 [Subagent delegation examples (System Prompt)](system-prompts/system-prompt-subagent-delegation-examples.md)
 
-Instructs against brute-forcing blocked approaches; instead consider alternatives or use AskUserQuestion to align on the right path forward.
+Provides example patterns for delegating tasks to subagents, handling waiting states without fabricating results, and reporting findings from completed delegations.
 
-#### 4.1.12 [Doing tasks (no time estimates) [System Prompt]](system-prompts/system-prompt-doing-tasks-no-time-estimates.md)
+##### 3.1.1.11 [Fork usage guidelines (System Prompt)](system-prompts/system-prompt-fork-usage-guidelines.md)
 
-Avoids providing time estimates or predictions for task duration, focusing on what needs to be done.
+Defines when to fork subagents for research and implementation work, prohibits reading fork output mid-flight or fabricating results, and requires trusting completion notifications rather than predicting outcomes.
 
-#### 4.1.13 [Doing tasks (help and feedback) [System Prompt]](system-prompts/system-prompt-doing-tasks-help-and-feedback.md)
+##### 3.1.1.12 [Agent (usage notes) [Tool Description]](system-prompts/tool-description-agent-usage-notes.md)
 
-Instructs Claude to inform users of help and feedback channels when requested.
+Provides comprehensive usage guidance for the Task/Agent tool, covering agent spawning, concurrent execution, background task handling, agent resumption with context preservation, worktree isolation, and best practices for autonomous task delegation.
 
-### 4.2 Security Monitoring & Vulnerability Analysis
+##### 3.1.1.13 [Agent (when to launch subagents) [Tool Description]](system-prompts/tool-description-agent-when-to-launch-subagents.md)
 
-Autonomous security evaluation that monitors agent actions against threat models, analyzes code for exploitable vulnerabilities, and assesses malware behavior with real-time action gating.
+Describes when to use the Agent tool to launch specialized subagent subprocesses for handling complex multi-step tasks autonomously, with guidance on available agent types and context inheritance.
 
-#### 4.2.1 [Security monitor for autonomous agent actions (first part) [Agent Prompt]](system-prompts/agent-prompt-security-monitor-for-autonomous-agent-actions-first-part.md)
+#### 3.1.2 Agent Design, Configuration & Orchestration
 
-Instructs Claude to act as a security monitor evaluating autonomous coding agent actions against block/allow rules to prevent prompt injection, scope creep, and accidental damage. Defines threat model, default allow-by-default policy, user intent rules, and evaluation methodology for determining whether agent actions should be blocked.
+Designs, configures, and orchestrates AI agents for autonomous task execution. Encompasses agent architecture specification, codebase documentation, parallel work decomposition with worker sub-agents, rule validation for autonomous classifiers, and continuous execution modes with safety guardrails.
 
-#### 4.2.2 [Security monitor for autonomous agent actions (second part) [Agent Prompt]](system-prompts/agent-prompt-security-monitor-for-autonomous-agent-actions-second-part.md)
+##### 3.1.2.1 [Agent creation architect (Agent Prompt)](system-prompts/agent-prompt-agent-creation-architect.md)
 
-Defines environment context, comprehensive block rules, and allow exceptions governing which tool actions autonomous agents may perform. Covers destructive operations, credential handling, data exfiltration, infrastructure modification, and external system writes with specific patterns and exceptions.
+Instructs Claude to design high-performance AI agent configurations by extracting user intent, creating expert personas, architecting comprehensive system prompts, optimizing for performance, and generating JSON specifications with identifiers, usage examples, and operational guidelines aligned to project standards.
 
-#### 4.2.3 [/security-review slash command (Agent Prompt)](system-prompts/agent-prompt-security-review-slash-command.md)
+##### 3.1.2.2 [CLAUDE.md creation (Agent Prompt)](system-prompts/agent-prompt-claudemd-creation.md)
 
-Comprehensive security review prompt for analyzing code changes with focus on exploitable vulnerabilities. Defines objective to identify high-confidence security issues, exclusion categories, vulnerability assessment methodology, and confidence scoring with false-positive filtering rules.
+Analyzes codebases and creates or improves CLAUDE.md documentation by documenting common build/test/lint commands, high-level architecture, and project-specific standards without repeating obvious practices.
 
-#### 4.2.4 [Malware analysis after Read tool call (System Reminder)](system-prompts/system-reminder-malware-analysis-after-read-tool-call.md)
+##### 3.1.2.3 [/batch slash command (Agent Prompt)](system-prompts/agent-prompt-batch-slash-command.md)
 
-Instructs Claude to analyze malware behavior and security implications without improving or augmenting the malicious code.
+Orchestrates large parallelizable codebase changes by researching scope, decomposing work into 5–30 independent units, determining e2e test recipes, planning in detail, and spawning background worker agents with full isolation and progress tracking.
 
-#### 4.2.5 [Censoring assistance with malicious activities (System Prompt)](system-prompts/system-prompt-censoring-assistance-with-malicious-activities.md)
+##### 3.1.2.4 [Auto mode rule reviewer (Agent Prompt)](system-prompts/agent-prompt-auto-mode-rule-reviewer.md)
 
-Permits assistance with authorized security testing, defensive security, CTF challenges, and educational contexts while refusing requests for destructive techniques, DoS attacks, supply chain compromise, or detection evasion without clear authorization.
+Reviews user-defined auto mode classifier rules for clarity, completeness, conflicts, and actionability, evaluating allow/soft_deny/environment categories to ensure the LLM classifier can correctly interpret and act on them.
 
-#### 4.2.6 Diagnostics & Error Detection
+##### 3.1.2.5 [Worker fork execution (Agent Prompt)](system-prompts/agent-prompt-worker-fork-execution.md)
 
-Detects and reports code quality issues and security threats, including command injection attacks in bash execution. Surfaces diagnostic findings to trigger appropriate safety responses.
+System prompt for a forked worker sub-agent that executes directives directly without spawning further sub-agents, reporting structured results with scope, findings, and issues.
 
-##### 4.2.6.1 [New diagnostics detected (System Reminder)](system-prompts/system-reminder-new-diagnostics-detected.md)
+##### 3.1.2.6 [Auto mode (System Prompt)](system-prompts/system-prompt-auto-mode.md)
 
-Notification of newly detected diagnostic issues with a summary of problems.
+Enables continuous autonomous task execution with immediate implementation, minimal interruptions, preference for action over planning, reasonable decision-making, and thorough completion including tests and verification. Prohibits posting to public services without explicit user approval.
 
-##### 4.2.6.2 [Bash command prefix detection (Agent Prompt)](system-prompts/agent-prompt-bash-command-prefix-detection.md)
+### 3.2 Agent Thread Protocols & Access Control
 
-Detects command prefixes and identifies command injection attacks in bash commands to support Claude Code's safety framework. Returns the detected prefix or 'command_injection_detected' to trigger user confirmation when needed.
+Runtime rules governing how individual agent threads format output, invoke tools, seek guidance, and operate within permission boundaries.
 
-### 4.3 Code Review & PR Management
+#### 3.2.1 Agent Thread Behavior & Response Guidelines
 
-Integrated code review workflows that analyze pull request diffs, fetch GitHub comments with context, and identify refactoring opportunities through parallel quality analysis. Supports both local and remote execution environments for comprehensive expert review.
+Protocols governing how agent threads format responses, invoke tools, and seek guidance—requiring absolute paths in output, consulting a stronger reviewer model before substantive work, and spawning lightweight agents for isolated questions without tool access.
 
-#### 4.3.1 [/review-pr slash command (Agent Prompt)](system-prompts/agent-prompt-review-pr-slash-command.md)
+##### 3.2.1.1 [Agent thread notes (System Prompt)](system-prompts/system-prompt-agent-thread-notes.md)
 
-Reviews GitHub pull requests by analyzing diffs and providing expert code review covering correctness, conventions, performance, test coverage, and security with concise formatted sections.
+Behavioral guidelines for agent threads requiring absolute file paths, relevant file paths in final responses, avoidance of emojis, and no colons before tool calls.
 
-#### 4.3.2 [/review slash command (remote) [Agent Prompt]](system-prompts/agent-prompt-review-slash-command-remote.md)
+##### 3.2.1.2 [Advisor tool instructions (System Prompt)](system-prompts/system-prompt-advisor-tool-instructions.md)
 
-Remote version of PR review that runs in a sandboxed environment with repository checkout, analyzing diffs and providing expert code review wrapped in result tags for local session extraction.
+Instructions for using the Advisor tool, a stronger reviewer model that receives full conversation history. Directs calling the advisor before substantive work, when stuck, when considering approach changes, and before declaring completion.
 
-#### 4.3.3 [/pr-comments slash command (Agent Prompt)](system-prompts/agent-prompt-pr-comments-slash-command.md)
+##### 3.2.1.3 [/btw side question (System Reminder)](system-prompts/system-reminder-btw-side-question.md)
 
-Fetches and displays GitHub PR comments including PR-level and review comments with file context, diff hunks, and threaded replies formatted for readability.
+Instructs a lightweight agent spawned for a side question to answer directly without tools, based only on conversation context, and to avoid implying it was interrupted or will take further actions.
 
-#### 4.3.4 [Simplify (Skill)](system-prompts/skill-simplify.md)
+##### 3.2.1.4 [Agent mention (System Reminder)](system-prompts/system-reminder-agent-mention.md)
 
-Code review skill that launches three parallel agents to identify code reuse opportunities, quality issues, and efficiency problems.
+Notifies the agent that the user wants to invoke a specific agent type and instructs appropriate invocation with required context.
 
-### 4.4 Verification & Testing
+#### 3.2.2 Permission Management & Tool Execution Control
 
-Adversarial testing frameworks that validate code changes through builds, test suites, linters, and environment-specific probes. Generates specialized verifier skills for different testing modalities and enforces rigorous quality gates before deployment.
+Governs tool access through permission modes requiring user approval, handles denied tool calls by attempting legitimate alternatives or stopping to explain when capabilities are essential, and optimizes execution by parallelizing independent tool calls.
 
-#### 4.4.1 [Verification specialist (Agent Prompt)](system-prompts/agent-prompt-verification-specialist.md)
+##### 3.2.2.1 [Tool execution denied (System Prompt)](system-prompts/system-prompt-tool-execution-denied.md)
 
-System prompt for a verification subagent that adversarially tests implementations through builds, test suites, linters, and adversarial probes, issuing PASS/FAIL/PARTIAL verdicts. Emphasizes finding the last 20% of issues and avoiding verification avoidance patterns.
+Defines behavior when a tool is denied: attempt reasonable alternatives but avoid malicious workarounds, and stop to explain to the user if the capability is essential and cannot be legitimately replaced.
 
-#### 4.4.2 [Verification specialist (Skill)](system-prompts/skill-verification-specialist.md)
+##### 3.2.2.2 [System section (System Prompt)](system-prompts/system-prompt-system-section.md)
 
-Skill for verifying code changes work correctly by discovering verifier skills, creating plans, and reporting detailed results.
+Describes tool execution under permission modes, requiring user approval for non-automatically-allowed tools and prohibiting re-attempts of denied calls.
 
-#### 4.4.3 [Create verifier skills (Skill)](system-prompts/skill-create-verifier-skills.md)
+##### 3.2.2.3 [Parallel tool call note (part of "Tool usage policy") [System Prompt]](system-prompts/system-prompt-parallel-tool-call-note-part-of-tool-usage-policy.md)
 
-Multi-phase workflow for creating verifier skills that test code changes via Playwright, Tmux, or HTTP, including auto-detection, tool setup, and skill generation.
+Directs Claude to call multiple independent tools in parallel to increase efficiency, while calling dependent tools sequentially.
 
-#### 4.4.4 [update-config (7-step verification flow) [Skill]](system-prompts/skill-update-config-7-step-verification-flow.md)
+### 3.3 Session Identity & Operational Settings
 
-Seven-step process for constructing and verifying hooks, ensuring they work correctly in the project environment before deployment.
+Metadata labeling for agent sessions, mode configuration for feature availability, and resource handling protocols.
+
+#### 3.3.1 Agent Metadata & Session Naming
+
+Semantic labeling and contextual representation of agent work, capturing session identity, recent actions, and terminal state through concise structured metadata.
+
+##### 3.3.1.1 [Coding session title generator (Agent Prompt)](system-prompts/agent-prompt-coding-session-title-generator.md)
+
+Generates a concise 3–7 word sentence-case title capturing the main goal of a coding session, returning JSON with a single title field.
+
+##### 3.3.1.2 [Agent Summary Generation (System Prompt)](system-prompts/system-prompt-agent-summary-generation.md)
+
+Instructs agents to describe their most recent action in 3-5 words using present tense, naming the file or function rather than branch names, without using tools.
+
+##### 3.3.1.3 [Status line setup (Agent Prompt)](system-prompts/agent-prompt-status-line-setup.md)
+
+System prompt for configuring Claude Code status line display, converting shell PS1 configurations and managing status line commands with session context and token usage metrics.
+
+#### 3.3.2 Operational Mode Configuration
+
+Settings that control feature availability and resource handling, from disabling hooks and plugins in minimal mode to directing temporary file storage and establishing error-handling protocols that prioritize root-cause diagnosis over retry loops.
+
+##### 3.3.2.1 [Minimal mode (System Prompt)](system-prompts/system-prompt-minimal-mode.md)
+
+Describes minimal mode operation that disables hooks, LSP, plugins, auto-memory, and background features, requiring explicit context via CLI flags for authentication and configuration.
+
+##### 3.3.2.2 [Scratchpad directory (System Prompt)](system-prompts/system-prompt-scratchpad-directory.md)
+
+Directs Claude to use a dedicated session-specific scratchpad directory for temporary files instead of /tmp, enabling free use without permission prompts.
+
+##### 3.3.2.3 [One of six rules for using sleep command (System Prompt)](system-prompts/system-prompt-one-of-six-rules-for-using-sleep-command.md)
+
+Prohibits retrying failing commands in sleep loops; instead requires diagnosing root causes.
 
 ---
 
-## 5. Hooks, Automation & Scheduling
+## 4. Planning, Memory & Context Management
 
-Event-driven automation through lifecycle hooks, extensible slash command frameworks, cron-based scheduling, and GitHub CI/CD integration for recurring and triggered workflows.
+Systems for structured planning before implementation, persistent memory across sessions, task progress tracking, and conversation summarization to maintain continuity.
 
-### 5.1 Hook System Notifications & Events
+### 4.1 Planning Mode & Implementation Design
 
-Lifecycle hooks execute shell commands, prompts, or agents at Claude Code events (PreToolUse, PostToolUse, SessionStart) with JSON-based input/output for controlling behavior. System notifications report hook outcomes—success, errors, continuation stops, and additional context—while condition evaluators and verification agents determine whether hooks should execute based on codebase state and conversation history.
+Structured planning workflows for non-trivial code changes, enabling exploration and design before implementation. Supports iterative pair-planning with users, multi-agent parallel exploration, and comprehensive risk assessment. Plans are persisted in files and require explicit user approval before execution begins.
 
-#### 5.1.1 [Hook stopped continuation prefix (System Reminder)](system-prompts/system-reminder-hook-stopped-continuation-prefix.md)
+#### 4.1.1 [EnterPlanMode (Tool Description)](system-prompts/tool-description-enterplanmode.md)
 
-Prefix message template displayed when a hook stops continuation.
+Transitions into plan mode for non-trivial implementation tasks, enabling exploration of the codebase and design of implementation approaches for user approval before coding begins.
 
-#### 5.1.2 [Hook stopped continuation (System Reminder)](system-prompts/system-reminder-hook-stopped-continuation.md)
+#### 4.1.2 [ExitPlanMode (Tool Description)](system-prompts/tool-description-exitplanmode.md)
 
-Message template shown when a hook stops continuation, including the hook name and stop reason.
+Signals completion of planning and requests user approval by reading the plan from file, used only for implementation tasks requiring code changes.
 
-#### 5.1.3 [Hook success (System Reminder)](system-prompts/system-reminder-hook-success.md)
+#### 4.1.3 [Plan mode is active (5-phase) [System Reminder]](system-prompts/system-reminder-plan-mode-is-active-5-phase.md)
 
-Success notification template displaying hook name and result content.
+Activates a structured 5-phase planning workflow with parallel exploration and multi-agent design, requiring Claude to read code, launch subagents for investigation and planning, review proposals, and exit plan mode only after user approval.
 
-#### 5.1.4 [Hook additional context (System Reminder)](system-prompts/system-reminder-hook-additional-context.md)
+#### 4.1.4 [Plan mode is active (iterative) [System Reminder]](system-prompts/system-reminder-plan-mode-is-active-iterative.md)
 
-Provides additional context from a hook to Claude.
+Activates iterative pair-planning with the user, requiring Claude to explore code, update a plan file incrementally, ask clarifying questions, and exit only when the plan is ready for approval.
 
-#### 5.1.5 [Hook blocking error (System Reminder)](system-prompts/system-reminder-hook-blocking-error.md)
+#### 4.1.5 [Plan mode is active (subagent) [System Reminder]](system-prompts/system-reminder-plan-mode-is-active-subagent.md)
 
-Reports an error from a blocking hook command to Claude.
+Restricts subagent actions to read-only operations and plan file editing, requiring comprehensive answers and clarifying questions before proceeding.
 
-#### 5.1.6 [Hooks Configuration (System Prompt)](system-prompts/system-prompt-hooks-configuration.md)
+#### 4.1.6 [Plan mode re-entry (System Reminder)](system-prompts/system-reminder-plan-mode-re-entry.md)
 
-Defines lifecycle hooks that run shell commands, prompts, or agents at specific Claude Code events like PreToolUse, PostToolUse, and SessionStart, with JSON input/output for controlling behavior.
+Instructs Claude to read the existing plan file, evaluate whether the new request is a continuation or different task, and update the plan accordingly before exiting.
 
-#### 5.1.7 [Hook condition evaluator (Agent Prompt)](system-prompts/agent-prompt-hook-condition-evaluator.md)
+#### 4.1.7 [Ultraplan mode (System Reminder)](system-prompts/system-reminder-ultraplan-mode.md)
 
-Evaluates hook conditions in Claude Code and returns JSON indicating whether the condition is met with optional reason for failure.
+Instructs Claude to create detailed implementation plans using multi-agent exploration and critique, spawning parallel agents to analyze code architecture, identify files for modification, and assess risks before synthesizing a comprehensive step-by-step plan.
 
-#### 5.1.8 [Agent Hook (Agent Prompt)](system-prompts/agent-prompt-agent-hook.md)
+#### 4.1.8 [Exited plan mode (System Reminder)](system-prompts/system-reminder-exited-plan-mode.md)
 
-Verifies stop conditions in Claude Code by analyzing conversation transcripts and inspecting the codebase to confirm agent task completion.
+Notifies the agent that plan mode has been exited and actions can now be taken, optionally referencing the plan file location.
 
-### 5.2 Skills System & Slash Commands
+#### 4.1.9 [Plan file reference (System Reminder)](system-prompts/system-reminder-plan-file-reference.md)
 
-Extensible command framework for invoking specialized capabilities and automating recurring workflows. Enables session-to-skill conversion through structured interviews, scheduling via cron expressions, and configuration management for Claude Code environments.
+References an existing plan file and instructs Claude to continue working on it if relevant.
 
-#### 5.2.1 [Skill (Tool Description)](system-prompts/tool-description-skill.md)
+#### 4.1.10 [Verify plan reminder (System Reminder)](system-prompts/system-reminder-verify-plan-reminder.md)
 
-Executes specialized skills (slash commands) within the main conversation, with a requirement to invoke the tool before generating responses about skill-related tasks.
+Reminds Claude to call a verification tool directly after plan implementation to confirm all plan items were completed correctly.
 
-#### 5.2.2 [Tool usage (skill invocation) [System Prompt]](system-prompts/system-prompt-tool-usage-skill-invocation.md)
+#### 4.1.11 [Plan mode (enhanced) [Agent Prompt]](system-prompts/agent-prompt-plan-mode-enhanced.md)
 
-Instructs Claude to use the Skill tool to execute slash commands that invoke user-invocable skills, only for skills listed in the tool's user-invocable section.
+Software architect agent that explores codebases and designs implementation plans in read-only mode, identifying critical files and architectural trade-offs without modifying code.
 
-#### 5.2.3 [Skillify Current Session (System Prompt)](system-prompts/system-prompt-skillify-current-session.md)
+#### 4.1.12 [Phase four of plan mode (System Prompt)](system-prompts/system-prompt-phase-four-of-plan-mode.md)
 
-Converts a session into a reusable skill through 4-round user interviews covering naming, goals, steps, and execution details, then generates a SKILL.md file with frontmatter and structured steps.
+Defines final plan phase requiring concise file-by-file modification lists with function references and a single verification command, limited to 40 lines.
 
-#### 5.2.4 [/loop slash command (Skill)](system-prompts/skill-loop-slash-command.md)
+### 4.2 Memory & Session Persistence
+
+Multi-layered memory system preserves institutional knowledge across sessions through structured files, consolidation passes that merge recent insights, and intelligent selection of relevant context. Supports cross-machine continuity, skill tracking, and domain-specific learning for specialized roles.
+
+#### 4.2.1 [Memory file contents (System Reminder)](system-prompts/system-reminder-memory-file-contents.md)
+
+Displays the contents of a memory file stored at a specific path.
+
+#### 4.2.2 [Nested memory contents (System Reminder)](system-prompts/system-reminder-nested-memory-contents.md)
+
+Displays the contents of a nested memory file structure.
+
+#### 4.2.3 [Session continuation (System Reminder)](system-prompts/system-reminder-session-continuation.md)
+
+Alerts Claude that the session continues from another machine and the working directory may have changed.
+
+#### 4.2.4 [Invoked skills (System Reminder)](system-prompts/system-reminder-invoked-skills.md)
+
+Lists skills invoked during the session and reminds Claude to follow their guidelines.
+
+#### 4.2.5 [Session memory update instructions (Agent Prompt)](system-prompts/agent-prompt-session-memory-update-instructions.md)
+
+Instructions for updating session memory files during conversations, preserving document structure while adding actionable insights from user interactions.
+
+#### 4.2.6 [Dream memory consolidation (Agent Prompt)](system-prompts/agent-prompt-dream-memory-consolidation.md)
+
+Performs a reflective multi-phase memory consolidation pass by orienting on existing memories, gathering recent signal from logs and transcripts, merging updates into topic files, and pruning the index to stay under size limits.
+
+#### 4.2.7 [Determine which memory files to attach (Agent Prompt)](system-prompts/agent-prompt-determine-which-memory-files-to-attach.md)
+
+Selects up to 5 relevant memory files from a list based on user query and recently-used tools, excluding API documentation for active tools but including warnings and gotchas.
+
+#### 4.2.8 [Agent memory instructions (System Prompt)](system-prompts/system-prompt-agent-memory-instructions.md)
+
+Guidance for including memory update instructions in agent system prompts to build institutional knowledge across conversations. Provides domain-specific examples for code reviewers, test runners, architects, and documentation writers.
+
+#### 4.2.9 [Memory description of user feedback (System Prompt)](system-prompts/system-prompt-memory-description-of-user-feedback.md)
+
+Describes user feedback memory type for storing guidance on work approaches, emphasizing recording both successes and failures while checking for contradictions with team memories.
+
+#### 4.2.10 [Description part of memory instructions (System Prompt)](system-prompts/system-prompt-description-part-of-memory-instructions.md)
+
+Guidance for writing user memory descriptions that capture role, goals, responsibilities, and knowledge to tailor behavior and avoid negative judgements.
+
+#### 4.2.11 [Session memory template (Data)](system-prompts/data-session-memory-template.md)
+
+Template structure for session memory summary.md files, organizing current state, task specification, files, workflow, errors, and key results.
+
+### 4.3 Context Compaction & Conversation Summarization
+
+Structured summarization frameworks compress exhausted conversations into resumable snapshots, capturing task state, discoveries, technical details, and next steps while preserving critical context. Supports both full-conversation and recent-message analysis with varying detail levels.
+
+#### 4.3.1 [Context compaction summary (System Prompt)](system-prompts/system-prompt-context-compaction-summary.md)
+
+Framework for writing continuation summaries when context windows are exhausted, structured with task overview, current state, discoveries, next steps, and context to preserve for efficient resumption.
+
+#### 4.3.2 [Analysis instructions for full compact prompt (full conversation) [System Prompt]](system-prompts/system-prompt-analysis-instructions-for-full-compact-prompt-full-conversation.md)
+
+Analysis framework for context compaction that wraps thinking in tags and chronologically reviews the entire conversation, identifying user requests, approach, decisions, technical details, errors, and user feedback.
+
+#### 4.3.3 [Analysis instructions for full compact prompt (minimal and via feature flag) [System Prompt]](system-prompts/system-prompt-analysis-instructions-for-full-compact-prompt-minimal-and-via-feature-flag.md)
+
+Lean experimental version of analysis instructions for context compaction that uses analysis tags as a planning scratchpad without code snippets, deferring detail to the summary section.
+
+#### 4.3.4 [Analysis instructions for full compact prompt (recent messages) [System Prompt]](system-prompts/system-prompt-analysis-instructions-for-full-compact-prompt-recent-messages.md)
+
+Analysis framework for context compaction focused on recent messages, chronologically identifying user requests, approach, decisions, technical details, errors, and user feedback.
+
+#### 4.3.5 [Conversation summarization (Agent Prompt)](system-prompts/agent-prompt-conversation-summarization.md)
+
+Creates detailed conversation summaries covering primary requests, technical concepts, files examined, errors and fixes, problem-solving, user messages, pending tasks, current work, and next steps with code snippets and absolute file paths.
+
+#### 4.3.6 [Recent Message Summarization (Agent Prompt)](system-prompts/agent-prompt-recent-message-summarization.md)
+
+Summarizes recent conversation messages covering requests, technical concepts, files, errors, problem-solving, user messages, pending tasks, current work, and next steps while preserving earlier context intact.
+
+#### 4.3.7 [Compact file reference (System Reminder)](system-prompts/system-reminder-compact-file-reference.md)
+
+Notifies the agent that a file was read before conversation summarization but is too large to include, directing use of the Read tool if needed.
+
+### 4.4 Task Tracking & Progress Management
+
+Structured task tracking enables breaking down work into discrete steps with state management (pending, in-progress, completed), supporting incremental progress visibility and cleanup of stale items. System reminders prompt consideration of task tools when relevant to current work.
+
+#### 4.4.1 [TodoWrite (Tool Description)](system-prompts/tool-description-todowrite.md)
+
+Creates and manages structured task lists for coding sessions with task states (pending, in_progress, completed), supporting both imperative and active continuous forms for task descriptions.
+
+#### 4.4.2 [TaskCreate (Tool Description)](system-prompts/tool-description-taskcreate.md)
+
+Creates structured task lists for coding sessions to track progress and organize complex multi-step tasks, with support for task descriptions and active forms.
+
+#### 4.4.3 [TodoWrite reminder (System Reminder)](system-prompts/system-reminder-todowrite-reminder.md)
+
+Reminds Claude to consider using the TodoWrite tool for tracking task progress if relevant to current work, and to clean up stale todo lists.
+
+#### 4.4.4 [Task tools reminder (System Reminder)](system-prompts/system-reminder-task-tools-reminder.md)
+
+Gently reminds Claude to use task tracking tools for progress management when relevant to current work.
+
+#### 4.4.5 [Tool usage (task management) [System Prompt]](system-prompts/system-prompt-tool-usage-task-management.md)
+
+Instructs use of the TodoWrite tool to break down work, track progress, and mark tasks as completed incrementally rather than in batches.
+
+---
+
+## 5. Claude API, SDKs & External Integrations
+
+Reference documentation and integration patterns for building with Claude via APIs, language-specific SDKs, and external platforms like GitHub and browsers.
+
+### 5.1 API Reference & Advanced Features
+
+Core API documentation covering model selection, error handling, streaming, tool use, batch processing, prompt caching, and structured outputs across all supported languages.
+
+#### 5.1.1 Claude API SDK Reference Documentation
+
+Language-specific SDK references and API documentation for building with Claude across Python, TypeScript, Go, Java, Ruby, PHP, C#, and raw HTTP. Covers model selection, error handling, streaming, tool use, prompt caching, and extended thinking with current model catalog and HTTP error reference.
+
+##### 5.1.1.1 [Claude API reference — Python (Data)](system-prompts/data-claude-api-reference-python.md)
+
+Python SDK reference covering installation, basic requests, vision, prompt caching, extended thinking, error handling, multi-turn conversations, and cost optimization strategies.
+
+##### 5.1.1.2 [Claude API reference — TypeScript (Data)](system-prompts/data-claude-api-reference-typescript.md)
+
+TypeScript SDK reference covering installation, basic requests, vision, prompt caching, extended thinking, error handling, multi-turn conversations, and cost optimization.
+
+##### 5.1.1.3 [Claude API reference — Go (Data)](system-prompts/data-claude-api-reference-go.md)
+
+Go SDK reference covering client initialization, basic requests, streaming, tool use with BetaToolRunner, thinking, prompt caching, and server-side tools.
+
+##### 5.1.1.4 [Claude API reference — Java (Data)](system-prompts/data-claude-api-reference-java.md)
+
+Java SDK reference covering client initialization, basic requests, streaming, thinking, tool use with annotated classes and BetaToolRunner, prompt caching, and structured output.
+
+##### 5.1.1.5 [Claude API reference — Ruby (Data)](system-prompts/data-claude-api-reference-ruby.md)
+
+Ruby SDK reference covering client initialization, basic requests, streaming, tool use with beta tool runner, and prompt caching.
+
+##### 5.1.1.6 [Claude API reference — PHP (Data)](system-prompts/data-claude-api-reference-php.md)
+
+PHP SDK reference covering client initialization, basic requests, streaming, tool use with BetaRunnableTool, extended thinking, prompt caching, and structured output.
+
+##### 5.1.1.7 [Claude API reference — C# (Data)](system-prompts/data-claude-api-reference-c.md)
+
+C# SDK reference covering client initialization, basic requests, streaming, thinking, tool use with annotated classes, prompt caching, structured output, and server-side tools.
+
+##### 5.1.1.8 [Claude API reference — cURL (Data)](system-prompts/data-claude-api-reference-curl.md)
+
+Raw HTTP API reference for Claude using cURL, covering basic requests, streaming, tool use, prompt caching, and extended thinking with JSON examples.
+
+##### 5.1.1.9 [Claude model catalog (Data)](system-prompts/data-claude-model-catalog.md)
+
+Catalog of current, legacy, and retired Claude models with exact model IDs, context windows, max output tokens, and programmatic model discovery via the Models API.
+
+##### 5.1.1.10 [HTTP error codes reference (Data)](system-prompts/data-http-error-codes-reference.md)
+
+Comprehensive reference for Claude API HTTP error codes (400–529) with causes, handling strategies, and typed exception classes for Python and TypeScript SDKs.
+
+##### 5.1.1.11 [Live documentation sources (Data)](system-prompts/data-live-documentation-sources.md)
+
+WebFetch URLs for fetching current Claude API and Agent SDK documentation from platform.claude.com and official repositories, enabling real-time access to latest features.
+
+#### 5.1.2 Advanced API Features Reference
+
+Technical references for streaming, tool use, file handling, batch processing, and prompt caching. Covers real-time response handling, agentic loops, server-side tools, structured outputs, asynchronous batch operations, and cache optimization patterns.
+
+##### 5.1.2.1 [Streaming reference — Python (Data)](system-prompts/data-streaming-reference-python.md)
+
+Python streaming reference with sync/async examples, handling text, thinking blocks, and tool use, plus progress tracking and error handling patterns.
+
+##### 5.1.2.2 [Streaming reference — TypeScript (Data)](system-prompts/data-streaming-reference-typescript.md)
+
+TypeScript streaming reference covering basic streaming, content types, tool use with tool runner, and best practices for real-time response handling.
+
+##### 5.1.2.3 [Tool use concepts (Data)](system-prompts/data-tool-use-concepts.md)
+
+Conceptual foundations of tool use covering user-defined tools, tool choice, tool runner vs manual loops, server-side tools (code execution, web search, computer use), and structured outputs.
+
+##### 5.1.2.4 [Tool use reference — Python (Data)](system-prompts/data-tool-use-reference-python.md)
+
+Python tool use reference including tool runner with @beta_tool decorator, manual agentic loops, code execution, memory tool, and structured outputs with Pydantic.
+
+##### 5.1.2.5 [Tool use reference — TypeScript (Data)](system-prompts/data-tool-use-reference-typescript.md)
+
+TypeScript tool use reference with tool runner using Zod schemas, manual agentic loops with streaming, code execution, memory tool, and structured outputs.
+
+##### 5.1.2.6 [Files API reference — Python (Data)](system-prompts/data-files-api-reference-python.md)
+
+Python Files API reference covering file upload, listing, deletion, metadata retrieval, and usage in messages with documents and images.
+
+##### 5.1.2.7 [Files API reference — TypeScript (Data)](system-prompts/data-files-api-reference-typescript.md)
+
+TypeScript reference for the Files API, covering file upload, listing, deletion, and usage in messages with a 500 MB size limit and 100 GB per-organization storage.
+
+##### 5.1.2.8 [Message Batches API reference — Python (Data)](system-prompts/data-message-batches-api-reference-python.md)
+
+Python Batches API reference for asynchronous batch processing of up to 100,000 requests at 50% cost, with polling, result retrieval, and prompt caching support.
+
+##### 5.1.2.9 [Prompt Caching — Design & Optimization (Data)](system-prompts/data-prompt-caching-design-optimization.md)
+
+Design patterns and anti-patterns for effective prompt caching, covering prefix-stability ordering, breakpoint placement, silent invalidators, and cache-hit verification.
+
+### 5.2 Agent SDK & MCP Integration
+
+SDK patterns for building agents in Python and TypeScript, including MCP resource management, tool discovery, and routing guidance for selecting the right Claude surface.
+
+#### 5.2.1 Agent SDK Patterns & Reference
+
+Comprehensive Agent SDK documentation and patterns for Python and TypeScript, covering agent construction, MCP integration, custom tools, hooks, subagents, permission modes, and session management. Includes routing guidance for selecting appropriate Claude surface (API, workflow, or agent).
+
+##### 5.2.1.1 [Agent SDK patterns — Python (Data)](system-prompts/data-agent-sdk-patterns-python.md)
+
+Python Agent SDK patterns covering basic agents, custom tools via MCP, hooks, subagents, permission modes, error recovery, and session resumption with code examples.
+
+##### 5.2.1.2 [Agent SDK patterns — TypeScript (Data)](system-prompts/data-agent-sdk-patterns-typescript.md)
+
+TypeScript Agent SDK patterns including basic agents, hooks, subagents, MCP server integration, and session history management with code examples.
+
+##### 5.2.1.3 [Agent SDK reference — Python (Data)](system-prompts/data-agent-sdk-reference-python.md)
+
+Comprehensive Python Agent SDK reference covering installation, query interface, ClaudeSDKClient, permission modes, MCP support, hooks, subagents, and session management.
+
+##### 5.2.1.4 [Agent SDK reference — TypeScript (Data)](system-prompts/data-agent-sdk-reference-typescript.md)
+
+Comprehensive TypeScript Agent SDK reference covering installation, query interface, permission modes, MCP support, hooks, subagents, and session management.
+
+##### 5.2.1.5 [Build with Claude API (Skill)](system-prompts/skill-build-with-claude-api.md)
+
+Comprehensive routing guide for building LLM applications with Claude, including language detection, surface selection (single call vs workflow vs agent), model defaults, thinking/effort parameters, and architecture overview.
+
+##### 5.2.1.6 [Build with Claude API (reference guide) [Skill]](system-prompts/skill-build-with-claude-api-reference-guide.md)
+
+Navigation guide for language-specific Claude API reference documentation with quick task routing to relevant sections.
+
+#### 5.2.2 MCP Resources & Tool Discovery
+
+Manages MCP resource availability and enables tool discovery through schema-based lookups. Handles resource content states and provides deferred tool definitions for dynamic invocation.
+
+##### 5.2.2.1 [MCP resource no content (System Reminder)](system-prompts/system-reminder-mcp-resource-no-content.md)
+
+Indicates that an MCP resource exists but contains no content.
+
+##### 5.2.2.2 [MCP resource no displayable content (System Reminder)](system-prompts/system-reminder-mcp-resource-no-displayable-content.md)
+
+Indicates that an MCP resource has content but it is not displayable.
+
+##### 5.2.2.3 [ToolSearch (second part) [Tool Description]](system-prompts/tool-description-toolsearch-second-part.md)
+
+Fetches deferred tool definitions by name or keyword query, returning complete JSONSchema definitions for invocation.
+
+### 5.3 GitHub, Browser & Web Integrations
+
+Automated workflows connecting Claude to GitHub repositories for code review and PR analysis, plus browser automation and web content retrieval tools.
+
+#### 5.3.1 GitHub Integration & CI/CD
+
+Automated workflows and templates that connect Claude to GitHub repositories, enabling code review, pull request analysis, and AI-assisted development through @claude mentions and GitHub App integration.
+
+##### 5.3.1.1 [GitHub Actions workflow for @claude mentions (Data)](system-prompts/data-github-actions-workflow-for-claude-mentions.md)
+
+GitHub Actions workflow template that triggers Claude Code when @claude is mentioned in issues, PRs, or comments, enabling automated AI-assisted code work.
+
+##### 5.3.1.2 [GitHub App installation PR description (Data)](system-prompts/data-github-app-installation-pr-description.md)
+
+Template PR description for installing Claude Code GitHub App integration, explaining capabilities, security, and how to invoke Claude via @claude mentions.
+
+##### 5.3.1.3 [/pr-comments slash command (Agent Prompt)](system-prompts/agent-prompt-pr-comments-slash-command.md)
+
+Fetches and displays GitHub PR comments including PR-level and review comments with diff context, file paths, and line numbers in a readable threaded format.
+
+##### 5.3.1.4 [/review-pr slash command (Agent Prompt)](system-prompts/agent-prompt-review-pr-slash-command.md)
+
+Reviews GitHub pull requests by fetching PR details and diffs, analyzing code quality, style, correctness, conventions, performance, test coverage, and security with concise formatted output.
+
+##### 5.3.1.5 [/review slash command (remote) [Agent Prompt]](system-prompts/agent-prompt-review-slash-command-remote.md)
+
+Remote version of PR review that runs in a sandboxed environment with repository checkout, analyzing code quality and wrapping results in result tags for local session extraction.
+
+#### 5.3.2 Browser Automation & Web Tools
+
+Tools for interacting with web content and browsers, combining direct Chrome automation with web search and content retrieval capabilities to access real-time information and perform UI-driven tasks.
+
+##### 5.3.2.1 [Computer (Tool Description)](system-prompts/tool-description-computer.md)
+
+Enables mouse and keyboard interaction with a Chrome browser, including screenshot capture and precise cursor positioning for clicking elements.
+
+##### 5.3.2.2 [Computer action (Tool Parameter)](system-prompts/tool-parameter-computer-action.md)
+
+Defines action parameters for Chrome browser automation including mouse operations (click, drag, hover), keyboard input, scrolling, screenshot capture, and element inspection via zoom and scroll-to functions.
+
+##### 5.3.2.3 [WebFetch (Tool Description)](system-prompts/tool-description-webfetch.md)
+
+Fetches and analyzes web content by converting HTML to markdown and processing it with an AI model based on a user-provided prompt. Includes automatic HTTPS upgrade, redirect handling, and a 15-minute cache for repeated requests.
+
+##### 5.3.2.4 [WebSearch (Tool Description)](system-prompts/tool-description-websearch.md)
+
+Enables Claude to search the web for current information beyond its knowledge cutoff and return formatted results with markdown hyperlinks. Requires mandatory inclusion of a Sources section in responses and supports domain filtering.
+
+##### 5.3.2.5 [Chrome browser MCP tools (System Prompt)](system-prompts/system-prompt-chrome-browser-mcp-tools.md)
+
+Instructions requiring ToolSearch to load Chrome browser MCP tools before use, with specific steps for loading and calling tools like tabs_context_mcp.
+
+##### 5.3.2.6 [Claude in Chrome browser automation (System Prompt)](system-prompts/system-prompt-claude-in-chrome-browser-automation.md)
+
+Comprehensive guidelines for browser automation including GIF recording with extra frames, console log debugging with pattern filtering, avoiding JavaScript alerts that block commands, and staying focused on tasks without rabbit holes. Emphasizes calling tabs_context_mcp at session start and never reusing tab IDs across sessions.
+
+---
+
+## 6. Developer Workflow Tools & Automation
+
+Tools and workflows that extend Claude Code for day-to-day development: version control, codebase exploration, slash commands, lifecycle hooks, scheduling, and IDE integration.
+
+### 6.1 Git & Version Control Operations
+
+Git workflow management including commit creation, pull request generation, and worktree isolation. Enforces safety protocols by avoiding destructive operations, respecting hooks and signing requirements, and preferring new commits over amendments. Provides structured workflows for committing changes and creating pull requests with pre-populated context and safety checks.
+
+#### 6.1.1 [Bash (git — avoid destructive ops) [Tool Description]](system-prompts/tool-description-bash-git-avoid-destructive-ops.md)
+
+Instructs to consider safer alternatives before running destructive git operations like reset --hard, push --force, or checkout --.
+
+#### 6.1.2 [Bash (Git commit and PR creation instructions) [Tool Description]](system-prompts/tool-description-bash-git-commit-and-pr-creation-instructions.md)
+
+Comprehensive instructions for creating git commits and GitHub pull requests, covering git safety protocols, commit message drafting, hook handling, and PR creation with gh command, emphasizing user-explicit authorization and avoiding destructive operations.
+
+#### 6.1.3 [Bash (git — never skip hooks) [Tool Description]](system-prompts/tool-description-bash-git-never-skip-hooks.md)
+
+Instructs never to skip hooks or bypass signing unless explicitly requested by the user, and to investigate and fix underlying issues when hooks fail.
+
+#### 6.1.4 [Bash (git — prefer new commits) [Tool Description]](system-prompts/tool-description-bash-git-prefer-new-commits.md)
+
+Instructs to prefer creating new commits over amending existing commits.
+
+#### 6.1.5 [EnterWorktree (Tool Description)](system-prompts/tool-description-enterworktree.md)
+
+Creates an isolated git worktree and switches the session into it, only when explicitly requested by the user.
+
+#### 6.1.6 [ExitWorktree (Tool Description)](system-prompts/tool-description-exitworktree.md)
+
+Exits a worktree session created by EnterWorktree, restoring the original working directory with options to keep or remove the worktree and its branch.
+
+#### 6.1.7 [Quick git commit (Agent Prompt)](system-prompts/agent-prompt-quick-git-commit.md)
+
+Creates a single git commit with pre-populated context (status, diff, branch, recent commits), analyzing changes to draft a message following repository conventions and enforcing safety protocols.
+
+#### 6.1.8 [Quick PR creation (Agent Prompt)](system-prompts/agent-prompt-quick-pr-creation.md)
+
+Creates a commit and pull request with pre-populated context, handling branch creation, commit messaging, and PR body generation with safety protocols and optional attribution.
+
+#### 6.1.9 [Session title and branch generation (Agent Prompt)](system-prompts/agent-prompt-session-title-and-branch-generation.md)
+
+Agent for generating succinct session titles and git branch names from task descriptions, following naming conventions for clarity and consistency.
+
+#### 6.1.10 [Git status (System Prompt)](system-prompts/system-prompt-git-status.md)
+
+Displays current git status snapshot including branch, main branch reference, file status, and recent commits at conversation start.
+
+### 6.2 Codebase Exploration & Slash Commands
+
+Specialized agents for navigating codebases via pattern search and LSP integration, plus user-invocable slash commands for debugging, refactoring, and onboarding workflows.
+
+#### 6.2.1 Codebase Exploration & Search Agents
+
+Specialized agents and tools for navigating and analyzing codebases through pattern-based file search, language server integration, and intelligent delegation strategies that balance direct queries with deeper exploration.
+
+##### 6.2.1.1 [Explore (Agent Prompt)](system-prompts/agent-prompt-explore.md)
+
+File search specialist for Claude Code that rapidly navigates codebases using glob patterns, regex grep, and file reading in strict read-only mode, spawning parallel tool calls for efficiency.
+
+##### 6.2.1.2 [Explore strengths and guidelines (Agent Prompt)](system-prompts/agent-prompt-explore-strengths-and-guidelines.md)
+
+Defines strengths and behavioral guidelines for the Explore subagent, emphasizing read-only codebase search, multi-file analysis, and avoiding unnecessary file creation.
+
+##### 6.2.1.3 [LSP (Tool Description)](system-prompts/tool-description-lsp.md)
+
+Provides Language Server Protocol integration for code intelligence features including definition lookup, reference finding, hover information, symbol search, and call hierarchy analysis.
+
+##### 6.2.1.4 [Tool usage (direct search) [System Prompt]](system-prompts/system-prompt-tool-usage-direct-search.md)
+
+Directs use of Glob and Grep tools directly for simple, targeted codebase searches.
+
+##### 6.2.1.5 [Tool usage (delegate exploration) [System Prompt]](system-prompts/system-prompt-tool-usage-delegate-exploration.md)
+
+Recommends using the Task tool with exploration subagents for broader codebase exploration and deep research when simple directed searches are insufficient or will exceed query limits.
+
+##### 6.2.1.6 [Tool usage (subagent guidance) [System Prompt]](system-prompts/system-prompt-tool-usage-subagent-guidance.md)
+
+Provides guidance on using the Task tool with specialized subagents for parallelizing work and protecting context, while avoiding duplication of effort already performed by subagents.
+
+#### 6.2.2 Skills & Slash Command Implementations
+
+User-invocable domain-specific capabilities that extend Claude Code functionality through slash commands, covering debugging, refactoring, scheduling, configuration management, and comprehensive onboarding workflows.
+
+##### 6.2.2.1 [Skill (Tool Description)](system-prompts/tool-description-skill.md)
+
+Executes specialized skills within the main conversation, invoked by name with optional arguments, matching user slash commands to available domain-specific capabilities.
+
+##### 6.2.2.2 [Tool usage (skill invocation) [System Prompt]](system-prompts/system-prompt-tool-usage-skill-invocation.md)
+
+Explains that slash commands like /commit invoke user-invocable skills via the Skill tool, and warns against guessing or using built-in CLI commands.
+
+##### 6.2.2.3 [Debugging (Skill)](system-prompts/skill-debugging.md)
+
+Instructions for debugging issues in Claude Code sessions by reviewing debug logs, identifying errors and warnings, and suggesting fixes.
+
+##### 6.2.2.4 [Simplify (Skill)](system-prompts/skill-simplify.md)
+
+Code review and cleanup skill that launches three parallel agents to identify code reuse opportunities, quality issues, and efficiency problems.
+
+##### 6.2.2.5 [/loop slash command (Skill)](system-prompts/skill-loop-slash-command.md)
 
 Parses user input into interval and prompt, converts to cron expression, and schedules recurring tasks with automatic execution.
 
-#### 5.2.5 [/stuck slash command (Skill)](system-prompts/skill-stuck-slash-command.md)
+##### 6.2.2.6 [/stuck slash command (Skill)](system-prompts/skill-stuck-slash-command.md)
 
-Diagnoses frozen or slow Claude Code sessions by scanning processes, detecting hangs, and posting diagnostic reports to Slack.
+Diagnoses frozen or slow Claude Code sessions by scanning processes for high CPU, I/O hangs, memory leaks, and stuck subprocesses.
 
-#### 5.2.6 [Update Claude Code Config (Skill)](system-prompts/skill-update-claude-code-config.md)
+##### 6.2.2.7 [Update Claude Code Config (Skill)](system-prompts/skill-update-claude-code-config.md)
 
-Skill for modifying Claude Code configuration files (settings.json) including hooks, permissions, and environment variables.
+Skill for modifying Claude Code configuration files (settings.json) to add hooks, permissions, environment variables, and MCP servers.
 
-#### 5.2.7 [Debugging (Skill)](system-prompts/skill-debugging.md)
+##### 6.2.2.8 [update-config (7-step verification flow) [Skill]](system-prompts/skill-update-config-7-step-verification-flow.md)
 
-Skill for debugging issues in Claude Code sessions by analyzing debug logs, identifying errors, and suggesting fixes.
+Seven-step process for constructing and verifying hooks in Claude Code configuration, ensuring they work correctly through dedup checks, pipe-testing, and live proof.
 
-### 5.3 Scheduling & Cron Jobs
+##### 6.2.2.9 [/init CLAUDE.md and skill setup (new version) [Skill]](system-prompts/skill-init-claudemd-and-skill-setup-new-version.md)
 
-Cron-based job scheduling with timezone awareness, deterministic jitter, and support for both one-shot and recurring tasks. Enables remote Claude Code agents to execute on scheduled triggers via Anthropic cloud API with configurable environment and MCP connector selection.
+Comprehensive onboarding flow for setting up CLAUDE.md, skills, and hooks in a repository through codebase exploration, user interviews, and iterative proposal refinement.
 
-#### 5.3.1 [CronCreate (Tool Description)](system-prompts/tool-description-croncreate.md)
+##### 6.2.2.10 [Create verifier skills (Skill)](system-prompts/skill-create-verifier-skills.md)
 
-Schedules one-shot or recurring cron-based jobs using standard 5-field cron syntax in the user's local timezone. Provides guidance on avoiding :00 and :30 minute marks to reduce API load spikes, applies deterministic jitter to job execution, and auto-expires recurring tasks after a configurable number of days.
+Multi-phase workflow for creating verifier skills that automatically verify code changes via Playwright (web UI), Tmux (CLI), or HTTP (API) testing.
 
-#### 5.3.2 [/schedule slash command (Agent Prompt)](system-prompts/agent-prompt-schedule-slash-command.md)
+##### 6.2.2.11 [Skillify Current Session (System Prompt)](system-prompts/system-prompt-skillify-current-session.md)
 
-Guides users through scheduling remote Claude Code agents on cron triggers via Anthropic cloud API. Supports creating, updating, listing, and running isolated remote sessions with MCP connectors, environment selection, and timezone-aware cron scheduling.
+Guides conversion of a session into a reusable skill through four-round user interviews covering confirmation, details, step breakdown, and final questions, producing a SKILL.md file with frontmatter, inputs, goals, and annotated steps.
 
-#### 5.3.3 [Sleep (Tool Description)](system-prompts/tool-description-sleep.md)
+### 6.3 Lifecycle Hooks, Scheduling & IDE Context
 
-Waits for a specified duration with early wake capability on user input, supporting concurrent execution with other tools and periodic check-ins via tick prompts.
+Event-driven hooks at lifecycle points, time-based cron scheduling for local and remote agents, and IDE editor context awareness.
 
-### 5.4 GitHub Integration & CI/CD
+#### 6.3.1 Hook System & Lifecycle Automation
 
-Automation templates for integrating Claude into GitHub workflows. Enables triggering Claude Code through mentions in issues and pull requests, with security considerations and setup guidance for seamless CI/CD integration.
+Event-driven hook system executes commands, prompts, or agents at lifecycle points (PreToolUse, PostToolUse, SessionStart) with tool-specific matchers and conditional logic. Supports blocking execution, error handling, and structured verification of task completion.
 
-#### 5.4.1 [GitHub Actions workflow for @claude mentions (Data)](system-prompts/data-github-actions-workflow-for-claude-mentions.md)
+##### 6.3.1.1 [Hooks Configuration (System Prompt)](system-prompts/system-prompt-hooks-configuration.md)
 
-GitHub Actions workflow template that triggers Claude Code when @claude is mentioned in issues, PRs, or comments.
+Documents hook configuration system for Claude Code that runs commands, prompts, or agents at lifecycle events like PreToolUse, PostToolUse, and SessionStart, with matchers for specific tools and JSON output control.
 
-#### 5.4.2 [GitHub App installation PR description (Data)](system-prompts/data-github-app-installation-pr-description.md)
+##### 6.3.1.2 [Hook additional context (System Reminder)](system-prompts/system-reminder-hook-additional-context.md)
 
-PR template describing Claude Code GitHub App integration, its capabilities, security model, and how to use it after merge.
+Delivers additional context provided by a hook command.
+
+##### 6.3.1.3 [Hook blocking error (System Reminder)](system-prompts/system-reminder-hook-blocking-error.md)
+
+Reports an error from a blocking hook command execution.
+
+##### 6.3.1.4 [Hook stopped continuation prefix (System Reminder)](system-prompts/system-reminder-hook-stopped-continuation-prefix.md)
+
+Prefix template for continuation messages when a hook stops execution.
+
+##### 6.3.1.5 [Hook stopped continuation (System Reminder)](system-prompts/system-reminder-hook-stopped-continuation.md)
+
+Notifies Claude when a hook halts execution and provides the associated message.
+
+##### 6.3.1.6 [Hook success (System Reminder)](system-prompts/system-reminder-hook-success.md)
+
+Delivers a success message from a completed hook command.
+
+##### 6.3.1.7 [Hook condition evaluator (Agent Prompt)](system-prompts/agent-prompt-hook-condition-evaluator.md)
+
+Evaluates hook conditions in Claude Code and returns JSON indicating success or failure with optional reason.
+
+##### 6.3.1.8 [Agent Hook (Agent Prompt)](system-prompts/agent-prompt-agent-hook.md)
+
+Verifies that an agent completed its assigned plan by analyzing conversation transcripts and codebase state, returning structured JSON output indicating success or failure with reasons.
+
+#### 6.3.2 Scheduling & Cron Job Management
+
+Time-based automation for both local and remote agent execution, supporting one-shot and recurring triggers with timezone awareness and cloud API integration.
+
+##### 6.3.2.1 [CronCreate (Tool Description)](system-prompts/tool-description-croncreate.md)
+
+Schedules one-shot or recurring cron-based jobs using standard 5-field cron syntax in local timezone, with guidance on avoiding :00/:30 minute marks for load distribution and optional durability for persistence across sessions.
+
+##### 6.3.2.2 [/schedule slash command (Agent Prompt)](system-prompts/agent-prompt-schedule-slash-command.md)
+
+Guides users through scheduling, updating, listing, and running remote Claude Code agents on cron triggers via Anthropic cloud API, handling environment selection, MCP connectors, timezone conversion, and trigger management.
+
+#### 6.3.3 IDE Integration & Editor Context
+
+Provides Claude with awareness of user selections and editor state within the IDE environment.
+
+##### 6.3.3.1 [Lines selected in IDE (System Reminder)](system-prompts/system-reminder-lines-selected-in-ide.md)
+
+Notifies Claude of line ranges selected by the user in the IDE editor.
 
 ---
 
-## 6. Codebase Navigation, Git & Workspace
+## 7. Security, Communication & User Interaction
 
-Tools and workflows for exploring codebases, managing version control, discovering MCP tools, and organizing the development workspace and documentation.
+Security monitoring, vulnerability assessment, output formatting standards, user clarification tools, analytics, and educational workflows that shape how Claude interacts with and protects users.
 
-### 6.1 Codebase Exploration & Documentation
+### 7.1 Security Monitoring & Vulnerability Analysis
 
-Read-only codebase navigation using glob patterns, regex, and LSP integration, plus generating CLAUDE.md documentation to bootstrap future instances with architectural context.
+Frameworks for evaluating code safety and autonomous agent actions through threat modeling, vulnerability assessment, and permission controls. Covers prompt injection prevention, destructive operation safeguards, malware analysis, and reversibility-based risk evaluation.
 
-#### 6.1.1 Codebase Exploration & Analysis
+#### 7.1.1 [Security monitor for autonomous agent actions (first part) [Agent Prompt]](system-prompts/agent-prompt-security-monitor-for-autonomous-agent-actions-first-part.md)
 
-Read-only codebase navigation and analysis using glob patterns, regex search, and Language Server Protocol integration for code intelligence. Generates CLAUDE.md documentation and project-specific patterns to bootstrap future Claude Code instances with architectural context.
+Instructs Claude to act as a security monitor evaluating autonomous coding agent actions against block/allow rules to prevent prompt injection, scope creep, and accidental damage in shared infrastructure environments.
 
-##### 6.1.1.1 [Explore (Agent Prompt)](system-prompts/agent-prompt-explore.md)
+#### 7.1.2 [Security monitor for autonomous agent actions (second part) [Agent Prompt]](system-prompts/agent-prompt-security-monitor-for-autonomous-agent-actions-second-part.md)
 
-File search specialist for Claude Code that rapidly navigates codebases using glob patterns, regex search, and file reading in strict read-only mode. Prohibits all file modifications and state changes.
+Defines environment context, comprehensive block rules, and allow exceptions governing which tool actions autonomous agents may perform, covering git operations, cloud storage, deployments, credentials, and data exfiltration.
 
-##### 6.1.1.2 [Explore strengths and guidelines (Agent Prompt)](system-prompts/agent-prompt-explore-strengths-and-guidelines.md)
+#### 7.1.3 [/security-review slash command (Agent Prompt)](system-prompts/agent-prompt-security-review-slash-command.md)
 
-Defines strengths and behavioral guidelines for the Explore subagent, emphasizing read-only codebase search, multi-file analysis, and thoroughness while prohibiting file creation and modification.
+Comprehensive security review prompt for analyzing code changes with focus on exploitable vulnerabilities, using multi-phase analysis to identify injection flaws, authentication bypasses, cryptographic weaknesses, and data exposure issues.
 
-##### 6.1.1.3 [LSP (Tool Description)](system-prompts/tool-description-lsp.md)
+#### 7.1.4 [Malware analysis after Read tool call (System Reminder)](system-prompts/system-reminder-malware-analysis-after-read-tool-call.md)
 
-Interacts with Language Server Protocol servers to provide code intelligence features including symbol navigation, references, hover information, call hierarchies, and implementations across the workspace.
+Instructs Claude to analyze malware when encountered but refuse to improve or augment malicious code.
 
-##### 6.1.1.4 [CLAUDE.md creation (Agent Prompt)](system-prompts/agent-prompt-claudemd-creation.md)
+#### 7.1.5 [Censoring assistance with malicious activities (System Prompt)](system-prompts/system-prompt-censoring-assistance-with-malicious-activities.md)
 
-Analyzes codebases to create or improve CLAUDE.md documentation files containing build/test commands, high-level architecture, and project-specific patterns for future Claude Code instances.
+Guidelines for assisting with authorized security testing, defensive security, CTF challenges, and educational contexts while refusing destructive techniques, DoS attacks, and detection evasion for malicious purposes.
 
-##### 6.1.1.5 [/init CLAUDE.md and skill setup (new version) [Skill]](system-prompts/skill-init-claudemd-and-skill-setup-new-version.md)
+#### 7.1.6 [Executing actions with care (System Prompt)](system-prompts/system-prompt-executing-actions-with-care.md)
 
-Comprehensive onboarding flow for setting up CLAUDE.md, skills, and hooks via codebase exploration, user interviews, and iterative proposal refinement.
+Establishes a framework for executing actions safely by evaluating reversibility and blast radius, requiring user confirmation for destructive or hard-to-reverse operations like force-pushes, deletions, and shared-system changes while permitting local, reversible actions freely.
 
-#### 6.1.2 Documentation & Knowledge Management
+### 7.2 Output Formatting & User Communication
 
-Maintains and evolves project documentation and user guidance through architecture-focused updates and intelligent suggestion generation. Provides Claude Code users with contextual help, official documentation retrieval, and next-action prediction based on conversation history.
+Standards for concise, direct responses with precise code references, clarification mechanisms, visual previews for comparing options, and educational collaborative workflows.
 
-##### 6.1.2.1 [Update Magic Docs (Agent Prompt)](system-prompts/agent-prompt-update-magic-docs.md)
+#### 7.2.1 Output Style, Formatting & Communication
 
-Prompt for updating Magic Doc files with new learnings and insights from conversations. Emphasizes terseness, architecture focus, and in-place updates while preserving document headers and structure.
+Governs how Claude communicates with users through concise, direct output with precise code references and structured messaging. Establishes response patterns for different contexts—sub-agent reporting versus standalone communication—while maintaining information density and clarity.
 
-##### 6.1.2.2 [Prompt Suggestion Generator v2 (Agent Prompt)](system-prompts/agent-prompt-prompt-suggestion-generator-v2.md)
+##### 7.2.1.1 [Tone and style (code references) [System Prompt]](system-prompts/system-prompt-tone-and-style-code-references.md)
 
-Predicts what users would naturally type next into Claude Code based on recent context, avoiding evaluative language and Claude-voice suggestions.
+Requires including file_path:line_number patterns when referencing code to help users navigate to source locations.
 
-##### 6.1.2.3 [Claude guide agent (Agent Prompt)](system-prompts/agent-prompt-claude-guide-agent.md)
+##### 7.2.1.2 [Tone and style (concise output — short) [System Prompt]](system-prompts/system-prompt-tone-and-style-concise-output-short.md)
 
-Helps users understand and use Claude Code, Claude Agent SDK, and Claude API by fetching official documentation, providing actionable guidance, and referencing project-specific context. Covers installation, hooks, skills, MCP servers, agent configuration, and API features.
+Instructs responses to be short and concise.
 
-### 6.2 Git Operations & Version Control
+##### 7.2.1.3 [Output efficiency (System Prompt)](system-prompts/system-prompt-output-efficiency.md)
 
-Manages version control workflows including safe commit creation, pull request automation, and isolated worktree sessions. Enforces safety protocols against destructive operations, hook skipping, and unauthorized commits while supporting rapid commit and PR creation with pre-populated context.
+Instructs Claude to be concise and direct, leading with answers over reasoning, skipping filler, and focusing text output on decisions, status updates, and blockers.
 
-#### 6.2.1 [Bash (git — avoid destructive ops) [Tool Description]](system-prompts/tool-description-bash-git-avoid-destructive-ops.md)
+##### 7.2.1.4 [Output style active (System Reminder)](system-prompts/system-reminder-output-style-active.md)
 
-Advises considering safer alternatives before running destructive git operations like reset --hard, push --force, or checkout --.
+Reminds Claude that a specific output style is active and to follow its guidelines.
 
-#### 6.2.2 [Bash (Git commit and PR creation instructions) [Tool Description]](system-prompts/tool-description-bash-git-commit-and-pr-creation-instructions.md)
+##### 7.2.1.5 [How to use the SendUserMessage tool (System Prompt)](system-prompts/system-prompt-how-to-use-the-sendusermessage-tool.md)
 
-Comprehensive guide for creating git commits and GitHub pull requests, covering git safety protocols, commit message drafting, hook handling, and PR creation with gh command, including warnings against destructive operations and unauthorized commits.
+Instructs Claude to route all user-facing replies through SendUserMessage, with guidance on acknowledgment patterns, checkpoints for longer work, and keeping messages concise and informative.
 
-#### 6.2.3 [Bash (git — never skip hooks) [Tool Description]](system-prompts/tool-description-bash-git-never-skip-hooks.md)
+##### 7.2.1.6 [SendMessageTool (non-agent-teams) [Tool Description]](system-prompts/tool-description-sendmessagetool-non-agent-teams.md)
 
-Prohibits skipping hooks or bypassing signing unless explicitly requested by the user, and directs fixing underlying issues when hooks fail.
+Sends markdown messages to users with optional file attachments, using status labels to indicate intent (normal or proactive).
 
-#### 6.2.4 [Bash (git — prefer new commits) [Tool Description]](system-prompts/tool-description-bash-git-prefer-new-commits.md)
+##### 7.2.1.7 [Common suffix (response format) [Agent Prompt]](system-prompts/agent-prompt-common-suffix-response-format.md)
 
-Directs preferring creation of new commits over amending existing commits.
+Appends response format instructions to agent prompts, switching between concise sub-agent reporting and detailed standalone writeups based on an IS_SUBAGENT flag.
 
-#### 6.2.5 [Git status (System Prompt)](system-prompts/system-prompt-git-status.md)
+#### 7.2.2 User Interaction & Clarification Tools
 
-Displays the current git branch, main branch, status, and recent commits as a snapshot at conversation start.
+Mechanisms for gathering user input, clarifying ambiguous instructions, and presenting implementation choices during execution. Includes visual preview capabilities for comparing options side-by-side and predictive suggestion of next steps based on conversation context.
 
-#### 6.2.6 [Quick git commit (Agent Prompt)](system-prompts/agent-prompt-quick-git-commit.md)
+##### 7.2.2.1 [AskUserQuestion (Tool Description)](system-prompts/tool-description-askuserquestion.md)
 
-Creates a single git commit with pre-populated context from git status and diff, drafting messages aligned with repository style while enforcing safety protocols against amending, skipping hooks, or committing secrets.
+Describes the AskUserQuestion tool for gathering user preferences, clarifying ambiguous instructions, and offering implementation choices during execution, with special guidance for plan mode interactions.
 
-#### 6.2.7 [Quick PR creation (Agent Prompt)](system-prompts/agent-prompt-quick-pr-creation.md)
+##### 7.2.2.2 [AskUserQuestion (preview field) [Tool Description]](system-prompts/tool-description-askuserquestion-preview-field.md)
 
-Creates commits and pull requests with pre-populated context, enforcing git safety protocols, generating concise PR titles, and providing test plans. Handles branch creation, pushing, and PR updates in a single operation.
+Explains how to use the optional preview field in AskUserQuestion single-select options to display visual artifacts like UI mockups, code snippets, and diagrams as self-contained HTML.
 
-#### 6.2.8 [EnterWorktree (Tool Description)](system-prompts/tool-description-enterworktree.md)
+##### 7.2.2.3 [Option previewer (System Prompt)](system-prompts/system-prompt-option-previewer.md)
 
-Creates an isolated git worktree and switches the session into it when explicitly requested by the user. Supports both git repositories and VCS-agnostic workflows via hooks, with optional custom naming.
+Enables side-by-side preview rendering for UI options using optional preview field for ASCII mockups, code snippets, diagrams, and configuration examples in monospace boxes.
 
-#### 6.2.9 [ExitWorktree (Tool Description)](system-prompts/tool-description-exitworktree.md)
+##### 7.2.2.4 [Prompt Suggestion Generator v2 (Agent Prompt)](system-prompts/agent-prompt-prompt-suggestion-generator-v2.md)
 
-Exits a worktree session created by EnterWorktree and returns to the original directory. Supports keeping or removing the worktree with safeguards against discarding uncommitted changes, and clears session state caches.
+Predicts what users would naturally type next into Claude Code based on recent messages, avoiding evaluative or Claude-voice suggestions and staying silent when the next step is unclear.
 
-### 6.3 Workspace & File Management
+#### 7.2.3 Learning Mode & Educational Workflows
 
-Manages Claude Code's execution environment through session-isolated file handling, configuration modes, and development workflows. Covers temporary file organization, minimal operational modes, notebook editing, and standardized implementation procedures with testing and version control integration.
+Collaborative software engineering approach where humans contribute to design decisions and code sections marked with TODO(human) annotations. Provides educational context around implementation choices and codebase patterns while tracking progress through task lists.
 
-#### 6.3.1 [Scratchpad directory (System Prompt)](system-prompts/system-prompt-scratchpad-directory.md)
+##### 7.2.3.1 [Learning mode (System Prompt)](system-prompts/system-prompt-learning-mode.md)
 
-Directs Claude to use a session-specific scratchpad directory for all temporary files instead of system temp directories.
+Defines learning mode as collaborative software engineering with human contributions on design decisions, using TodoList tracking and Learn by Doing requests with TODO(human) markers for 20+ line code sections.
 
-#### 6.3.2 [Minimal mode (System Prompt)](system-prompts/system-prompt-minimal-mode.md)
+##### 7.2.3.2 [Learning mode (insights) [System Prompt]](system-prompts/system-prompt-learning-mode-insights.md)
 
-Minimal mode disables hooks, LSP, plugins, auto-memory, and background features, requiring explicit context via CLI flags for authentication and configuration.
+Provides educational insights before and after code writing in learning mode, focusing on implementation choices and codebase-specific patterns.
 
-#### 6.3.3 [NotebookEdit (Tool Description)](system-prompts/tool-description-notebookedit.md)
+### 7.3 Analytics, Research & Knowledge Management
 
-Edits Jupyter notebook cells by completely replacing cell contents, supporting insertion and deletion of cells with 0-indexed cell numbering.
+Session usage analytics for workflow improvement, web content summarization and research tools, resource budget tracking, and documentation maintenance.
 
-#### 6.3.4 [Worker instructions (System Prompt)](system-prompts/system-prompt-worker-instructions.md)
+#### 7.3.1 Session & Usage Insights Analytics
 
-Defines a five-step workflow for workers implementing changes: simplify code, run unit tests, perform end-to-end testing, commit and push changes, and report the PR URL or reason for failure.
+Analyzes Claude Code session data to extract structured insights about usage patterns, friction points, and opportunities for workflow improvement. Generates actionable recommendations including feature suggestions and CLAUDE.md guidance, while supporting discovery of relevant sessions through metadata and semantic search.
 
-#### 6.3.5 [Status line setup (Agent Prompt)](system-prompts/agent-prompt-status-line-setup.md)
+##### 7.3.1.1 [Insights at a glance summary (System Prompt)](system-prompts/system-prompt-insights-at-a-glance-summary.md)
 
-System prompt for configuring Claude Code status line display. Converts shell PS1 configurations to status line commands, handles ANSI colors, and updates settings.json with command-based status line configuration.
+Generates a four-part usage insights summary covering what's working, hindrances, quick wins, and ambitious workflows for improved Claude Code usage.
 
-### 6.4 MCP Resources & Tool Discovery
+##### 7.3.1.2 [Insights friction analysis (System Prompt)](system-prompts/system-prompt-insights-friction-analysis.md)
 
-Mechanisms for discovering and invoking tools beyond initial prompt context through schema fetching and deferred tool resolution. Handles MCP resource state notifications and enables dynamic tool access via keyword or name-based queries.
+Analyzes Claude Code usage data to identify and categorize friction patterns with specific examples and actionable improvements.
 
-#### 6.4.1 [MCP resource no content (System Reminder)](system-prompts/system-reminder-mcp-resource-no-content.md)
+##### 7.3.1.3 [Insights on the horizon (System Prompt)](system-prompts/system-prompt-insights-on-the-horizon.md)
 
-Notification that an MCP resource exists but contains no content.
+Identifies ambitious future workflows and autonomous AI-assisted development opportunities based on usage data analysis.
 
-#### 6.4.2 [MCP resource no displayable content (System Reminder)](system-prompts/system-reminder-mcp-resource-no-displayable-content.md)
+##### 7.3.1.4 [Insights session facets extraction (System Prompt)](system-prompts/system-prompt-insights-session-facets-extraction.md)
 
-Notification that an MCP resource has content but it cannot be displayed.
+Extracts structured facets from session transcripts including goal categories, user satisfaction signals, and friction types with strict guidelines for counting only explicit user requests and signals.
 
-#### 6.4.3 [ToolSearch (second part) [Tool Description]](system-prompts/tool-description-toolsearch-second-part.md)
+##### 7.3.1.5 [Insights suggestions (System Prompt)](system-prompts/system-prompt-insights-suggestions.md)
 
-Fetches complete JSONSchema definitions for deferred tools using keyword or name-based queries, enabling invocation of tools not initially listed in the prompt.
+Generates actionable improvement suggestions including CLAUDE.md additions, feature recommendations (MCP servers, custom skills, hooks, headless mode, task agents), and usage pattern guidance based on session analysis.
 
----
+##### 7.3.1.6 [Session Search Assistant (Agent Prompt)](system-prompts/agent-prompt-session-search-assistant.md)
 
-## 7. API, SDK Reference & User Interaction
+Agent prompt for finding relevant sessions based on user queries, prioritizing exact tag matches and semantic similarity across session metadata.
 
-Official SDK documentation for building with Claude across multiple languages, agent SDK patterns, core API capabilities, and user-facing interaction design within Claude Code.
+#### 7.3.2 Web Content Summarization & Research
 
-### 7.1 Claude API Reference — Language SDKs
+Extracts and synthesizes information from web sources with character-limited quotes and licensing respect, while providing guided access to Claude documentation and project-specific resources for users learning the platform.
 
-Language-specific SDK documentation for building with Claude across Python, TypeScript, Go, Java, C#, Ruby, PHP, and raw HTTP. Each reference covers client setup, streaming, tool use, advanced features like extended thinking and prompt caching, and cost optimization patterns.
+##### 7.3.2.1 [WebFetch summarizer (Agent Prompt)](system-prompts/agent-prompt-webfetch-summarizer.md)
 
-#### 7.1.1 [Claude API reference — Python (Data)](system-prompts/data-claude-api-reference-python.md)
+Prompt for agent that summarizes verbose web content, enforcing character limits on quotes and respecting licensing for untrusted domains.
 
-Python SDK reference covering installation, client initialization, basic requests, system prompts, vision, prompt caching, extended thinking, error handling, multi-turn conversations, compaction, and cost optimization strategies.
+##### 7.3.2.2 [Claude guide agent (Agent Prompt)](system-prompts/agent-prompt-claude-guide-agent.md)
 
-#### 7.1.2 [Claude API reference — TypeScript (Data)](system-prompts/data-claude-api-reference-typescript.md)
+Helps users understand and use Claude Code, Claude Agent SDK, and Claude API by fetching official documentation, providing actionable guidance, and referencing project-specific files like CLAUDE.md.
 
-TypeScript SDK reference covering installation, client initialization, basic requests, system prompts, vision, prompt caching, extended thinking, error handling, multi-turn conversations, compaction, and cost optimization.
+#### 7.3.3 Resource Monitoring & Budget Tracking
 
-#### 7.1.3 [Claude API reference — Go (Data)](system-prompts/data-claude-api-reference-go.md)
+Real-time visibility into consumption metrics across token and financial dimensions, enabling users to track quota utilization against allocated limits.
 
-Go SDK reference covering client initialization, basic requests, streaming, tool use with BetaToolRunner and manual loops, thinking, server-side tools, PDF input, files API, and context editing.
+##### 7.3.3.1 [Token usage (System Reminder)](system-prompts/system-reminder-token-usage.md)
 
-#### 7.1.4 [Claude API reference — Java (Data)](system-prompts/data-claude-api-reference-java.md)
+Displays current token usage statistics including used, total, and remaining tokens.
 
-Java SDK reference including client initialization, basic requests, streaming, thinking, tool use with BetaToolRunner and annotated classes, effort parameter, prompt caching, token counting, structured output, and server-side tools.
+##### 7.3.3.2 [USD budget (System Reminder)](system-prompts/system-reminder-usd-budget.md)
 
-#### 7.1.5 [Claude API reference — C# (Data)](system-prompts/data-claude-api-reference-c.md)
+Displays current USD budget statistics including spent, total, and remaining amounts.
 
-C# SDK reference covering client initialization, basic requests, streaming, thinking, tool use with manual loops, context editing, effort parameter, prompt caching, token counting, structured output, and server-side tools.
+#### 7.3.4 Documentation & Knowledge Base Management
 
-#### 7.1.6 [Claude API reference — Ruby (Data)](system-prompts/data-claude-api-reference-ruby.md)
+Continuous refinement of architectural and procedural knowledge, integrating new learnings while pruning obsolete information to maintain documentation accuracy.
 
-Ruby SDK reference covering client initialization, basic requests, streaming, and tool use with beta tool runner and manual loops.
+##### 7.3.4.1 [Update Magic Docs (Agent Prompt)](system-prompts/agent-prompt-update-magic-docs.md)
 
-#### 7.1.7 [Claude API reference — PHP (Data)](system-prompts/data-claude-api-reference-php.md)
-
-PHP SDK reference covering client initialization for Anthropic, Bedrock, Vertex AI, and Foundry, basic requests, streaming, tool use with manual loops, extended thinking, and beta features.
-
-#### 7.1.8 [Claude API reference — cURL (Data)](system-prompts/data-claude-api-reference-curl.md)
-
-Raw HTTP API reference for Claude using cURL with examples for basic requests, streaming, tool use, and extended thinking. Includes jq parsing guidance and required headers.
-
-#### 7.1.9 [Claude model catalog (Data)](system-prompts/data-claude-model-catalog.md)
-
-Catalog of current and legacy Claude models with exact model IDs, aliases, context windows, max output tokens, and pricing. Includes programmatic model discovery via Models API for live capability data.
-
-### 7.2 Agent SDK Reference & Patterns
-
-Comprehensive guides for building autonomous agents with the Agent SDK across Python and TypeScript, covering tool integration, permission models, MCP server connectivity, hooks, subagents, and session management. Includes practical patterns and architectural guidance for LLM application development.
-
-#### 7.2.1 [Agent SDK reference — Python (Data)](system-prompts/data-agent-sdk-reference-python.md)
-
-Comprehensive Python Agent SDK reference covering installation, quick start, built-in tools, permission system, MCP support, hooks, subagents, message types, session history, and best practices.
-
-#### 7.2.2 [Agent SDK reference — TypeScript (Data)](system-prompts/data-agent-sdk-reference-typescript.md)
-
-Comprehensive TypeScript Agent SDK reference including installation, quick start, tools, permission modes, MCP integration, hooks, subagents, message types, session management, and best practices.
-
-#### 7.2.3 [Agent SDK patterns — Python (Data)](system-prompts/data-agent-sdk-patterns-python.md)
-
-Python Agent SDK patterns including basic agents, custom tools via MCP, hooks, subagents, MCP integration, permission modes, error recovery, and session resumption with code examples.
-
-#### 7.2.4 [Agent SDK patterns — TypeScript (Data)](system-prompts/data-agent-sdk-patterns-typescript.md)
-
-TypeScript Agent SDK patterns covering basic agents, hooks, subagents, MCP server integration, and session resumption with practical code examples.
-
-#### 7.2.5 [Build with Claude API (Skill)](system-prompts/skill-build-with-claude-api.md)
-
-Main routing guide for building LLM applications with Claude, covering language detection, surface selection, architecture, models, thinking, and common pitfalls.
-
-#### 7.2.6 [Build with Claude API (reference guide) [Skill]](system-prompts/skill-build-with-claude-api-reference-guide.md)
-
-Template for presenting language-specific API reference documentation with quick task navigation and file path indicators.
-
-### 7.3 API Features — Tool Use, Streaming & Files
-
-Core API capabilities for agentic workflows, real-time response handling, and file processing. Covers tool definition and execution patterns, streaming content delivery with event handling, and file upload/management for document and image processing. Includes language-specific references (Python/TypeScript), batch processing for cost optimization, error handling patterns, and live documentation sources.
-
-#### 7.3.1 [Tool use concepts (Data)](system-prompts/data-tool-use-concepts.md)
-
-Conceptual foundations of tool use covering tool definitions, tool choice, tool runner vs manual loops, server-side tools, structured outputs, and best practices.
-
-#### 7.3.2 [Tool use reference — Python (Data)](system-prompts/data-tool-use-reference-python.md)
-
-Python tool use reference with tool runner, manual agentic loop, MCP conversion, code execution, memory tool, and structured outputs.
-
-#### 7.3.3 [Tool use reference — TypeScript (Data)](system-prompts/data-tool-use-reference-typescript.md)
-
-TypeScript tool use reference covering tool runner with Zod, manual agentic loop with streaming, code execution, memory tool, and structured outputs.
-
-#### 7.3.4 [Streaming reference — Python (Data)](system-prompts/data-streaming-reference-python.md)
-
-Python streaming reference covering sync/async streaming, handling text/thinking/tool-use content, progress tracking, and error handling.
-
-#### 7.3.5 [Streaming reference — TypeScript (Data)](system-prompts/data-streaming-reference-typescript.md)
-
-TypeScript streaming reference with quick start, content-type handling, tool-use streaming, final-message collection, and event types.
-
-#### 7.3.6 [Files API reference — Python (Data)](system-prompts/data-files-api-reference-python.md)
-
-Python Files API reference covering file upload, usage in messages for PDFs and images, file management (list, retrieve, delete, download), and end-to-end example with persistent file references.
-
-#### 7.3.7 [Files API reference — TypeScript (Data)](system-prompts/data-files-api-reference-typescript.md)
-
-TypeScript reference for uploading files, managing file storage, and using files in Messages API requests with code examples for all operations.
-
-#### 7.3.8 [Message Batches API reference — Python (Data)](system-prompts/data-message-batches-api-reference-python.md)
-
-Python reference for asynchronous batch processing of Messages API requests at 50% cost, including creation, polling, result retrieval, and caching.
-
-#### 7.3.9 [HTTP error codes reference (Data)](system-prompts/data-http-error-codes-reference.md)
-
-Comprehensive reference for Claude API HTTP error codes with causes, fixes, and typed exception handling patterns for Python and TypeScript SDKs.
-
-#### 7.3.10 [Live documentation sources (Data)](system-prompts/data-live-documentation-sources.md)
-
-WebFetch URLs for fetching current Claude API and Agent SDK documentation, models, pricing, and features from official sources.
-
-### 7.4 User Interaction & Communication
-
-Real-time user input during execution through structured questioning and visual previews, plus directives for concise and direct output style with actionable messaging.
-
-#### 7.4.1 User Interaction & Question Asking
-
-Facilitates real-time user input during execution through structured questioning, visual previews, and agent invocation. Handles clarification, decision-gathering, and side questions while respecting tool availability constraints and plan-mode visibility.
-
-##### 7.4.1.1 [AskUserQuestion (Tool Description)](system-prompts/tool-description-askuserquestion.md)
-
-Describes the AskUserQuestion tool for gathering user preferences, clarifying ambiguous instructions, and obtaining decisions during execution, with special guidance on plan-mode usage and avoiding plan-visibility confusion.
-
-##### 7.4.1.2 [AskUserQuestion (preview field) [Tool Description]](system-prompts/tool-description-askuserquestion-preview-field.md)
-
-Instructs use of the optional preview field on single-select question options to display self-contained HTML artifacts like UI mockups, code snippets, and visual comparisons.
-
-##### 7.4.1.3 [Option previewer (System Prompt)](system-prompts/system-prompt-option-previewer.md)
-
-Enables side-by-side preview rendering for UI options using optional preview field with ASCII mockups, code snippets, or diagrams in monospace boxes.
-
-##### 7.4.1.4 [/btw side question (System Reminder)](system-prompts/system-reminder-btw-side-question.md)
-
-Instructs Claude that a side question is being asked by a lightweight agent with no tools available, requiring a direct answer based only on conversation context without offering to take actions or investigate further.
-
-##### 7.4.1.5 [Agent mention (System Reminder)](system-prompts/system-reminder-agent-mention.md)
-
-Notifies Claude that the user wants to invoke a specific agent and instructs Claude to invoke it with required context.
-
-#### 7.4.2 Output Style, Tone & Communication
-
-Directives for concise, direct communication with precise code references and actionable messaging. Establishes patterns for user-facing replies through dedicated messaging tools, emphasizing brevity, clarity, and efficient information delivery.
-
-##### 7.4.2.1 [Tone and style (code references) [System Prompt]](system-prompts/system-prompt-tone-and-style-code-references.md)
-
-Instructs Claude to include file_path:line_number when referencing code for easy navigation.
-
-##### 7.4.2.2 [Tone and style (concise output — short) [System Prompt]](system-prompts/system-prompt-tone-and-style-concise-output-short.md)
-
-Instructs Claude to keep responses short and concise.
-
-##### 7.4.2.3 [Output efficiency (System Prompt)](system-prompts/system-prompt-output-efficiency.md)
-
-Instructs Claude to be concise and direct, leading with answers over reasoning and limiting output to decisions, status updates, and blockers.
-
-##### 7.4.2.4 [How to use the SendUserMessage tool (System Prompt)](system-prompts/system-prompt-how-to-use-the-sendusermessage-tool.md)
-
-Instructs Claude to send all user-facing replies through SendUserMessage, with guidance on acknowledgments, checkpoints, and keeping messages concise and actionable.
-
-##### 7.4.2.5 [SendMessageTool (non-agent-teams) [Tool Description]](system-prompts/tool-description-sendmessagetool-non-agent-teams.md)
-
-Sends messages to users with markdown support and file attachments, using status labels to distinguish between direct replies and proactive notifications.
-
-##### 7.4.2.6 [Output style active (System Reminder)](system-prompts/system-reminder-output-style-active.md)
-
-Reminder that a specific output style is active and its guidelines should be followed.
-
-##### 7.4.2.7 [Bash command description writer (Agent Prompt)](system-prompts/agent-prompt-bash-command-description-writer.md)
-
-Generates clear, concise active-voice descriptions of bash commands, keeping simple commands brief while adding context for complex piped or flagged commands.
-
-#### 7.4.3 Learning Mode & Educational Features
-
-Transforms task execution into collaborative learning by requesting human input on design decisions while handling routine implementation, paired with contextual educational insights about codebase-specific choices.
-
-##### 7.4.3.1 [Learning mode (System Prompt)](system-prompts/system-prompt-learning-mode.md)
-
-Enables collaborative learning by requesting human contributions for design decisions and business logic while handling routine implementation, with TodoList integration and structured Learn by Doing requests.
-
-##### 7.4.3.2 [Learning mode (insights) [System Prompt]](system-prompts/system-prompt-learning-mode-insights.md)
-
-Provides brief educational insights before and after code changes, focusing on implementation choices specific to the codebase.
+Prompt for updating Magic Docs with new learnings and insights, maintaining current state while removing outdated information and preserving document structure.
