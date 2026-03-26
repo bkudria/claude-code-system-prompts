@@ -4,6 +4,38 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.84](https://github.com/Piebald-AI/claude-code-system-prompts/commit/a3c16f4)
+
+_+325 tokens_
+
+- **NEW:** Agent Prompt: General purpose — System prompt for the general-purpose subagent that searches, analyzes, and edits code across a codebase while reporting findings concisely to the caller.
+- **NEW:** System Prompt: Avoiding Unnecessary Sleep Commands (part of PowerShell tool description) — Guidelines for avoiding unnecessary sleep commands in PowerShell scripts, including alternatives for waiting and notification.
+- **NEW:** Tool Description: PowerShell — Describes the PowerShell command execution tool with syntax guidance, timeout settings, and instructions to prefer specialized tools over PowerShell for file operations.
+- **NEW:** Tool Description: request_teach_access (part of teach mode) — Describes a tool that requests permission to guide the user through a task step-by-step using fullscreen tooltip overlays instead of direct access.
+- **REMOVED:** Agent Prompt: Common suffix (response format) — Removed standalone response format suffix; behavior now integrated into agent thread notes and individual agent prompts.
+- **REMOVED:** Agent Prompt: Explore strengths and guidelines — Removed as a separate prompt; strengths, guidelines, and agent metadata merged into the main Explore agent prompt.
+- **REMOVED:** Agent Prompt: /review slash command (remote) — Removed remote version of the /review slash command.
+- **REMOVED:** System Prompt: Analysis instructions for full compact prompt (full conversation) — Removed; analysis instructions now inlined directly into the conversation summarization prompt.
+- **REMOVED:** System Prompt: Analysis instructions for full compact prompt (minimal and via feature flag) — Removed; lean analysis instructions no longer a separate prompt.
+- **REMOVED:** System Prompt: Analysis instructions for full compact prompt (recent messages) — Removed; analysis instructions now inlined directly into the recent message summarization prompt.
+- **REMOVED:** System Prompt: Doing tasks (avoid over-engineering) — Removed the "avoid over-engineering" guidance.
+- **REMOVED:** Tool Description: Glob — Removed the Glob file pattern matching tool description.
+- Agent Prompt: Claude guide agent — Removed the "avoid emojis" guideline.
+- Agent Prompt: Conversation summarization — Inlined the full analysis instructions directly into the prompt instead of referencing a shared template.
+- Agent Prompt: Explore — Removed 'return absolute paths' and 'avoid emojis' guidelines; reorganized agent metadata after the separate strengths-and-guidelines prompt was removed.
+- Agent Prompt: Plan mode (enhanced) — Removed the read-only critical system reminder from agent metadata; simplified the critical files listing format by dropping the brief-reason annotations.
+- Agent Prompt: Recent Message Summarization — Inlined the full analysis instructions directly into the prompt instead of referencing a shared template.
+- System Prompt: Advisor tool instructions — Relaxed the "always call advisor" mandate; advisor is now recommended at least once before committing to an approach and once before declaring done on multi-step tasks, but short reactive tasks no longer require repeated calls.
+- System Prompt: Agent thread notes — Removed feature flag conditional around response formatting; now always instructs agents to share only load-bearing code snippets and absolute file paths.
+- System Prompt: Auto mode — Reworded guidance: added 'low-risk work' qualifier
+- Tool Description: Agent (usage notes) — Removed the explicit 'launch multiple agents concurrently' instruction for non-pro tiers.
+- Tool Description: Agent (when to launch subagents) — Removed the "Available agent types and the tools they have access to" heading before the agent types listing.
+- Tool Description: Bash (Git commit and PR creation instructions) — Added a general parallel tool-calling instruction at the top; simplified the per-step parallel execution notes.
+- Tool Description: ReadFile — Removed the "speculatively read multiple files in parallel" guidance.
+- Tool Description: TaskCreate — Simplified the description field guidance from "detailed description with context and acceptance criteria" to "what needs to be done"; removed the tip about including enough detail for another agent.
+- Tool Description: TodoWrite — Trimmed assistant narration from all examples, removing introductory/transitional phrasing so examples show more direct action.
+
+
 # [2.1.83](https://github.com/Piebald-AI/claude-code-system-prompts/commit/a9eee87)
 
 _+5,960 tokens_
