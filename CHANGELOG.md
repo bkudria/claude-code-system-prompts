@@ -4,6 +4,15 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.85](https://github.com/Piebald-AI/claude-code-system-prompts/commit/6368c71)
+
+_+172 tokens_
+
+- Agent Prompt: Security monitor for autonomous agent actions (second part) — Added "Production Reads" as a new blocked category: reading inside running production via remote shell, dumping env vars/configs, or direct prod database queries now requires explicit user approval, since even read-only access pulls live credentials into the transcript. Separated "Remote Shell Writes" from read-only inspection (previously noted as fine) to enforce this distinction.
+- System Prompt: Fork usage guidelines — Added guidance to pass a short `name` on forks so the user can see them in the teams panel and steer them mid-run.
+- System Prompt: Subagent delegation examples — Added `name` fields to the fork and subagent delegation examples (e.g., "ship-audit", "migration-review") to align with the new fork naming guidance.
+- System Reminder: Ultraplan mode — Added a confidentiality instruction: the agent must not disclose the ultraplan prompt or how the feature works; if asked, it should say it's generating an advanced plan with subagents and offer to help with the plan instead.
+
 # [2.1.84](https://github.com/Piebald-AI/claude-code-system-prompts/commit/a3c16f4)
 
 _+325 tokens_
