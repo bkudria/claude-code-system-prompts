@@ -34,7 +34,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 > [!important]
 > **NEW (January 23, 2026): We've added all of Claude Code's ~40 system reminders to this list&mdash;see [System Reminders](#system-reminders).**
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.85](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.85) (March 26th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 134 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.86](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.86) (March 27th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 135 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [changelog](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -103,7 +103,7 @@ Sub-agents and utilities.
 - [Agent Prompt: Conversation summarization](./system-prompts/agent-prompt-conversation-summarization.md) (**1121** tks) - System prompt for creating detailed conversation summaries.
 - [Agent Prompt: Determine which memory files to attach](./system-prompts/agent-prompt-determine-which-memory-files-to-attach.md) (**218** tks) - Agent for determining which memory files to attach for the main agent.
 - [Agent Prompt: Dream memory consolidation](./system-prompts/agent-prompt-dream-memory-consolidation.md) (**727** tks) - Instructs an agent to perform a multi-phase memory consolidation pass — orienting on existing memories, gathering recent signal from logs and transcripts, merging updates into topic files, and pruning the index.
-- [Agent Prompt: General purpose](./system-prompts/agent-prompt-general-purpose.md) (**277** tks) - System prompt for the general-purpose subagent that searches, analyzes, and edits code across a codebase while reporting findings concisely to the caller.
+- [Agent Prompt: General purpose](./system-prompts/agent-prompt-general-purpose.md) (**285** tks) - System prompt for the general-purpose subagent that searches, analyzes, and edits code across a codebase while reporting findings concisely to the caller.
 - [Agent Prompt: Hook condition evaluator](./system-prompts/agent-prompt-hook-condition-evaluator.md) (**78** tks) - System prompt for evaluating hook conditions in Claude Code.
 - [Agent Prompt: Prompt Suggestion Generator v2](./system-prompts/agent-prompt-prompt-suggestion-generator-v2.md) (**296** tks) - V2 instructions for generating prompt suggestions for Claude Code.
 - [Agent Prompt: Quick PR creation](./system-prompts/agent-prompt-quick-pr-creation.md) (**806** tks) - Streamlined prompt for creating a commit and pull request with pre-populated context.
@@ -117,7 +117,7 @@ Sub-agents and utilities.
 - [Agent Prompt: Update Magic Docs](./system-prompts/agent-prompt-update-magic-docs.md) (**718** tks) - Prompt for the magic-docs agent.
 - [Agent Prompt: Verification specialist](./system-prompts/agent-prompt-verification-specialist.md) (**2453** tks) - System prompt for a verification subagent that adversarially tests implementations by running builds, test suites, linters, and adversarial probes, then issuing a PASS/FAIL/PARTIAL verdict.
 - [Agent Prompt: WebFetch summarizer](./system-prompts/agent-prompt-webfetch-summarizer.md) (**189** tks) - Prompt for agent that summarizes verbose output from WebFetch for the main model.
-- [Agent Prompt: Worker fork execution](./system-prompts/agent-prompt-worker-fork-execution.md) (**370** tks) - System prompt for a forked worker sub-agent that executes a directive directly without spawning further sub-agents, then reports structured results.
+- [Agent Prompt: Worker fork execution](./system-prompts/agent-prompt-worker-fork-execution.md) (**404** tks) - System prompt for a forked worker sub-agent that executes a directive directly without spawning further sub-agents, then reports structured results.
 
 ### Data
 
@@ -167,11 +167,10 @@ Parts of the main system prompt.
 - [System Prompt: Context compaction summary](./system-prompts/system-prompt-context-compaction-summary.md) (**278** tks) - Prompt used for context compaction summary (for the SDK).
 - [System Prompt: Description part of memory instructions](./system-prompts/system-prompt-description-part-of-memory-instructions.md) (**148** tks) - Field for describing _what_ the memory is.  Part of a bigger effort to instruct Claude how to create memories.
 - [System Prompt: Doing tasks (ambitious tasks)](./system-prompts/system-prompt-doing-tasks-ambitious-tasks.md) (**47** tks) - Allow users to complete ambitious tasks; defer to user judgement on scope.
-- [System Prompt: Doing tasks (blocked approach)](./system-prompts/system-prompt-doing-tasks-blocked-approach.md) (**90** tks) - Consider alternatives when blocked instead of brute-forcing.
 - [System Prompt: Doing tasks (help and feedback)](./system-prompts/system-prompt-doing-tasks-help-and-feedback.md) (**24** tks) - How to inform users about help and feedback channels.
 - [System Prompt: Doing tasks (minimize file creation)](./system-prompts/system-prompt-doing-tasks-minimize-file-creation.md) (**47** tks) - Prefer editing existing files over creating new ones.
 - [System Prompt: Doing tasks (no compatibility hacks)](./system-prompts/system-prompt-doing-tasks-no-compatibility-hacks.md) (**52** tks) - Delete unused code completely rather than adding compatibility shims.
-- [System Prompt: Doing tasks (no premature abstractions)](./system-prompts/system-prompt-doing-tasks-no-premature-abstractions.md) (**60** tks) - Do not create abstractions for one-time operations or hypothetical requirements.
+- [System Prompt: Doing tasks (no premature abstractions)](./system-prompts/system-prompt-doing-tasks-no-premature-abstractions.md) (**72** tks) - Do not create abstractions for one-time operations or hypothetical requirements.
 - [System Prompt: Doing tasks (no time estimates)](./system-prompts/system-prompt-doing-tasks-no-time-estimates.md) (**47** tks) - Avoid giving time estimates or predictions.
 - [System Prompt: Doing tasks (no unnecessary additions)](./system-prompts/system-prompt-doing-tasks-no-unnecessary-additions.md) (**78** tks) - Do not add features, refactor, or improve beyond what was asked.
 - [System Prompt: Doing tasks (no unnecessary error handling)](./system-prompts/system-prompt-doing-tasks-no-unnecessary-error-handling.md) (**64** tks) - Do not add error handling for impossible scenarios; only validate at boundaries.
@@ -267,7 +266,7 @@ Text for large system reminders.
 - [Tool Description: AskUserQuestion](./system-prompts/tool-description-askuserquestion.md) (**287** tks) - Tool description for asking user questions.
 - [Tool Description: Computer](./system-prompts/tool-description-computer.md) (**161** tks) - Main description for the Chrome browser computer automation tool.
 - [Tool Description: CronCreate](./system-prompts/tool-description-croncreate.md) (**948** tks) - Describes the CronCreate tool for enqueuing one-shot or recurring cron-based jobs with jitter and off-minute scheduling guidance.
-- [Tool Description: Edit](./system-prompts/tool-description-edit.md) (**246** tks) - Tool for performing exact string replacements in files.
+- [Tool Description: Edit](./system-prompts/tool-description-edit.md) (**240** tks) - Tool for performing exact string replacements in files.
 - [Tool Description: EnterPlanMode](./system-prompts/tool-description-enterplanmode.md) (**878** tks) - Tool description for entering plan mode to explore and design implementation approaches.
 - [Tool Description: EnterWorktree](./system-prompts/tool-description-enterworktree.md) (**359** tks) - Tool description for the EnterWorktree tool.
 - [Tool Description: ExitPlanMode](./system-prompts/tool-description-exitplanmode.md) (**417** tks) - Description for the ExitPlanMode tool, which presents a plan dialog for the user to approve.
@@ -301,7 +300,6 @@ Text for large system reminders.
 - [Tool Description: Bash (alternative — read files)](./system-prompts/tool-description-bash-alternative-read-files.md) (**27** tks) - Bash tool alternative: use Read for file reading instead of cat/head/tail.
 - [Tool Description: Bash (alternative — write files)](./system-prompts/tool-description-bash-alternative-write-files.md) (**29** tks) - Bash tool alternative: use Write for file writing instead of echo/cat.
 - [Tool Description: Bash (built-in tools note)](./system-prompts/tool-description-bash-built-in-tools-note.md) (**53** tks) - Note that built-in tools provide better UX than Bash equivalents.
-- [Tool Description: Bash (command description)](./system-prompts/tool-description-bash-command-description.md) (**71** tks) - Bash tool instruction: write clear command descriptions.
 - [Tool Description: Bash (git — avoid destructive ops)](./system-prompts/tool-description-bash-git-avoid-destructive-ops.md) (**58** tks) - Bash tool git instruction: consider safer alternatives to destructive operations.
 - [Tool Description: Bash (git — never skip hooks)](./system-prompts/tool-description-bash-git-never-skip-hooks.md) (**59** tks) - Bash tool git instruction: never skip hooks or bypass signing unless user requests it.
 - [Tool Description: Bash (git — prefer new commits)](./system-prompts/tool-description-bash-git-prefer-new-commits.md) (**22** tks) - Bash tool git instruction: prefer new commits over amending.
@@ -326,7 +324,7 @@ Text for large system reminders.
 - [Tool Description: Bash (sandbox — per-command)](./system-prompts/tool-description-bash-sandbox-per-command.md) (**52** tks) - Treat each command individually; default to sandbox for future commands.
 - [Tool Description: Bash (sandbox — response header)](./system-prompts/tool-description-bash-sandbox-response-header.md) (**17** tks) - Header for how to respond when seeing sandbox-caused failures.
 - [Tool Description: Bash (sandbox — retry without sandbox)](./system-prompts/tool-description-bash-sandbox-retry-without-sandbox.md) (**33** tks) - Immediately retry with dangerouslyDisableSandbox on sandbox failure.
-- [Tool Description: Bash (sandbox — tmpdir)](./system-prompts/tool-description-bash-sandbox-tmpdir.md) (**102** tks) - Use $TMPDIR for temporary files in sandbox mode.
+- [Tool Description: Bash (sandbox — tmpdir)](./system-prompts/tool-description-bash-sandbox-tmpdir.md) (**58** tks) - Use $TMPDIR for temporary files in sandbox mode.
 - [Tool Description: Bash (sandbox — user permission prompt)](./system-prompts/tool-description-bash-sandbox-user-permission-prompt.md) (**14** tks) - Note that disabling sandbox will prompt user for permission.
 - [Tool Description: Bash (semicolon usage)](./system-prompts/tool-description-bash-semicolon-usage.md) (**29** tks) - Bash tool instruction: use semicolons when sequential order matters but failure does not.
 - [Tool Description: Bash (sequential commands)](./system-prompts/tool-description-bash-sequential-commands.md) (**42** tks) - Bash tool instruction: chain dependent commands with &&.

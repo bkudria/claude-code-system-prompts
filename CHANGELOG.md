@@ -4,6 +4,19 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.86](https://github.com/Piebald-AI/claude-code-system-prompts/commit/f7141ee)
+
+_-157 tokens_
+
+- **REMOVED:** System Prompt: Doing tasks (blocked approach) — Removed guidance about considering alternatives when blocked instead of brute-forcing.
+- **REMOVED:** Tool Description: Bash (command description) — Removed instruction to write clear command descriptions for Bash tool usage.
+- Agent Prompt: General purpose — Replaced "Do what has been asked; nothing more, nothing less" with "Complete the task fully—don't gold-plate, but don't leave it half-done."
+- Agent Prompt: Worker fork execution — Wrapped fork instructions in boilerplate tags; replaced dynamic role description with a fixed "You are a forked worker process" statement; added a new boilerplate instructions variable.
+- System Prompt: Doing tasks (no premature abstractions) — Expanded guidance to clarify that complexity should match what the task actually requires—discouraging both speculative abstractions and half-finished implementations.
+- Tool Description: Bash (sandbox — tmpdir) — Simplified temporary file guidance by removing the fallback function; now instructs to use only `$TMPDIR` directly.
+- Tool Description: Edit — Changed the line number prefix format description from a hardcoded explanation to a dynamic reference; no change to the matching guidance itself.
+
+
 # [2.1.85](https://github.com/Piebald-AI/claude-code-system-prompts/commit/6368c71)
 
 _+172 tokens_
