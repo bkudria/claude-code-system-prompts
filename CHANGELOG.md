@@ -4,6 +4,25 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.88](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7d7c728)
+
+_-1,627 tokens_
+
+- **NEW:** System Prompt: Partial compaction instructions — Added instructions for compacting only a portion of the conversation, with a structured summary format and analysis process.
+- **NEW:** System Prompt: PowerShell edition for 5.1 — Added system prompt providing information about Windows PowerShell 5.1.
+- **NEW:** Tool Description: Config — Added tool for getting and setting Claude Code configuration settings.
+- **REMOVED:** System Prompt: System section — Removed the system section describing tool permission mode behavior and denied tool call guidance.
+- Skill: Verify skill — Substantially condensed the verification skill, cutting roughly two-thirds of the text while preserving the core workflow: find the change, identify the surface, get a handle, drive the running app, capture evidence, report. Removed the extended "discovery ladder," "red flags," and "what DONE looks like" reference tables in favor of a compact surface table and inline guidance.
+- System Prompt: Fork usage guidelines — Incorporated fork-specific prompt-writing guidance (previously in the subagent prompts section) about writing directives that specify scope rather than re-explaining background.
+- System Prompt: Git status — Stripped the inline variable template (branch, status, recent commits); now contains only the introductory note that git status is a point-in-time snapshot.
+- System Prompt: Writing subagent prompts — Collapsed the separate context-inheriting vs fresh-agent sections into a single flow that defaults to the fresh-agent briefing style, with conditional notes when a subagent type is present.
+- System Reminder: Plan mode is active (iterative) — Made the subagent exploration suggestion conditional on whether agents are actually available, instead of always appending it.
+- System Reminder: Ultraplan mode — Ultraplan can now implement the plan in the same session on approval; added a teleport sentinel so the agent knows when the plan was sent to the user's local terminal instead of being implemented remotely.
+- Tool Description: Agent (usage notes) — Removed the instruction to provide clear, detailed prompts for agents without subagent types (guidance now lives in the fork/subagent prompt-writing sections).
+- Tool Description: PowerShell — Significantly expanded syntax guidance: added registry PSDrive prefixes, environment variable access, call operator for paths with spaces, interactive/blocking command warnings, multiline here-string rules (including column-0 closing requirement), stop-parsing token, and revised command-chaining advice to distinguish sequential-with-error-handling from fire-and-forget.
+- Tool Description: TeammateTool — Updated the team file path from `~/.claude/teams/{team-name}.json` to `~/.claude/teams/{team-name}/config.json`.
+
+
 # [2.1.87](https://github.com/Piebald-AI/claude-code-system-prompts/commit/115c568)
 
 <sub>_No changes to the system prompts in v2.1.87._</sub>
