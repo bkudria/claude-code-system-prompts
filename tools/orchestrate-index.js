@@ -16,7 +16,7 @@ const path = require('path');
 const { validateSummaries, validateClusters, validateClusterSummaries, validateHierarchy } = require('./validate');
 const { generateIndex } = require('./generate-index');
 const { buildInlinedBatchPrompt, buildInlinedClusterPrompt, buildInlinedClusterSummarizerPrompt, buildRootSummaryPrompt, buildOrganizeHierarchyPrompt } = require('./prompt-builders');
-const { parseModelJSON, runModel, runModelsConcurrently } = require('./model');
+const { parseModelJSON, previewText, runModel, runModelsConcurrently } = require('./model');
 
 // ---------------------------------------------------------------------------
 // Hierarchy pruning
@@ -254,7 +254,7 @@ async function clusterAndSummarize(allSummaries, config, clustersPath) {
     }
     const parsed = parseModelJSON(clusterResult.text.trim());
     if (!parsed || !parsed.clusters) {
-      log('warn', `Cluster attempt ${attempt}/${MAX_CLUSTER_ATTEMPTS} failed: could not parse JSON`);
+      log('warn', `Cluster attempt ${attempt}/${MAX_CLUSTER_ATTEMPTS} failed: could not parse JSON: ${previewText(clusterResult.text)}`);
       continue;
     }
 
@@ -314,7 +314,7 @@ async function clusterAndSummarize(allSummaries, config, clustersPath) {
     }
     const parsed = parseModelJSON(result.text.trim());
     if (!Array.isArray(parsed)) {
-      return { ok: false, cost: result.cost, error: `cluster batch ${i + 1}: failed to parse JSON array` };
+      return { ok: false, cost: result.cost, error: `cluster batch ${i + 1}: failed to parse JSON array: ${previewText(result.text)}` };
     }
     for (const cs of parsed) {
       if (cs.id && cs.name && cs.summary && cs.keywords) allClusterSummaries.push(cs);
@@ -347,7 +347,7 @@ async function clusterAndSummarize(allSummaries, config, clustersPath) {
       }
       const parsed = parseModelJSON(result.text.trim());
       if (!Array.isArray(parsed)) {
-        return { ok: false, cost: result.cost, error: `cluster batch ${origIdx + 1}: failed to parse JSON array` };
+        return { ok: false, cost: result.cost, error: `cluster batch ${origIdx + 1}: failed to parse JSON array: ${previewText(result.text)}` };
       }
       for (const cs of parsed) {
         if (cs.id && cs.name && cs.summary && cs.keywords) allClusterSummaries.push(cs);
@@ -454,7 +454,7 @@ async function main() {
       }
       const parsed = parseModelJSON(result.text.trim());
       if (!Array.isArray(parsed)) {
-        return { ok: false, cost: result.cost, error: `batch ${i + 1}: failed to parse JSON array` };
+        return { ok: false, cost: result.cost, error: `batch ${i + 1}: failed to parse JSON array: ${previewText(result.text)}` };
       }
       for (const s of parsed) {
         if (s.file && s.summary) {
@@ -490,7 +490,7 @@ async function main() {
         }
         const parsed = parseModelJSON(result.text.trim());
         if (!Array.isArray(parsed)) {
-          return { ok: false, cost: result.cost, error: `batch ${origIdx + 1}: failed to parse JSON array` };
+          return { ok: false, cost: result.cost, error: `batch ${origIdx + 1}: failed to parse JSON array: ${previewText(result.text)}` };
         }
         for (const s of parsed) {
           if (s.file && s.summary) {
@@ -563,7 +563,7 @@ async function main() {
       }
       const hierarchyData = parseModelJSON(result.text.trim());
       if (!hierarchyData || !Array.isArray(hierarchyData.hierarchy)) {
-        log('warn', `Hierarchy attempt ${attempt}/${MAX_HIERARCHY_ATTEMPTS} failed: could not parse JSON with hierarchy array`);
+        log('warn', `Hierarchy attempt ${attempt}/${MAX_HIERARCHY_ATTEMPTS} failed: could not parse JSON with hierarchy array: ${previewText(result.text)}`);
         continue;
       }
       const hv = validateHierarchy(hierarchyData, expectedIds, clusterSizes);

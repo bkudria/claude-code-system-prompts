@@ -51,6 +51,13 @@ function parseModelJSON(text) {
   return undefined;
 }
 
+function previewText(text, maxLen = 200) {
+  if (!text) return '(empty)';
+  if (text.length <= maxLen) return text;
+  const half = Math.floor(maxLen / 2);
+  return text.slice(0, half) + ' [...] ' + text.slice(-half);
+}
+
 async function runModel(model, prompt, opts = {}) {
   const modelId = MODEL_IDS[model] || model;
   const timeout = opts.timeout || 120_000;
@@ -67,7 +74,7 @@ async function runModel(model, prompt, opts = {}) {
       },
       body: JSON.stringify({
         model: modelId,
-        max_tokens: 8192,
+        max_tokens: 16384,
         ...(opts.temperature !== undefined && { temperature: opts.temperature }),
         ...(opts.system && { system: opts.system }),
         messages: [{ role: 'user', content: prompt }],
@@ -82,12 +89,16 @@ async function runModel(model, prompt, opts = {}) {
     }
 
     const data = await response.json();
-    const text = data.content?.[0]?.text || '';
     const inputTokens = data.usage?.input_tokens || 0;
     const outputTokens = data.usage?.output_tokens || 0;
     const pricing = MODEL_PRICING[modelId];
     const cost = (inputTokens * pricing.input + outputTokens * pricing.output) / 1_000_000;
 
+    if (data.stop_reason === 'max_tokens') {
+      return { ok: false, text: null, cost, error: 'Response truncated (max_tokens limit reached)' };
+    }
+
+    const text = data.content?.[0]?.text || '';
     return { ok: true, text, cost };
   } catch (err) {
     clearTimeout(timer);
@@ -127,4 +138,4 @@ function collectBatchResults(results) {
   return cost;
 }
 
-module.exports = { parseModelJSON, runModel, runModelsConcurrently, collectBatchResults };
+module.exports = { parseModelJSON, previewText, runModel, runModelsConcurrently, collectBatchResults };
