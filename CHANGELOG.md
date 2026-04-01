@@ -4,6 +4,21 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.89](https://github.com/Piebald-AI/claude-code-system-prompts/commit/0e24543)
+
+_+3,986 tokens_
+
+- **NEW:** System Prompt: Buddy Mode — Added instructions for generating coding companions that live in the terminal and comment on the developer's work, with a focus on creating memorable, distinct personalities based on given stats and inspiration words.
+- **NEW:** System Prompt: MCP Tool Result Truncation — Added guidelines for handling long outputs from MCP tools, including when to use direct file queries vs subagents for analysis.
+- **NEW:** System Prompt: Remote plan mode (ultraplan) — Added system reminder for remote planning sessions that instructs Claude to explore the codebase, produce a diagram-rich plan via ExitPlanMode, and implement it with a pull request upon approval.
+- **NEW:** System Prompt: Remote planning session — Added system reminder that configures a remote planning session to explore the codebase, produce an implementation plan, and handle plan approval, rejection, or teleportation back to the user's local terminal.
+- **NEW:** Skill: Computer Use MCP — Added instructions for using computer-use MCP tools including tool selection tiers, app access tiers, link safety, and financial action restrictions.
+- Agent Prompt: Security monitor for autonomous agent actions (second part) — Expanded "Irreversible Local Destruction" to block `mv`/`cp`/Write/Edit onto existing untracked or out-of-repo paths, noting they have no git recovery. Added "Create Public Surface" block rule covering creating public repos, changing repo visibility, or publishing to public registries. Expanded "Expose Local Services" to cover mounting host paths into containers. Added note to "Credential Leakage" that committing credentials to a public repo counts even if trusted. Added git hooks to "Unauthorized Persistence" mechanisms.
+- Agent Prompt: Verification specialist — Substantially expanded with a new self-awareness section documenting known failure patterns (skipping checks, trusting self-reports, hedging with PARTIAL, being fooled by AI slop). Added instructions to scan the parent agent's conversation for tool calls, claims, shortcuts, and glossed-over errors before verifying. Added a mandatory adversarial verification protocol requiring at least one probe per change area (boundary values, concurrency, idempotency, orphan ops). Tightened PARTIAL verdict guidance to prohibit using it as a hedge — ambiguous findings must be decided as PASS or FAIL.
+- Data: Prompt Caching — Design & Optimization — Added model-specific minimum cacheable prefix table (ranging from 1024 to 4096 tokens by model). Updated cache write economics to distinguish 5-minute TTL (1.25×) from 1-hour TTL (2×) pricing with break-even analysis. Added clarification that `input_tokens` is the uncached remainder only. Added new sections on the invalidation hierarchy (three cache tiers), the 20-block lookback window limit, and concurrent-request timing with a fan-out workaround.
+- Tool Description: Agent (when to launch subagents) — Added support for an additional info block alongside the agent types listing.
+
+
 # [2.1.88](https://github.com/Piebald-AI/claude-code-system-prompts/commit/7d7c728)
 
 _-1,627 tokens_
