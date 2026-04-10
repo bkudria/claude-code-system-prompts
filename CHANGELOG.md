@@ -4,6 +4,54 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.98](https://github.com/Piebald-AI/claude-code-system-prompts/commit/a23620e)
+
+_+2,045 tokens_
+
+- **NEW:** System Prompt: Communication style — Added guidelines for giving brief user-facing updates at key moments during tool use, writing concise end-of-turn summaries, matching response format to task complexity, and avoiding comments and planning documents in code.
+- **NEW:** System Prompt: Dream team memory handling — Added instructions for handling shared team memories during dream consolidation, including deduplication, conservative pruning rules, and avoiding accidental promotion of personal memories.
+- **NEW:** System Prompt: Exploratory questions — analyze before implementing — Added instructions for Claude to respond to open-ended questions with analysis, options, and tradeoffs instead of jumping to implementation, waiting for user agreement before writing code.
+- **NEW:** System Prompt: User-facing communication style — Added detailed guidelines for writing clear, concise, and readable user-facing text including prose style, update cadence, formatting rules, and audience-aware explanations.
+- **NEW:** Tool Description: Background monitor (streaming events) — Added description for a background monitor tool that streams stdout events from long-running scripts as chat notifications, with guidelines on script quality, output volume, and selective filtering.
+- Agent Prompt: Dream memory consolidation — Added support for an optional transcript source note displayed after the transcripts directory path.
+- Agent Prompt: Dream memory pruning — Added conservative pruning rules for `team/` subdirectory memories: only delete when clearly contradicted or superseded by a newer team memory, never delete just because unrecognized or irrelevant to recent sessions, and never move personal memories into `team/`.
+- Skill: /dream nightly schedule — Minor refactor to include memory directory reference in the consolidation configuration.
+- System Prompt: Advisor tool instructions — Minor wording updates: clarified tool invocation syntax, broadened 'before writing code' to 'before writing,' and updated several examples and descriptions for generality (e.g., 'reading code' → 'fetching a source,' 'the code does Y' → 'the paper states Y').
+
+
+# [2.1.97](https://github.com/Piebald-AI/claude-code-system-prompts/commit/38cf6fe)
+
+_+23,865 tokens_
+
+- **NEW:** Agent Prompt: Managed Agents onboarding flow — Added an interactive interview script that walks users through configuring a Managed Agent from scratch, selecting tools, skills, files, and environment settings, and emitting setup and runtime code.
+- **NEW:** Data: Managed Agents client patterns — Added a reference guide covering common client-side patterns for driving Managed Agent sessions, including stream reconnection, idle-break gating, tool confirmations, interrupts, and custom tools.
+- **NEW:** Data: Managed Agents core concepts — Added reference documentation covering Agents, Sessions, Environments, Containers, lifecycle, versioning, endpoints, and usage patterns.
+- **NEW:** Data: Managed Agents endpoint reference — Added a comprehensive reference for Managed Agents API endpoints, SDK methods, request/response schemas, error handling, and rate limits.
+- **NEW:** Data: Managed Agents environments and resources — Added reference documentation covering environments, file resources, GitHub repository mounting, and the Files API with SDK examples.
+- **NEW:** Data: Managed Agents events and steering — Added a reference guide for sending and receiving events on managed agent sessions, including streaming, polling, reconnection, message queuing, interrupts, and event payload details.
+- **NEW:** Data: Managed Agents overview — Added a comprehensive overview of the Managed Agents API architecture, mandatory agent-then-session flow, beta headers, documentation reading guide, and common pitfalls.
+- **NEW:** Data: Managed Agents reference — Python — Added a reference guide for using the Anthropic Python SDK to create and manage agents, sessions, environments, streaming, custom tools, files, and MCP servers.
+- **NEW:** Data: Managed Agents reference — TypeScript — Added a reference guide for using the Anthropic TypeScript SDK to create and manage agents, sessions, environments, streaming, custom tools, file uploads, and MCP server integration.
+- **NEW:** Data: Managed Agents reference — cURL — Added cURL and raw HTTP request examples for the Managed Agents API including environment, agent, and session lifecycle operations.
+- **NEW:** Data: Managed Agents tools and skills — Added reference documentation covering tool types (agent toolset, MCP, custom), permission policies, vault credential management, and the skills API.
+- **NEW:** Skill: Build Claude API and SDK apps — Added trigger rules for activating guidance when users are building applications with the Claude API, Anthropic SDKs, or Managed Agents.
+- **NEW:** Skill: Building LLM-powered applications with Claude — Added a comprehensive routing guide for building LLM-powered applications using the Anthropic SDK, covering language detection, API surface selection (Claude API vs Managed Agents), model defaults, thinking/effort configuration, and language-specific documentation reading.
+- **NEW:** Skill: /dream nightly schedule — Added a skill that sets up a recurring nightly memory consolidation job by deduplicating existing schedules, creating a new cron task, confirming details to the user, and running an immediate consolidation.
+- **REMOVED:** Data: Agent SDK patterns — Python — Removed the Python Agent SDK patterns document (custom tools, hooks, subagents, MCP integration, session resumption).
+- **REMOVED:** Data: Agent SDK patterns — TypeScript — Removed the TypeScript Agent SDK patterns document (basic agents, hooks, subagents, MCP integration).
+- **REMOVED:** Data: Agent SDK reference — Python — Removed the Python Agent SDK reference document (installation, quick start, custom tools via MCP, hooks).
+- **REMOVED:** Data: Agent SDK reference — TypeScript — Removed the TypeScript Agent SDK reference document (installation, quick start, custom tools, hooks).
+- **REMOVED:** Skill: Build with Claude API — Removed the main routing guide for building LLM-powered applications with Claude, replaced by the new "Building LLM-powered applications with Claude" skill with Managed Agents support.
+- **REMOVED:** System Prompt: Buddy Mode — Removed the coding companion personality generator for terminal buddies.
+- Agent Prompt: Status line setup — Added `git_worktree` field to the workspace schema for reporting the git worktree name when the working directory is in a linked worktree.
+- Agent Prompt: Worker fork — Added agent metadata specifying model inheritance, permission bubbling, max turns, full tool access, and a description of when the fork is triggered.
+- Data: Live documentation sources — Replaced the Agent SDK documentation URLs and SDK repository extraction prompts with comprehensive Managed Agents documentation URLs covering overview, quickstart, agent setup, sessions, environments, events, tools, files, permissions, multi-agent, observability, GitHub, MCP connector, vaults, skills, memory, onboarding, cloud containers, and migration. Added an Anthropic CLI section. Updated SDK repository extraction prompts to focus on beta managed-agents namespaces and method signatures.
+- Skill: Build with Claude API (reference guide) — Updated the agent reference from Agent SDK folders to Managed Agents documentation files, with language-specific routing for Python, TypeScript, cURL, and a note that C# should use raw HTTP examples.
+- Skill: Verify skill — Restructured the "Get a handle" section to emphasize checking `.claude/skills/` for verifier skills first (even if you already know how to build), framing verifiers as the repo's evidence-capture protocol. Added a new "Push on it" section with concrete probing strategies organized by change type (new flag, new handler, changed error path, interactive/TUI, state/persistence). Added the 🔍 emoji marker for probe steps in the report format, with guidance that a steps list with no probes is a happy-path replay. Added probe documentation guidance in the Findings section.
+- System Prompt: Agent thread notes — Removed the conditional logic for relative vs. absolute file paths; agent threads now always require absolute file paths unconditionally.
+- Tool Description: ReadFile — Simplified to always require absolute file paths, removing the conditional relative-path option.
+- Tool Description: Write — Removed a conditional note variable from the "prefer Edit" guidance, making it unconditional.
+
 # [2.1.96](https://github.com/Piebald-AI/claude-code-system-prompts/commit/4a6ba72)
 
 _+0 tokens_
