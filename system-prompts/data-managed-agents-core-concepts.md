@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Managed Agents core concepts'
 description: Reference documentation for the Managed Agents API covering core concepts (Agents, Sessions, Environments, Containers), lifecycle, versioning, endpoints, and usage patterns
-ccVersion: 2.1.97
+ccVersion: 2.1.105
 -->
 # Managed Agents — Core Concepts
 
@@ -200,6 +200,8 @@ Each `POST /v1/agents/{id}` (update) creates a new immutable version (numeric ti
 | Get              | `GET`    | `/v1/agents/{id}`                     |
 | Update           | `POST`   | `/v1/agents/{id}`                     |
 | Archive          | `POST`   | `/v1/agents/{id}/archive`             |
+
+> ⚠️ **Archive is permanent.** Archiving makes the agent read-only: existing sessions continue to run, but **new sessions cannot reference it**, and there is no unarchive. Since agents have no `delete`, this is the terminal lifecycle state. Never archive a production agent as routine cleanup — confirm with the user first.
 
 ### Using an Agent in a Session
 

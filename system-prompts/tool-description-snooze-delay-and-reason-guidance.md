@@ -1,11 +1,11 @@
 <!--
 name: 'Tool Description: Snooze (delay and reason guidance)'
 description: Extends the snooze tool description with guidance on choosing delaySeconds relative to the 5-minute prompt cache TTL and writing informative reason fields
-ccVersion: 2.1.101
-variables:
-  - BASE_TOOL_DESCRIPTION
+ccVersion: 2.1.105
 -->
-${BASE_TOOL_DESCRIPTION}
+Schedule when to resume work in /loop dynamic mode — the user invoked /loop without an interval, asking you to self-pace iterations of a specific task.
+
+Pass the same /loop prompt back via `prompt` each turn so the next firing repeats the task. For an autonomous /loop (no user prompt), pass the literal sentinel `${"<<autonomous-loop-dynamic>>"}` as `prompt` instead — the runtime resolves it back to the autonomous-loop instructions at fire time. (There is a similar `${"<<autonomous-loop>>"}` sentinel for CronCreate-based autonomous loops; do not confuse the two — ${"ScheduleWakeup"} always uses the `-dynamic` variant.) Omit the call to end the loop.
 
 ## Picking delaySeconds
 

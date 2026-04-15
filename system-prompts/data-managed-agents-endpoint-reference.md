@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Managed Agents endpoint reference'
 description: Comprehensive reference for Managed Agents API endpoints, SDK methods, request/response schemas, error handling, and rate limits
-ccVersion: 2.1.97
+ccVersion: 2.1.105
 -->
 # Managed Agents — Endpoint Reference
 
@@ -33,7 +33,7 @@ All resources are under the `beta` namespace. Python and TypeScript share identi
 | Credentials | `vaults.credentials.create` / `retrieve` / `update` / `list` / `delete` / `archive` | `Vaults.Credentials.New` / `Get` / `Update` / `List` / `Delete` / `Archive` |
 
 **Naming quirks to watch for:**
-- Agents have **no delete** — only `archive`. Other resources have both.
+- Agents have **no delete** — only `archive`. Archive is **permanent**: the agent becomes read-only, new sessions cannot reference it, and there is no unarchive. Confirm with the user before archiving a production agent. Environments, Sessions, Vaults, and Credentials have both `delete` and `archive`; Session Resources, Files, and Skills are `delete`-only.
 - Session resources use `add` (not `create`).
 - Go's event stream is `StreamEvents` (not `Stream`).
 
@@ -53,7 +53,7 @@ All resources are under the `beta` namespace. Python and TypeScript share identi
 | `POST` | `/v1/agents` | CreateAgent | Create a saved agent configuration |
 | `GET` | `/v1/agents/{agent_id}` | GetAgent | Get agent details |
 | `POST` | `/v1/agents/{agent_id}` | UpdateAgent | Update agent configuration |
-| `POST` | `/v1/agents/{agent_id}/archive` | ArchiveAgent | Archive an agent (no hard delete for agents) |
+| `POST` | `/v1/agents/{agent_id}/archive` | ArchiveAgent | Archive an agent. Makes it **read-only**; existing sessions continue, new sessions cannot reference it. No unarchive — this is the terminal state. |
 | `GET` | `/v1/agents/{agent_id}/versions` | ListAgentVersions | List agent versions |
 
 ## Sessions
@@ -94,7 +94,7 @@ All resources are under the `beta` namespace. Python and TypeScript share identi
 | `GET`    | `/v1/environments/{environment_id}`                    | GetEnvironment       | Get environment details             |
 | `POST`   | `/v1/environments/{environment_id}`                    | UpdateEnvironment    | Update environment                  |
 | `DELETE` | `/v1/environments/{environment_id}`                    | DeleteEnvironment    | Delete environment. Returns 204. |
-| `POST`   | `/v1/environments/{environment_id}/archive`            | ArchiveEnvironment   | Archive environment (read-only; existing sessions continue) |
+| `POST`   | `/v1/environments/{environment_id}/archive`            | ArchiveEnvironment   | Archive environment. Makes it **read-only**; existing sessions continue, new sessions cannot reference it. No unarchive — this is the terminal state. |
 
 ## Vaults
 

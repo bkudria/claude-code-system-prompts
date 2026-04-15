@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Managed Agents reference — TypeScript'
 description: Reference guide for using the Anthropic TypeScript SDK to create and manage agents, sessions, environments, streaming, custom tools, file uploads, and MCP server integration
-ccVersion: 2.1.97
+ccVersion: 2.1.105
 -->
 # Managed Agents — TypeScript
 
@@ -305,7 +305,8 @@ import fs from "fs";
 
 // List files associated with a session
 const files = await client.beta.files.list({
-  scope: session.id,
+  scope_id: session.id,
+  betas: ["managed-agents-2026-04-01"],
 });
 for (const f of files.data) {
   console.log(f.filename, f.size_bytes);
@@ -325,17 +326,17 @@ for (const f of files.data) {
 
 ```typescript
 // Get session details
-const session = await client.beta.sessions.retrieve("sess_abc123");
+const session = await client.beta.sessions.retrieve("sesn_011CZxAbc123Def456");
 console.log(session.status, session.usage);
 
 // List sessions
 const sessions = await client.beta.sessions.list();
 
 // Delete a session
-await client.beta.sessions.delete("sess_abc123");
+await client.beta.sessions.delete("sesn_011CZxAbc123Def456");
 
 // Archive a session
-await client.beta.sessions.archive("sess_abc123");
+await client.beta.sessions.archive("sesn_011CZxAbc123Def456");
 ```
 
 ---

@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Managed Agents events and steering'
 description: Reference guide for sending and receiving events on managed agent sessions, including streaming, polling, reconnection, message queuing, interrupts, and event payload details
-ccVersion: 2.1.97
+ccVersion: 2.1.105
 -->
 # Managed Agents — Events & Steering
 
@@ -188,5 +188,7 @@ When done with a session, archive it to free resources:
 ```ts
 await client.beta.sessions.archive(sessionId);
 ```
+
+> Archiving a **session** is routine cleanup — sessions are per-run and disposable. **Do not generalize this to agents or environments**: those are persistent, reusable resources, and archiving them is permanent (no unarchive; new sessions cannot reference them). See `shared/managed-agents-overview.md` → Common Pitfalls.
 
 

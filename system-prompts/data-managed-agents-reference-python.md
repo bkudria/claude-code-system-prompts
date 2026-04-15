@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Managed Agents reference — Python'
 description: Reference guide for using the Anthropic Python SDK to create and manage agents, sessions, environments, streaming, custom tools, files, and MCP servers
-ccVersion: 2.1.97
+ccVersion: 2.1.105
 -->
 # Managed Agents — Python
 
@@ -279,7 +279,10 @@ List files the agent wrote to `/mnt/session/outputs/` during a session, then dow
 
 ```python
 # List files associated with a session
-files = client.beta.files.list(session_id=session.id)
+files = client.beta.files.list(
+    scope_id=session.id,
+    betas=["managed-agents-2026-04-01"],
+)
 for f in files.data:
     print(f.filename, f.size_bytes)
     # Download each file and save to disk
@@ -287,7 +290,7 @@ for f in files.data:
     file_content.write_to_file(f.filename)
 ```
 
-> 💡 There's a brief indexing lag (~1–3s) between `session.status_idle` and output files appearing in `files.list` (with `scope=session_id` as a query param). Retry once or twice if the list is empty.
+> 💡 There's a brief indexing lag (~1–3s) between `session.status_idle` and output files appearing in `files.list`. Retry once or twice if the list is empty.
 
 ---
 
@@ -295,17 +298,17 @@ for f in files.data:
 
 ```python
 # Get session details
-session = client.beta.sessions.retrieve(session_id="sess_abc123")
+session = client.beta.sessions.retrieve(session_id="sesn_011CZxAbc123Def456")
 print(session.status, session.usage)
 
 # List sessions
 sessions = client.beta.sessions.list()
 
 # Delete a session
-client.beta.sessions.delete(session_id="sess_abc123")
+client.beta.sessions.delete(session_id="sesn_011CZxAbc123Def456")
 
 # Archive a session
-client.beta.sessions.archive(session_id="sess_abc123")
+client.beta.sessions.archive(session_id="sesn_011CZxAbc123Def456")
 ```
 
 ---

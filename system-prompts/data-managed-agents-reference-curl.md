@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Managed Agents reference — cURL'
 description: Provides cURL and raw HTTP request examples for the Managed Agents API including environment, agent, and session lifecycle operations
-ccVersion: 2.1.97
+ccVersion: 2.1.105
 -->
 # Managed Agents — cURL / Raw HTTP
 
@@ -265,12 +265,16 @@ List files the agent wrote to `/mnt/session/outputs/` during a session, then dow
 
 ```bash
 # List files associated with a session
-curl "https://api.anthropic.com/v1/files?scope=$SESSION_ID" \
-  "${HEADERS[@]}"
+curl "https://api.anthropic.com/v1/files?scope_id=$SESSION_ID" \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "anthropic-beta: files-api-2025-04-14,managed-agents-2026-04-01"
 
 # Download a specific file
 curl "https://api.anthropic.com/v1/files/$FILE_ID/content" \
-  "${HEADERS[@]}" \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "anthropic-beta: files-api-2025-04-14,managed-agents-2026-04-01" \
   -o downloaded_file.txt
 ```
 

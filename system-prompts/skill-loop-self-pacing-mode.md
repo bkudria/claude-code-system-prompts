@@ -1,12 +1,13 @@
 <!--
 name: 'Skill: /loop self-pacing mode'
 description: Instructs Claude how to self-pace a recurring loop by arming event monitors as primary wake signals and scheduling fallback heartbeat delays between iterations
-ccVersion: 2.1.101
+ccVersion: 2.1.105
 variables:
   - MONITOR_TOOL_NAME
   - SCHEDULE_WAKEUP_TOOL_NAME
   - TASK_LIST_TOOL_NAME
   - TASK_STOP_TOOL_NAME
+  - ADDITIONAL_INFO_FN
 -->
 The user wants you to self-pace. Decide what makes the next iteration worth running — a passage of time, or an observable event.
 
@@ -17,5 +18,5 @@ The user wants you to self-pace. Decide what makes the next iteration worth runn
    - `reason`: one short sentence on why you picked that delay.
    - `prompt`: the full original /loop input verbatim, prefixed with `/loop ` so the next firing re-enters this skill and continues the loop. For example, if the user typed `/loop check the deploy`, pass `/loop check the deploy` as the prompt.
 4. **If you were woken by a `<task-notification>`** rather than this prompt: handle the event in the context of the loop task, then call ${SCHEDULE_WAKEUP_TOOL_NAME} again with the same `prompt` and the same 1200–1800s `delaySeconds` from step 3 — the ${MONITOR_TOOL_NAME} remains the wake signal; this only resets the safety net.
-5. **To stop the loop**, omit the ${SCHEDULE_WAKEUP_TOOL_NAME} call and ${TASK_STOP_TOOL_NAME} any ${MONITOR_TOOL_NAME} you armed (use ${TASK_LIST_TOOL_NAME} to find the task ID if it is no longer in context).
+5. **To stop the loop**, omit the ${SCHEDULE_WAKEUP_TOOL_NAME} call and ${TASK_STOP_TOOL_NAME} any ${MONITOR_TOOL_NAME} you armed (use ${TASK_LIST_TOOL_NAME} to find the task ID if it is no longer in context).${ADDITIONAL_INFO_FN()}
 6. Briefly confirm: that you're self-pacing, whether a ${MONITOR_TOOL_NAME} is the primary wake signal, that you ran the task now, and what fallback delay you picked.
