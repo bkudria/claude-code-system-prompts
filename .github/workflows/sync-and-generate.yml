@@ -36,7 +36,7 @@ jobs:
       - name: Update upstream branch
         run: |
           git fetch upstream main:upstream
-          git push origin upstream
+          git push --force-with-lease origin upstream
 
       - name: Merge upstream into main
         id: merge
