@@ -74,7 +74,7 @@ async function runModel(model, prompt, opts = {}) {
       },
       body: JSON.stringify({
         model: modelId,
-        max_tokens: 16384,
+        max_tokens: opts.max_tokens || 16384,
         ...(opts.temperature !== undefined && { temperature: opts.temperature }),
         ...(opts.system && { system: opts.system }),
         messages: [{ role: 'user', content: prompt }],

@@ -244,7 +244,7 @@ async function clusterAndSummarize(allSummaries, config, clustersPath) {
   for (let attempt = 1; attempt <= MAX_CLUSTER_ATTEMPTS; attempt++) {
     const { system, user } = buildInlinedClusterPrompt(allSummariesJson, itemCount, lastFeedback);
     const clusterResult = await runModel(clusterModel, user, {
-      timeout: 300_000, temperature: attempt > 1 ? 0.3 : 0, system,
+      timeout: 300_000, temperature: attempt > 1 ? 0.3 : 0, system, max_tokens: 32768,
     });
     clusterCost += clusterResult.cost;
 
@@ -553,7 +553,7 @@ async function main() {
     for (let attempt = 1; attempt <= MAX_HIERARCHY_ATTEMPTS; attempt++) {
       const { system: hierSystem, user: hierUser } = buildOrganizeHierarchyPrompt(clustersData, lastFeedback);
       const result = await runModel('sonnet', hierUser, {
-        timeout: 300_000, temperature: attempt > 1 ? 0.3 : 0, system: hierSystem,
+        timeout: 300_000, temperature: attempt > 1 ? 0.3 : 0, system: hierSystem, max_tokens: 32768,
       });
       hierCost += result.cost;
 
@@ -603,7 +603,7 @@ async function main() {
     }));
 
     const { system: rootSystem, user: rootUser } = buildRootSummaryPrompt(childInfo);
-    const rootResult = await runModel('sonnet', rootUser, { timeout: 120_000, temperature: 0.3, system: rootSystem });
+    const rootResult = await runModel('sonnet', rootUser, { timeout: 120_000, temperature: 0.3, system: rootSystem, max_tokens: 32768 });
     const rootCost = rootResult.cost;
     if (!rootResult.ok || !rootResult.text) {
       throw new Error(`Root summary failed: ${rootResult.error || 'empty result'}`);
