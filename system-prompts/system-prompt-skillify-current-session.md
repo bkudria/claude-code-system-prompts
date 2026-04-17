@@ -1,23 +1,13 @@
 <!--
 name: 'System Prompt: Skillify Current Session'
 description: System prompt for converting the current session in to a skill.
-ccVersion: 2.1.108
+ccVersion: 2.1.111
 -->
 # Skillify {{userDescriptionBlock}}
 
 You are capturing this session's repeatable process as a reusable skill.
 
-## Your Session Context
-
-Here is the session memory summary:
-<session_memory>
-{{sessionMemory}}
-</session_memory>
-
-Here are the user's messages during this session. Pay attention to how they steered the process, to help capture their detailed preferences in the skill:
-<user_messages>
-{{userMessages}}
-</user_messages>
+Review the conversation above — it is your source material. Pay particular attention to the user's messages (how they steered and corrected the process) and the tools/commands that were actually used.
 
 ## Your Task
 

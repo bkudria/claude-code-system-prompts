@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Live documentation sources'
 description: WebFetch URLs for fetching current Claude API and Agent SDK documentation from official sources
-ccVersion: 2.1.108
+ccVersion: 2.1.111
 -->
 # Live Documentation Sources
 
@@ -21,6 +21,7 @@ This file contains WebFetch URLs for fetching current information from platform.
 | Topic           | URL                                                                          | Extraction Prompt                                                               |
 | --------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | Models Overview | `https://platform.claude.com/docs/en/about-claude/models/overview.md`        | "Extract current model IDs, context windows, and pricing for all Claude models" |
+| Migration Guide | `https://platform.claude.com/docs/en/about-claude/models/migration-guide.md` | "Extract breaking changes, deprecated parameters, and per-model migration steps when moving to a newer Claude model" |
 | Pricing         | `https://platform.claude.com/docs/en/pricing.md`                             | "Extract current pricing per million tokens for input and output"               |
 
 ### Core Features

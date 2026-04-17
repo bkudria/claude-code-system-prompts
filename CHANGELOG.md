@@ -4,6 +4,58 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.112](https://github.com/Piebald-AI/claude-code-system-prompts/commit/de0eb75)
+
+_+0 tokens_
+
+<sub>_No changes to the system prompts in v2.1.112._</sub>
+
+# [2.1.111](https://github.com/Piebald-AI/claude-code-system-prompts/commit/c1b7c8b)
+
+_+21,018 tokens_
+
+- **NEW:** Skill: Generate permission allowlist from transcripts — Analyzes session transcripts to extract frequently used read-only tool-call patterns and adds them to the project's `.claude/settings.json` permission allowlist to reduce permission prompts.
+- **NEW:** Skill: Model migration guide — Step-by-step instructions for migrating existing code to newer Claude models, covering breaking changes, deprecated parameters, per-SDK syntax, prompt-behavior shifts, and migration checklists.
+- **REMOVED:** System Prompt: Doing tasks (minimize file creation) — Removed instruction to prefer editing existing files over creating new ones.
+- **REMOVED:** System Prompt: Doing tasks (no premature abstractions) — Removed instruction against creating abstractions for one-time operations or hypothetical requirements.
+- **REMOVED:** System Prompt: Doing tasks (no time estimates) — Removed instruction to avoid giving time estimates or predictions.
+- **REMOVED:** System Prompt: Doing tasks (no unnecessary additions) — Removed instruction to not add features, refactor, or improve beyond what was asked.
+- **REMOVED:** System Prompt: Doing tasks (read before modifying) — Removed instruction to read and understand existing code before suggesting modifications.
+- **REMOVED:** System Prompt: Tool usage (create files) — Removed instruction to prefer Write tool instead of cat heredoc or echo redirection.
+- **REMOVED:** System Prompt: Tool usage (delegate exploration) — Removed instruction to use Task tool for broader codebase exploration and deep research.
+- **REMOVED:** System Prompt: Tool usage (direct search) — Removed instruction to use Glob/Grep directly for simple, directed searches.
+- **REMOVED:** System Prompt: Tool usage (edit files) — Removed instruction to prefer Edit tool instead of sed/awk.
+- **REMOVED:** System Prompt: Tool usage (read files) — Removed instruction to prefer Read tool instead of cat/head/tail/sed.
+- **REMOVED:** System Prompt: Tool usage (reserve Bash) — Removed instruction to reserve Bash tool exclusively for system commands and terminal operations.
+- **REMOVED:** System Prompt: Tool usage (search content) — Removed instruction to prefer Grep tool instead of grep or rg.
+- **REMOVED:** System Prompt: Tool usage (search files) — Removed instruction to prefer Glob tool instead of find or ls.
+- **REMOVED:** System Prompt: Tool usage (skill invocation) — Removed instruction about slash commands invoking user-invocable skills via Skill tool.
+- Agent Prompt: Memory synthesis — Strengthened the "do not invent facts" rule into a full retrieval-only directive: the subagent must not answer or solve queries from general knowledge, and must return empty results when no memory covers the query.
+- Data: Claude API reference — cURL — Added Opus 4.7 to extended thinking references; noted that `budget_tokens` is fully removed on Opus 4.7 (returns 400 if sent).
+- Data: Claude API reference — Python — Added Opus 4.7 to extended thinking and compaction references; noted that `budget_tokens` is removed on Opus 4.7.
+- Data: Claude API reference — TypeScript — Added Opus 4.7 to extended thinking and compaction references; noted that `budget_tokens` is removed on Opus 4.7.
+- Data: Claude model catalog — Added Claude Opus 4.7 as the new flagship model (1M context, 128K output, adaptive thinking only); updated Opus 4.6 and Sonnet 4.6 context windows from "200K (1M beta)" to 1M; updated Models API example to reference Opus 4.7; added "opus 4.7" to the friendly-name lookup table; noted Opus 4.7's `thinking: {type: "enabled"}` is unsupported.
+- Data: HTTP error codes reference — Added Opus 4.7–specific 400 errors for removed `temperature`/`top_p`/`top_k` parameters and removed `budget_tokens`; updated quick-reference table with new Opus 4.7 rows.
+- Data: Live documentation sources — Added Migration Guide URL for fetching breaking changes and per-model migration steps.
+- Data: Managed Agents endpoint reference — Changed model shorthand example to use template variable; noted `speed: "fast"` is only supported on Opus 4.6.
+- Data: Prompt Caching — Design & Optimization — Added Opus 4.7 to the 4096-token minimum prefix table; updated example to reference Opus 4.7.
+- Data: Streaming reference — Python — Updated adaptive thinking note to include Opus 4.7 alongside Opus 4.6.
+- Data: Streaming reference — TypeScript — Updated adaptive thinking note to include Opus 4.7 alongside Opus 4.6.
+- Data: Tool use concepts — Updated dynamic filtering heading to include Opus 4.7 alongside Opus 4.6 and Sonnet 4.6.
+- Skill: Building LLM-powered applications with Claude — Major Opus 4.7 integration: added Opus 4.7 to model table (1M context at standard pricing); documented that `budget_tokens`, `temperature`, `top_p`, and `top_k` are fully removed on Opus 4.7 (return 400); introduced `"xhigh"` effort level exclusive to Opus 4.7; documented thinking content omitted by default on Opus 4.7 with `display: "summarized"` opt-in; added Task Budgets beta feature; added `budget_tokens` transitional escape hatch carve-out for Opus 4.6/Sonnet 4.6 (not Opus 4.7); added migration scope confirmation rule requiring Claude to ask which files to edit before starting model migrations; updated compaction context window reference from 200K to 1M; added model migration guide to the documentation reading order; updated 128K output note to include Opus 4.7; expanded JSON escaping and prefill warnings to cover Opus 4.7.
+- System Prompt: Skillify Current Session — Replaced explicit session memory and user messages XML blocks with a directive to review the conversation above as source material.
+- Tool Description: Skill — Tightened invocation rules: removed example-heavy format in favor of concise instructions; added strict guardrail to only invoke skills that appear in the available-skills list or that the user explicitly typed as a slash command, never guessing or inventing skill names.
+
+
+# [2.1.110](https://github.com/Piebald-AI/claude-code-system-prompts/commit/5249956)
+
+_+590 tokens_
+
+- **NEW:** Tool Description: PushNotification — Describes a tool that sends desktop notifications to the user's terminal and pushes to their phone when Remote Control is connected.
+- Agent Prompt: Security monitor for autonomous agent actions (second part) — Added new "Sandbox Network Callback" threat definition covering outbound connections from sandboxed Bash commands to OAST collaborators, request bins, tunnels, raw public IPs, or DNS-exfil-shaped subdomains; clarifies when to allow vs. block based on trusted domains and routine build/test/install activity.
+- System Prompt: REPL tool usage and scripting conventions — Made `gh()` shorthand and `REPO` constant conditional on whether a GitHub repo is present; added heredoc piping guidance warning against writing temp files to feed shell commands, since generic temp paths get clobbered by parallel agents.
+- Tool Description: REPL — Added guidance to pipe via heredoc instead of writing temp files for shell commands, warning that generic temp paths get clobbered by parallel agents.
+
 # [2.1.109](https://github.com/Piebald-AI/claude-code-system-prompts/commit/29ab332)
 
 _+0 tokens_
