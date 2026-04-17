@@ -60,9 +60,14 @@ function previewText(text, maxLen = 200) {
 
 async function runModel(model, prompt, opts = {}) {
   const modelId = MODEL_IDS[model] || model;
-  const timeout = opts.timeout || 120_000;
+  // opts.timeout is an idle-between-chunks timeout (reset on each SSE chunk), not an absolute request deadline.
+  const idleTimeout = opts.timeout || 120_000;
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeout);
+  let timer = setTimeout(() => controller.abort(), idleTimeout);
+  const bumpIdle = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => controller.abort(), idleTimeout);
+  };
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -75,35 +80,66 @@ async function runModel(model, prompt, opts = {}) {
       body: JSON.stringify({
         model: modelId,
         max_tokens: opts.max_tokens || 16384,
+        stream: true,
         ...(opts.temperature !== undefined && { temperature: opts.temperature }),
         ...(opts.system && { system: opts.system }),
         messages: [{ role: 'user', content: prompt }],
       }),
       signal: controller.signal,
     });
-    clearTimeout(timer);
 
     if (!response.ok) {
       const errorText = await response.text();
+      clearTimeout(timer);
       return { ok: false, text: null, cost: 0, error: `API ${response.status}: ${errorText}` };
     }
 
-    const data = await response.json();
-    const inputTokens = data.usage?.input_tokens || 0;
-    const outputTokens = data.usage?.output_tokens || 0;
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let text = '';
+    let inputTokens = 0;
+    let outputTokens = 0;
+    let stopReason = null;
+    let streamError = null;
+
+    for await (const chunk of response.body) {
+      bumpIdle();
+      buffer += decoder.decode(chunk, { stream: true });
+      let idx;
+      while ((idx = buffer.indexOf('\n\n')) !== -1) {
+        const eventBlock = buffer.slice(0, idx);
+        buffer = buffer.slice(idx + 2);
+        const dataLine = eventBlock.split('\n').find((l) => l.startsWith('data: '));
+        if (!dataLine) continue;
+        let payload;
+        try { payload = JSON.parse(dataLine.slice(6)); } catch { continue; }
+        if (payload.type === 'message_start') {
+          inputTokens = payload.message?.usage?.input_tokens || 0;
+          outputTokens = payload.message?.usage?.output_tokens || 0;
+        } else if (payload.type === 'content_block_delta' && payload.delta?.type === 'text_delta') {
+          text += payload.delta.text;
+        } else if (payload.type === 'message_delta') {
+          if (payload.delta?.stop_reason) stopReason = payload.delta.stop_reason;
+          if (payload.usage?.output_tokens != null) outputTokens = payload.usage.output_tokens;
+        } else if (payload.type === 'error') {
+          streamError = payload.error?.message || 'stream error';
+        }
+      }
+    }
+    clearTimeout(timer);
+
     const pricing = MODEL_PRICING[modelId];
     const cost = (inputTokens * pricing.input + outputTokens * pricing.output) / 1_000_000;
 
-    if (data.stop_reason === 'max_tokens') {
+    if (streamError) return { ok: false, text: null, cost, error: streamError };
+    if (stopReason === 'max_tokens') {
       return { ok: false, text: null, cost, error: 'Response truncated (max_tokens limit reached)' };
     }
-
-    const text = data.content?.[0]?.text || '';
     return { ok: true, text, cost };
   } catch (err) {
     clearTimeout(timer);
     if (err.name === 'AbortError') {
-      return { ok: false, text: null, cost: 0, error: `Timed out after ${timeout / 1000}s` };
+      return { ok: false, text: null, cost: 0, error: `Timed out after ${idleTimeout / 1000}s` };
     }
     return { ok: false, text: null, cost: 0, error: err.message };
   }

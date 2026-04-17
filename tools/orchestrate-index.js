@@ -286,6 +286,12 @@ async function clusterAndSummarize(allSummaries, config, clustersPath) {
   const clusterCount = clustersData.clusters.length;
   log('info', `Cluster: ${clusterCount} clusters identified. Validation passed.`);
 
+  const droppedEmpty = clustersData.clusters.filter(c => !c.members || c.members.length === 0).length;
+  if (droppedEmpty > 0) {
+    clustersData.clusters = clustersData.clusters.filter(c => c.members && c.members.length > 0);
+    log('info', `Cluster: dropped ${droppedEmpty} empty cluster(s); proceeding with ${clustersData.clusters.length}`);
+  }
+
   const clusterPhase = phaseResult(clusterCost, clusterStart, 1);
 
   // ── B. Summarize Clusters ──
