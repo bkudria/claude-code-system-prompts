@@ -244,7 +244,7 @@ async function clusterAndSummarize(allSummaries, config, clustersPath) {
   for (let attempt = 1; attempt <= MAX_CLUSTER_ATTEMPTS; attempt++) {
     const { system, user } = buildInlinedClusterPrompt(allSummariesJson, itemCount, lastFeedback);
     const clusterResult = await runModel(clusterModel, user, {
-      timeout: 600_000, temperature: attempt > 1 ? 0.3 : 0, system, max_tokens: 32768,
+      timeout: 600_000, temperature: attempt > 1 ? 0.3 : 0, system, max_tokens: 64000,
     });
     clusterCost += clusterResult.cost;
 
@@ -559,7 +559,7 @@ async function main() {
     for (let attempt = 1; attempt <= MAX_HIERARCHY_ATTEMPTS; attempt++) {
       const { system: hierSystem, user: hierUser } = buildOrganizeHierarchyPrompt(clustersData, lastFeedback);
       const result = await runModel('sonnet', hierUser, {
-        timeout: 600_000, temperature: attempt > 1 ? 0.3 : 0, system: hierSystem, max_tokens: 32768,
+        timeout: 600_000, temperature: attempt > 1 ? 0.3 : 0, system: hierSystem, max_tokens: 64000,
       });
       hierCost += result.cost;
 
