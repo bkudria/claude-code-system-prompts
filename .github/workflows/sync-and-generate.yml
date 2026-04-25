@@ -42,7 +42,7 @@ jobs:
         id: merge
         run: |
           BEFORE=$(git rev-parse HEAD)
-          git merge upstream --no-edit
+          git merge upstream --no-edit -X theirs
           AFTER=$(git rev-parse HEAD)
           if [ "$BEFORE" = "$AFTER" ]; then
             echo "new_commits=false" >> "$GITHUB_OUTPUT"
