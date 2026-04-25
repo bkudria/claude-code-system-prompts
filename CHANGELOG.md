@@ -4,6 +4,21 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.120](https://github.com/Piebald-AI/claude-code-system-prompts/commit/618334a)
+
+_+783 tokens_
+
+- **NEW:** System Prompt: Harness instructions — Core interactive-agent harness guidance for terminal markdown output, permission handling, `<system-reminder>` context, compaction, tool use, and clickable code references.
+- **NEW:** System Prompt: Memory instructions — Instructions for persistent file-based memory, including frontmatter format, memory types, duplicate/stale-memory handling, and verification of recalled file/function/flag references.
+- **NEW:** Tool Description: BrowserBatch — Describes the browser batch tool for executing multiple browser actions sequentially in one round trip, stopping on first error and returning interleaved outputs/screenshots.
+- **NEW:** Tool Description: Write (read existing file first) — Requires reading an existing file before overwriting it with Write, and recommends Edit for modifications.
+- Agent Prompt: Dream memory consolidation — Updated recent-log discovery from one daily log file per day to recursive session logs under `logs/YYYY/MM/DD/<id>-<title>.md`, with recursive `ls -R logs/` guidance and session titles used for triage.
+- Agent Prompt: Security monitor for autonomous agent actions (second part) — Added a `settings_deny_rules` insertion point after user deny rules, allowing settings-provided deny rules to be injected into the monitor prompt.
+- Agent Prompt: /security-review slash command — Replaced the hardcoded git-diff/status/log/show/remote allowed-tools list with an `${ALLOWED_TOOLS}` template variable while keeping Read/Glob/Grep/LS/Task available.
+- Data: Managed Agents endpoint reference — Increased the documented organization create-operation limit for Agents, Sessions, and Vaults from 60 RPM to 300 RPM.
+- Tool Description: WebSearch — Renamed the current-month template variable from `${GET_CURRENT_MONTH_YEAR()}` to `${CURRENT_MONTH_YEAR}` and updated the recent-search guidance to use the new variable form.
+
+
 # [2.1.119](https://github.com/Piebald-AI/claude-code-system-prompts/commit/0d2f643)
 
 _+12,498 tokens_
