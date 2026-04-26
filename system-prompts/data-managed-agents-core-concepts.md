@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Managed Agents core concepts'
 description: Reference documentation for the Managed Agents API covering core concepts (Agents, Sessions, Environments, Containers), lifecycle, versioning, endpoints, and usage patterns
-ccVersion: 2.1.105
+ccVersion: 2.1.119
 -->
 # Managed Agents — Core Concepts
 
@@ -26,7 +26,7 @@ Agent (config) ───────▶│  (agent loop: Claude + tool calls)  �
 Environment (template) ──▶ Container (tool execution workspace)
                                  │
                          Session ─┤
-                                 ├── Resources (files, repos — mounted at startup)
+                                 ├── Resources (files, repos, memory stores — attached at startup)
                                  ├── Vault IDs (MCP credential references)
                                  └── Conversation (event stream in/out)
 ```
@@ -67,6 +67,16 @@ rescheduling → running ↔ idle → terminated
 | Archive | Session becomes **read-only**. Not reversible. |
 | Delete | Permanently deletes session, event history, container, and checkpoints. |
 
+These are ops/inspection calls — typically made from a terminal, not application code. From the shell (see `shared/anthropic-cli.md`):
+
+```sh
+ant beta:sessions list --transform '{id,title,status,created_at}' --format jsonl
+ant beta:sessions retrieve --session-id "$SID"
+ant beta:sessions:events stream --session-id "$SID"   # watch events live
+ant beta:sessions archive  --session-id "$SID"
+ant beta:sessions delete   --session-id "$SID"
+```
+
 ---
 
 ## Sessions
@@ -88,7 +98,7 @@ Key fields returned by the API:
 | `archived_at` | string | ISO 8601 timestamp (nullable) |
 | `environment_id` | string | Environment ID |
 | `agent` | object | Agent configuration |
-| `resources` | array | Attached files and repos |
+| `resources` | array | Attached files, repos, and memory stores |
 | `metadata` | object | User-provided key-value pairs (max 8 keys) |
 | `usage` | object | Token usage statistics |
 
@@ -124,7 +134,7 @@ const session = await client.beta.sessions.create(
 | `agent`         | string or object | **Yes** | String shorthand `"agent_abc123"` (latest version) or `{type: "agent", id, version}` |
 | `environment_id`| string   | **Yes**  | Environment ID                                 |
 | `title`         | string   | No       | Human-readable name (appears in logs/dashboards) |
-| `resources`     | array    | No       | Files or GitHub repos, mounted to the container at startup |
+| `resources`     | array    | No       | Files, GitHub repos, or memory stores, attached to the container at startup. Memory stores are session-create-only (not addable via `resources.add()`). |
 | `vault_ids`     | array    | No       | Vault IDs (`vlt_*`) — MCP credentials with auto-refresh. See `shared/managed-agents-tools.md` → Vaults. |
 | `metadata`      | object   | No       | User-provided key-value pairs                  |
 
@@ -175,6 +185,8 @@ The agent is a **persistent resource**, not a per-run parameter. The intended pa
 ```
 
 **Anti-pattern:** calling `agents.create()` at the top of every script run. This accumulates orphaned agent objects, pays create latency on every invocation, and defeats the versioning model. If you see `agents.create()` in a function that's called per-request or per-cron-tick, that's wrong — hoist it to one-time setup and persist the ID.
+
+> **Recommended — define agents and environments as YAML + apply via the `ant` CLI.** The split is **CLI for the control plane, SDK for the data plane**: agents and environments are relatively static resources you manage with `ant` (version-controlled YAML, applied from CI); sessions are dynamic and driven by your application through the SDK. See `shared/anthropic-cli.md` → *Version-controlled Managed Agents resources* for the `ant beta:agents create < agent.yaml` / `update --version N` flow. The SDK `agents.create()` call shown elsewhere in this doc is the in-code equivalent — use it when you need to provision programmatically, but prefer the YAML flow for anything a human maintains.
 
 ### Versioning
 

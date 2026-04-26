@@ -1,7 +1,7 @@
 <!--
 name: 'Data: Files API reference — Python'
 description: Python Files API reference including file upload, listing, deletion, and usage in messages
-ccVersion: 2.1.78
+ccVersion: 2.1.118
 -->
 # Files API — Python
 
@@ -21,14 +21,18 @@ The Files API uploads files for use in Messages API requests. Reference files vi
 
 ## Upload a File
 
+The `file` argument accepts a `(filename, content, content_type)` tuple, a `pathlib.Path` (or any `PathLike` — read for you, async-safe with `AsyncAnthropic`), or an open binary file object.
+
 ```python
 import anthropic
+from pathlib import Path
 
 client = anthropic.Anthropic()
 
 uploaded = client.beta.files.upload(
     file=("report.pdf", open("report.pdf", "rb"), "application/pdf"),
 )
+# or: client.beta.files.upload(file=Path("report.pdf"))
 print(f"File ID: {uploaded.id}")
 print(f"Size: {uploaded.size_bytes} bytes")
 ```
@@ -92,9 +96,10 @@ response = client.beta.messages.create(
 
 ### List Files
 
+Iterate the list result directly — the SDK auto-paginates across all pages. Only use `.data` if you want the first page only.
+
 ```python
-files = client.beta.files.list()
-for f in files.data:
+for f in client.beta.files.list():
     print(f"{f.id}: {f.filename} ({f.size_bytes} bytes)")
 ```
 

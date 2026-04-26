@@ -4,6 +4,100 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.120](https://github.com/Piebald-AI/claude-code-system-prompts/commit/618334a)
+
+_+783 tokens_
+
+- **NEW:** System Prompt: Harness instructions — Core interactive-agent harness guidance for terminal markdown output, permission handling, `<system-reminder>` context, compaction, tool use, and clickable code references.
+- **NEW:** System Prompt: Memory instructions — Instructions for persistent file-based memory, including frontmatter format, memory types, duplicate/stale-memory handling, and verification of recalled file/function/flag references.
+- **NEW:** Tool Description: BrowserBatch — Describes the browser batch tool for executing multiple browser actions sequentially in one round trip, stopping on first error and returning interleaved outputs/screenshots.
+- **NEW:** Tool Description: Write (read existing file first) — Requires reading an existing file before overwriting it with Write, and recommends Edit for modifications.
+- Agent Prompt: Dream memory consolidation — Updated recent-log discovery from one daily log file per day to recursive session logs under `logs/YYYY/MM/DD/<id>-<title>.md`, with recursive `ls -R logs/` guidance and session titles used for triage.
+- Agent Prompt: Security monitor for autonomous agent actions (second part) — Added a `settings_deny_rules` insertion point after user deny rules, allowing settings-provided deny rules to be injected into the monitor prompt.
+- Agent Prompt: /security-review slash command — Replaced the hardcoded git-diff/status/log/show/remote allowed-tools list with an `${ALLOWED_TOOLS}` template variable while keeping Read/Glob/Grep/LS/Task available.
+- Data: Managed Agents endpoint reference — Increased the documented organization create-operation limit for Agents, Sessions, and Vaults from 60 RPM to 300 RPM.
+- Tool Description: WebSearch — Renamed the current-month template variable from `${GET_CURRENT_MONTH_YEAR()}` to `${CURRENT_MONTH_YEAR}` and updated the recent-search guidance to use the new variable form.
+
+
+# [2.1.119](https://github.com/Piebald-AI/claude-code-system-prompts/commit/0d2f643)
+
+_+12,498 tokens_
+
+- **NEW:** Agent Prompt: Background agent state classifier — Classifies the tail of a background agent transcript as working, blocked, done, or failed and returns concise state JSON.
+- **NEW:** Data: Assistant voice and values template — Template content for an `assistant.md` file describing Claude's voice, values, and communication style.
+- **NEW:** Data: Background agent state classification examples — Example assistant-message tails and JSON outputs for classifying background agent state, tempo, needs, and result.
+- **NEW:** Data: Managed Agents memory stores reference — Reference documentation for Managed Agents memory stores, including store creation, session attachment, FUSE mounts, memory CRUD, concurrency, versions, redaction, and endpoint paths.
+- **NEW:** Data: User profile memory template — Template content for the user profile memory file, covering personal details, work context, schedule, and communication preferences.
+- **NEW:** System Prompt: Background session instructions — Instructs background job sessions to use the job-specific temporary directory and follow the appropriate worktree isolation guidance.
+- **NEW:** System Prompt: Dream CLAUDE.md memory reconciliation — Instructs dream memory consolidation to reconcile feedback and project memories against CLAUDE.md, deleting stale memories or flagging possible CLAUDE.md drift.
+- **NEW:** System Reminder: Previously invoked skills — Restores skills invoked before conversation compaction as context only, warning not to re-execute setup actions or treat prior inputs as current instructions.
+- **NEW:** Skill: /catch-up periodic heartbeat — Skill for the `/catch-up` heartbeat that scans priorities, triages actionable changes, reports a short digest, and updates catch-up state.
+- **NEW:** Skill: /dream memory consolidation — Skill for the `/dream` nightly housekeeping job that consolidates recent logs and transcripts into persistent memory topics, learnings, and a pruned MEMORY.md index.
+- **NEW:** Skill: /morning-checkin daily brief — Skill for the `/morning-checkin` scheduled task that prepares a daily calendar and inbox digest, schedules pre-meeting check-ins, and records the day's top priority.
+- **NEW:** Skill: /pre-meeting-checkin event brief — Skill for the `/pre-meeting-checkin` task that gathers event materials, recent thread context, open questions, and a concise meeting brief.
+- **REMOVED:** System Reminder: Invoked skills — Replaced by the new "Previously invoked skills" reminder, which adds explicit context-only framing post-compaction.
+- Agent Prompt: Security monitor for autonomous agent actions — Added an encoded/obfuscated command rule requiring base64, PowerShell encoded commands, hex/char-array reassembly, and similar payloads to be decoded and evaluated before allowing; unverifiable payloads are blocked. Expanded block rules with PowerShell and Windows equivalents for remote code execution, remote shell access, production reads, security weakening, irreversible local destruction, credential exploration, and unauthorized persistence.
+- Agent Prompt: Status line setup — Documented two new optional JSON fields passed to the `statusLine` command: `effort` with `level` values `low`, `medium`, `high`, `xhigh`, or `max`, and `thinking.enabled` indicating whether extended thinking is on.
+- Agent Prompt: Dream memory consolidation — Added hooks for the new CLAUDE.md reconciliation block and an additional-guidance extension point near the index-pruning step.
+- Data: Managed Agents core concepts — Documented memory stores as session resources in `resources[]`, including that memory stores attach at session creation time only and cannot be added later with `resources.add()`.
+- Data: Managed Agents endpoint reference — Added Memory Stores, Memories, and Memory Versions endpoint tables, including store CRUD/archive, memory create/list/retrieve/update/delete semantics, conflict/precondition errors, `view: "basic"|"full"`, 100KB memory limits, immutable memory versions, and redaction behavior.
+- Data: Managed Agents environments and resources — Documented `memory_store` resources for sessions, including the max of 8 memory stores per session and a pointer to the memory-store reference.
+- Data: Managed Agents overview — Added memory stores to Managed Agents beta-resource documentation, SDK auto-beta guidance, and the archive-is-permanent warning.
+- Skill: Building LLM-powered applications with Claude — Updated the Managed Agents SDK auto-beta namespace list to include `memory_stores`.
+- Skill: /init CLAUDE.md and skill setup (new version) — Restructured `/init` around an initial CLAUDE.md existence check, added review/improve, leave, and start-fresh paths, added a plain-text primer before the first question, added a "Let Claude decide" fast path, changed proposal presentation to normal assistant text, treats skills/hooks answers as hints rather than hard filters, and adds an approval-gated diff flow for improving an existing CLAUDE.md.
+- Tool Description: Background monitor (streaming events) — Added an explicit decision framework for choosing between Bash `run_in_background` and the monitor based on notification count, a worked `gh pr checks` polling example, and warnings against unbounded commands for single-notification use cases, including why `tail -f log | grep -m 1 ...` can still hang.
+
+
+# [2.1.118](https://github.com/Piebald-AI/claude-code-system-prompts/commit/f5e8b4a)
+
+_+4,712 tokens_
+
+- **NEW:** Data: Anthropic CLI — Reference documentation for the `ant` CLI covering installation, authentication, command structure, input/output shaping, managed agents workflows, and scripting patterns.
+- **NEW:** System Prompt: Proactive schedule offer after follow-up work — Instructs the agent to offer a one-line `/schedule` follow-up only when completed work has a strong natural future action and the user is likely to want it.
+- **NEW:** System Prompt: WSL managed settings double opt-in — Explains that WSL can read the Windows managed settings policy chain only when the admin-enabled flag is set, with HKCU requiring an additional user opt-in.
+- **NEW:** System Reminder: Plan mode approval tool enforcement — Requires plan mode turns to end with either AskUserQuestion (for clarification) or ExitPlanMode (for plan approval), and forbids asking for approval any other way.
+- **NEW:** Tool Description: Schedule proactive offer guidance — Explains when to use the scheduling tool for recurring or one-time remote agents and when to proactively offer scheduling after successful work.
+- **REMOVED:** Agent Prompt: Agent Hook — Stop-condition verifier prompt removed.
+- **REMOVED:** System Prompt: Teammate Communication — Swarm-mode teammate communication prompt removed; the broadcast (`to: "*"`) option also dropped from the agent-teams SendMessageTool description.
+- **REMOVED:** System Reminder: Post-turn session summary — The structured-JSON inbox-triage summary reminder added in 2.1.116 has been removed.
+- **REMOVED:** Tool Description: Config — The Config tool for getting/setting Claude Code settings has been removed; the Update Claude Code Config skill now suggests the `/config` slash command instead of "the Config tool" for simple settings.
+- Agent Prompt: Explore, Plan mode (enhanced), Quick git commit, Quick PR creation, REPL tool usage, Tool Description: REPL, Tool Description: ReadFile — Generalized shell guidance to support both Bash and PowerShell environments: read-only command examples and forbidden-command lists are now branched (e.g., `Get-ChildItem`/`Get-Content` vs `ls`/`cat`; `New-Item`/`Remove-Item` vs `mkdir`/`rm`), and commit/PR templates emit PowerShell here-strings (`@'...'@` at column 0) instead of bash heredocs when running under PowerShell. REPL tips note that `shQuote` is POSIX-only and show the PowerShell single-quote-doubling alternative. ReadFile no longer hardcodes "Bash tool" for directory listing, referring instead to "the registered shell tool."
+- Agent Prompt: /schedule slash command — One-time-run support (`run_once_at`) is now gated behind a feature flag: when disabled, all references to one-off scheduling, `run_once_fired`, and the current-time anchor are suppressed. When enabled, added a "Current Time" section providing the local and UTC time at invocation and **requiring** the agent to re-check `date -u` via Bash before computing any `run_once_at` (rather than guessing from conversation context), then echo back both local and UTC for confirmation; if the resolved time is in the past, ask for clarification rather than rolling forward. Also removed the hardcoded opening AskUserQuestion prompt (skipped when the user request is already known).
+- Agent Prompt: Managed Agents onboarding flow — Setup block now defaults to emitting **YAML files + `ant` CLI commands** (`<name>.agent.yaml`, `<name>.environment.yaml`, `ant beta:agents create`/`update --version N`) so agents and environments can be checked into the repo and applied from CI; SDK setup code is now a fallback. Runtime block remains SDK code in the detected language because it must react programmatically to events.
+- Agent Prompt: Status line setup — Documented two additional vim modes (`VISUAL`, `VISUAL LINE`) for the `vim.mode` status field.
+- Agent Prompt: Verification specialist — Replaced inline temp-script guidance with a templated block (so Bash vs PowerShell guidance can be substituted).
+- Data: Claude API reference — Python — Added "Client Configuration" section covering `with_options()` per-request overrides, request timeouts (`httpx.Timeout`, `APITimeoutError`), retry behavior (auto-retries on 408/409/429/≥500 with `max_retries`), the `aiohttp` async backend (`DefaultAioHttpClient`), custom HTTP clients via `DefaultHttpxClient`/`DefaultAsyncHttpxClient` for proxies and base URLs, and `ANTHROPIC_LOG` debug logging. Added "Response Helpers" section covering `_request_id`, `to_json()`/`to_dict()`, and `.with_raw_response` for accessing raw headers.
+- Data: Files API reference — Python — Documented additional `file=` argument forms (`pathlib.Path`/`PathLike`, open binary file object) and that iterating `client.beta.files.list()` directly auto-paginates across all pages.
+- Data: Managed Agents core concepts — Added `ant` CLI examples for session ops (list/retrieve/stream events/archive/delete) and a recommendation to define agents and environments as version-controlled YAML applied via the CLI ("CLI for the control plane, SDK for the data plane"), with `agents.create()` reframed as the in-code equivalent for programmatic provisioning.
+- Data: Managed Agents overview — Added documentation routing entry pointing users wanting version-controlled YAML definitions and shell-driven API calls to `shared/anthropic-cli.md`.
+- Data: Message Batches API reference — Python — Added "List Batches (auto-pagination)" section explaining that iterating `client.messages.batches.list()` auto-paginates and documenting manual cursor controls (`has_next_page()`, `get_next_page()`, `next_page_info()`, `last_id`).
+- Data: Streaming reference — Python — Added "Low-level: `stream=True`" section showing how to pass `stream=True` to `messages.create()` for the raw event iterator (with no auto-accumulation), and added a best-practice note that large `max_tokens` without streaming raises `ValueError` because the SDK refuses non-streaming requests estimated to exceed ~10 minutes.
+- Skill: Build with Claude API (reference guide) — Added explicit routing entry pointing users to `shared/anthropic-cli.md` for terminal access, version-controlled YAML, and scripting.
+- Skill: Building LLM-powered applications with Claude — Updated Managed Agents callouts in three places to refer to the Anthropic CLI by its binary name (`ant`) and point at the dedicated `shared/anthropic-cli.md` reference instead of `shared/live-sources.md`.
+- System Reminder: Plan mode is active (5-phase) — Restructured to use templated workflow-instructions and phase-five blocks (the user-visible "must use ExitPlanMode for plan approval" enforcement now lives in the new Plan mode approval tool enforcement reminder).
+
+
+# [2.1.117](https://github.com/Piebald-AI/claude-code-system-prompts/commit/5b2d3b8)
+
+_-2,003 tokens_
+
+- **NEW:** System Prompt: Background job behavior — Instructs background job agents to narrate progress, restate final results in message text (not just in tool calls) so classifiers can extract them, and explicitly signal done/blocked/failed status.
+- **REMOVED:** Skill: Verify skill (runtime-verification) — The duplicate alias of the Verify skill registered under the `/runtime-verification` slash command name has been removed; the primary Verify skill remains.
+- Agent Prompt: /schedule slash command — Reframed "triggers" as "routines" throughout user-facing copy (API parameter `trigger_id` unchanged) and added support for one-time runs via `run_once_at` (RFC3339 UTC timestamp) as an alternative to `cron_expression`; updated deletion/management URLs from `claude.ai/code/scheduled` to `claude.ai/code/routines`; documented that `ended_reason: "run_once_fired"` indicates a fired one-shot that can be re-armed by updating with a new `run_once_at`; extended timezone-conversion guidance to cover one-time timestamps.
+
+# [2.1.116](https://github.com/Piebald-AI/claude-code-system-prompts/commit/967c3cf)
+
+_+1,136 tokens_
+
+- **NEW:** System Reminder: Post-turn session summary — Instructs Claude to produce a structured JSON summary of a Claude Code session for inbox-style triage across multiple sessions.
+- Agent Prompt: Dream memory consolidation — Clarified that daily logs are always present (removed "if present" hedge) and documented their prefix coding (`>` user, `<` assistant, `.` tool call); added explicit `ls logs/` step and guidance to read the most recent 1–3 days.
+- Agent Prompt: /schedule slash command — Updated connector management URL from `claude.ai/settings/connectors` to `claude.ai/customize/connectors`.
+- Skill: Build with Claude API (reference guide) — Added an explicit routing entry pointing migrations and retired-model replacements to `shared/model-migration.md`.
+- Skill: Building LLM-powered applications with Claude — Added `/claude-api migrate` subcommand that dispatches to the model migration guide, with instructions to execute (not summarize) the guide starting from the scope-confirmation step and to ask for the target model if not specified.
+- Skill: Model migration guide — Added a top-of-file callout for users arriving via `/claude-api migrate` telling Claude to execute the steps in order rather than summarize them, and to start with Step 0 (confirm scope) before editing.
+- Skill: Simplify — Added "Nested conditionals" as a new hacky-pattern category (ternary chains, nested if/else, nested switch 3+ levels deep) with guidance to flatten using early returns, guard clauses, lookup tables, or if/else-if cascades.
+- Tool Description: SendMessageTool (non-agent-teams) — Expanded `attachments` documentation: entries now accept either a file path string (for files on the working filesystem) or the exact `{file_uuid, file_name, size, is_image}` object returned by a device tool like `attach_file` (passed through verbatim for user-uploaded files).
+
 # [2.1.114](https://github.com/Piebald-AI/claude-code-system-prompts/commit/15a5ca2)
 
 _+0 tokens_
