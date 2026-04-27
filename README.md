@@ -34,7 +34,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 > [!important]
 > **NEW (January 23, 2026): We've added all of Claude Code's ~40 system reminders to this list&mdash;see [System Reminders](#system-reminders).**
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.120](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.120) (April 24th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 162 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.121](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.121) (April 27th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 163 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [changelog](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -297,7 +297,7 @@ Text for large system reminders.
 - [Tool Description: PowerShell](./system-prompts/tool-description-powershell.md) (**1455** tks) - Describes the PowerShell command execution tool with syntax guidance, timeout settings, and instructions to prefer specialized tools over PowerShell for file operations.
 - [Tool Description: PushNotification](./system-prompts/tool-description-pushnotification.md) (**261** tks) - Tool description for PushNotification. This is a tool that sends a desktop notification in the user's terminal and pushes to their phone if Remote Control is connected.
 - [Tool Description: REPL](./system-prompts/tool-description-repl.md) (**715** tks) - Describes the REPL tool, a JavaScript programming interface for looping, branching, and composing Claude Code tool calls as async functions.
-- [Tool Description: ReadFile](./system-prompts/tool-description-readfile.md) (**440** tks) - Tool description for reading files.
+- [Tool Description: ReadFile](./system-prompts/tool-description-readfile.md) (**427** tks) - Tool description for reading files.
 - [Tool Description: Schedule proactive offer guidance](./system-prompts/tool-description-schedule-proactive-offer-guidance.md) (**229** tks) - Explains when to use the scheduling tool for recurring or one-time remote agents and when to proactively offer scheduling after successful work.
 - [Tool Description: SendMessageTool](./system-prompts/tool-description-sendmessagetool.md) (**332** tks) - Agent teams version of SendMessageTool.
 - [Tool Description: Skill](./system-prompts/tool-description-skill.md) (**306** tks) - Tool description for executing skills in the main conversation.

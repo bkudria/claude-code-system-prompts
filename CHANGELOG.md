@@ -4,6 +4,12 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.121](https://github.com/Piebald-AI/claude-code-system-prompts/commit/e35c25e)
+
+_-13 tokens_
+
+- Tool Description: ReadFile — Removed the extra additional-usage-notes extension point from the end of the ReadFile tool description, leaving the existing additional-read-note hook as the final conditional guidance.
+
 # [2.1.120](https://github.com/Piebald-AI/claude-code-system-prompts/commit/618334a)
 
 _+783 tokens_
