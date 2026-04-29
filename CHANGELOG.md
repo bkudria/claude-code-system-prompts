@@ -4,6 +4,16 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.122](https://github.com/Piebald-AI/claude-code-system-prompts/commit/23ba8e4)
+
+_-122 tokens_
+
+- **REMOVED:** System Prompt: Phase four of plan mode — Removed the standalone phase-four plan-mode prompt; the active plan-mode reminder now receives phase-four instructions through its own template placeholder.
+- Skill: Debugging — Adds the provided issue description before the issue section and lets daemon debug context supply the fallback issue guidance when the user does not describe a specific problem.
+- System Prompt: Proactive schedule offer after follow-up work — Raises the confidence bar for offering `/schedule` follow-ups from 70%+ to 85%+ odds the user will say yes.
+- System Reminder: New diagnostics detected — Formats new diagnostics from the diagnostics list instead of inserting only the precomputed diagnostics summary.
+- System Reminder: Plan mode is active (5-phase) — Replaces the phase-four function hook with a direct phase-four-instructions placeholder in the active plan-mode workflow.
+
 # [2.1.121](https://github.com/Piebald-AI/claude-code-system-prompts/commit/e35c25e)
 
 _-13 tokens_
