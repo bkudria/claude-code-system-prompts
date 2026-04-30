@@ -4,7 +4,7 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
-# [2.1.123](https://github.com/Piebald-AI/claude-code-system-prompts/commit/903365e)
+#### [2.1.123](https://github.com/Piebald-AI/claude-code-system-prompts/commit/903365e)
 
 _+0 tokens_
 
@@ -120,7 +120,7 @@ _+1,136 tokens_
 - Skill: Simplify — Added "Nested conditionals" as a new hacky-pattern category (ternary chains, nested if/else, nested switch 3+ levels deep) with guidance to flatten using early returns, guard clauses, lookup tables, or if/else-if cascades.
 - Tool Description: SendMessageTool (non-agent-teams) — Expanded `attachments` documentation: entries now accept either a file path string (for files on the working filesystem) or the exact `{file_uuid, file_name, size, is_image}` object returned by a device tool like `attach_file` (passed through verbatim for user-uploaded files).
 
-# [2.1.114](https://github.com/Piebald-AI/claude-code-system-prompts/commit/15a5ca2)
+#### [2.1.114](https://github.com/Piebald-AI/claude-code-system-prompts/commit/15a5ca2)
 
 _+0 tokens_
 
@@ -134,7 +134,7 @@ _+26 tokens_
 - Tool Description: Bash (maintain cwd) — Added explicit instruction to never prepend `cd <current-directory>` to a `git` command, since `git` already operates on the current working tree and the compound form triggers a permission prompt.
 
 
-# [2.1.112](https://github.com/Piebald-AI/claude-code-system-prompts/commit/de0eb75)
+#### [2.1.112](https://github.com/Piebald-AI/claude-code-system-prompts/commit/de0eb75)
 
 _+0 tokens_
 
@@ -186,7 +186,7 @@ _+590 tokens_
 - System Prompt: REPL tool usage and scripting conventions — Made `gh()` shorthand and `REPO` constant conditional on whether a GitHub repo is present; added heredoc piping guidance warning against writing temp files to feed shell commands, since generic temp paths get clobbered by parallel agents.
 - Tool Description: REPL — Added guidance to pipe via heredoc instead of writing temp files for shell commands, warning that generic temp paths get clobbered by parallel agents.
 
-# [2.1.109](https://github.com/Piebald-AI/claude-code-system-prompts/commit/29ab332)
+#### [2.1.109](https://github.com/Piebald-AI/claude-code-system-prompts/commit/29ab332)
 
 _+0 tokens_
 
@@ -333,7 +333,7 @@ _+23,865 tokens_
 - Tool Description: ReadFile — Simplified to always require absolute file paths, removing the conditional relative-path option.
 - Tool Description: Write — Removed a conditional note variable from the "prefer Edit" guidance, making it unconditional.
 
-# [2.1.96](https://github.com/Piebald-AI/claude-code-system-prompts/commit/4a6ba72)
+#### [2.1.96](https://github.com/Piebald-AI/claude-code-system-prompts/commit/4a6ba72)
 
 _+0 tokens_
 
@@ -437,7 +437,7 @@ _-1,627 tokens_
 - Tool Description: TeammateTool — Updated the team file path from `~/.claude/teams/{team-name}.json` to `~/.claude/teams/{team-name}/config.json`.
 
 
-# [2.1.87](https://github.com/Piebald-AI/claude-code-system-prompts/commit/115c568)
+#### [2.1.87](https://github.com/Piebald-AI/claude-code-system-prompts/commit/115c568)
 
 <sub>_No changes to the system prompts in v2.1.87._</sub>
 
