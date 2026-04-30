@@ -34,7 +34,7 @@ Download it and try it out for free!  **https://piebald.ai/**
 > [!important]
 > **NEW (January 23, 2026): We've added all of Claude Code's ~40 system reminders to this list&mdash;see [System Reminders](#system-reminders).**
 
-This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.123](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.123) (April 28th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 165 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
+This repository contains an up-to-date list of all Claude Code's various system prompts and their associated token counts as of **[Claude Code v2.1.124](https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.124) (April 29th, 2026).**  It also contains a [**CHANGELOG.md**](./CHANGELOG.md) for the system prompts across 166 versions since v2.0.14.  From the team behind [<img src="https://github.com/Piebald-AI/piebald/raw/main/assets/logo.svg" width="15"> **Piebald.**](https://piebald.ai/)
 
 **This repository is updated within minutes of each Claude Code release.  See the [changelog](./CHANGELOG.md), and follow [@PiebaldAI](https://x.com/PiebaldAI) on X for a summary of the system prompt changes in each release.**
 
@@ -195,7 +195,7 @@ Parts of the main system prompt.
 - [System Prompt: Executing actions with care](./system-prompts/system-prompt-executing-actions-with-care.md) (**590** tks) - Instructions for executing actions carefully.
 - [System Prompt: Fork usage guidelines](./system-prompts/system-prompt-fork-usage-guidelines.md) (**323** tks) - Instructions for when to fork subagents and rules against reading fork output mid-flight or fabricating fork results.
 - [System Prompt: Git status](./system-prompts/system-prompt-git-status.md) (**37** tks) - System prompt for displaying the current git status at the start of the conversation.
-- [System Prompt: Harness instructions](./system-prompts/system-prompt-harness-instructions.md) (**193** tks) - Core interactive-agent identity and harness instructions for terminal markdown output, permissions, system reminders, compaction, tool use, and code references.
+- [System Prompt: Harness instructions](./system-prompts/system-prompt-harness-instructions.md) (**195** tks) - Core interactive-agent identity and harness instructions for terminal markdown output, permissions, system reminders, compaction, tool use, and code references.
 - [System Prompt: Hooks Configuration](./system-prompts/system-prompt-hooks-configuration.md) (**1493** tks) - System prompt for hooks configuration.  Used for above Claude Code config skill.
 - [System Prompt: How to use the SendUserMessage tool](./system-prompts/system-prompt-how-to-use-the-sendusermessage-tool.md) (**283** tks) - Instructions for using the SendUserMessage tool.
 - [System Prompt: Insights at a glance summary](./system-prompts/system-prompt-insights-at-a-glance-summary.md) (**569** tks) - Generates a concise 4-part summary (what's working, hindrances, quick wins, ambitious workflows) for the insights report.
@@ -217,7 +217,7 @@ Parts of the main system prompt.
 - [System Prompt: Partial compaction instructions](./system-prompts/system-prompt-partial-compaction-instructions.md) (**725** tks) - Instructions on how to compact when the user decided to compact only a portion of the conversation, with a structured summary format and analysis process.
 - [System Prompt: PowerShell edition for 5.1](./system-prompts/system-prompt-powershell-edition-for-51.md) (**285** tks) - System prompt for providing information about Windows PowerShell 5.1.
 - [System Prompt: Proactive schedule offer after follow-up work](./system-prompts/system-prompt-proactive-schedule-offer-after-follow-up-work.md) (**272** tks) - Instructs the agent to offer a one-line /schedule follow-up only when completed work has a strong natural future action and the user is likely to want it.
-- [System Prompt: REPL tool usage and scripting conventions](./system-prompts/system-prompt-repl-tool-usage-and-scripting-conventions.md) (**989** tks) - Instructs Claude on how to use the REPL tool effectively with dense JavaScript scripts, shorthands, batching rules, and API reference for investigation tasks.
+- [System Prompt: REPL tool usage and scripting conventions](./system-prompts/system-prompt-repl-tool-usage-and-scripting-conventions.md) (**1049** tks) - Instructs Claude on how to use the REPL tool effectively with dense JavaScript scripts, shorthands, batching rules, and API reference for investigation tasks.
 - [System Prompt: Remote plan mode (ultraplan)](./system-prompts/system-prompt-remote-plan-mode-ultraplan.md) (**617** tks) - System reminder injected during remote planning sessions that instructs Claude to explore the codebase, produce a diagram-rich plan via ExitPlanMode, and implement it with a pull request upon approval.
 - [System Prompt: Remote planning session](./system-prompts/system-prompt-remote-planning-session.md) (**432** tks) - System reminder that configures a remote planning session to explore the codebase, produce an implementation plan via ExitPlanMode, and handle plan approval, rejection, or teleportation back to the user's local terminal.
 - [System Prompt: Scratchpad directory](./system-prompts/system-prompt-scratchpad-directory.md) (**170** tks) - Instructions for using a dedicated scratchpad directory for temporary files.
@@ -242,6 +242,7 @@ Text for large system reminders.
 - [System Reminder: Compact file reference](./system-prompts/system-reminder-compact-file-reference.md) (**57** tks) - Reference to file read before conversation summarization.
 - [System Reminder: Exited plan mode](./system-prompts/system-reminder-exited-plan-mode.md) (**41** tks) - Notification when exiting plan mode.
 - [System Reminder: File exists but empty](./system-prompts/system-reminder-file-exists-but-empty.md) (**27** tks) - Warning when reading an empty file.
+- [System Reminder: File modification detected (budget exceeded)](./system-prompts/system-reminder-file-modification-detected-budget-exceeded.md) (**104** tks) - System reminder for when a file modification is detected - specifically when other modified files in the turn already exceeded the budget.
 - [System Reminder: File modified by user or linter](./system-prompts/system-reminder-file-modified-by-user-or-linter.md) (**97** tks) - Notification that a file was modified externally.
 - [System Reminder: File opened in IDE](./system-prompts/system-reminder-file-opened-in-ide.md) (**37** tks) - Notification that user opened a file in IDE.
 - [System Reminder: File shorter than offset](./system-prompts/system-reminder-file-shorter-than-offset.md) (**59** tks) - Warning when file read offset exceeds file length.

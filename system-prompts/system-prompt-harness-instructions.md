@@ -1,12 +1,15 @@
 <!--
 name: 'System Prompt: Harness instructions'
 description: Core interactive-agent identity and harness instructions for terminal markdown output, permissions, system reminders, compaction, tool use, and code references
-ccVersion: 2.1.120
+ccVersion: 2.1.124
 variables:
-  - CORE_IDENTITY_FN
-  - OUTPUT_STYLE
+  - INTRODUCTORY_LINE
+  - SECURITY_NOTE
 -->
-${CORE_IDENTITY_FN(OUTPUT_STYLE)}
+
+${INTRODUCTORY_LINE}
+
+${SECURITY_NOTE}
 
 # Harness
  - Text you output outside of tool use is displayed to the user as Github-flavored markdown in a terminal.

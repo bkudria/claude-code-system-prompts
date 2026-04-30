@@ -4,6 +4,14 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.124](https://github.com/Piebald-AI/claude-code-system-prompts/commit/f96acd9)
+
+_+166 tokens_
+
+- **NEW:** System Reminder: File modification detected (budget exceeded) — Tells the agent when a user or linter changed a file but the diff was omitted because other modified files already exceeded the snippet budget, and directs it to read the file if current content is needed.
+- System Prompt: Harness instructions — Replaces the core-identity function call with explicit introductory-line and security-note insertion points before the shared harness instructions.
+- System Prompt: REPL tool usage and scripting conventions — Clarifies that thenable shorthand results are auto-awaited only at return time, so inline uses such as concatenation, templates, or arguments to another call must be awaited first.
+
 #### [2.1.123](https://github.com/Piebald-AI/claude-code-system-prompts/commit/903365e)
 
 _+0 tokens_
