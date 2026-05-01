@@ -4,6 +4,12 @@ Note: Only use **NEW:** for entirely new prompt files, NOT for new additions/sec
 
 ### Claude Code System Prompts Changelog
 
+# [2.1.126](https://github.com/Piebald-AI/claude-code-system-prompts/commit/b9d42f2)
+
+_-87 tokens_
+
+- **REMOVED:** System Reminder: Malware analysis after Read tool call — Removed the reminder that asked agents to consider whether each file read is malware and to analyze malware without improving or augmenting it.
+
 # [2.1.124](https://github.com/Piebald-AI/claude-code-system-prompts/commit/f96acd9)
 
 _+166 tokens_
